@@ -1,0 +1,448 @@
+{
+  "total_formulas": 595,
+  "activation_functions": [
+    {
+      "name": "Neural Sigmoid Activation",
+      "latex": "S(x) = \\frac{1}{1 + \\exp(-\\beta(x - \\theta))}",
+      "type": "activation_function",
+      "domain": "neural-networks",
+      "description": "Sigmoidal firing rate function"
+    },
+    {
+      "name": "Nav1.1 Activation",
+      "latex": "m_\\infty = \\frac{1}{1 + \\exp((V_{1/2,m} - V)/k_m)}",
+      "type": "algebraic",
+      "domain": "ion-channels",
+      "description": "Nav1.1 steady-state activation"
+    },
+    {
+      "name": "Nav1.1 Inactivation",
+      "latex": "h_\\infty = \\frac{1}{1 + \\exp((V - V_{1/2,h})/k_h)}",
+      "type": "algebraic",
+      "domain": "ion-channels",
+      "description": "Nav1.1 steady-state inactivation"
+    },
+    {
+      "name": "Nav1.2 Activation",
+      "latex": "m_\\infty = \\frac{1}{1 + \\exp((V_{1/2,m} - V)/k_m)}",
+      "type": "algebraic",
+      "domain": "ion-channels",
+      "description": "Nav1.2 steady-state activation"
+    },
+    {
+      "name": "Nav1.2 Inactivation",
+      "latex": "h_\\infty = \\frac{1}{1 + \\exp((V - V_{1/2,h})/k_h)}",
+      "type": "algebraic",
+      "domain": "ion-channels",
+      "description": "Nav1.2 steady-state inactivation"
+    },
+    {
+      "name": "Nav1.3 Activation",
+      "latex": "m_\\infty = \\frac{1}{1 + \\exp((V_{1/2,m} - V)/k_m)}",
+      "type": "algebraic",
+      "domain": "ion-channels",
+      "description": "Nav1.3 steady-state activation"
+    },
+    {
+      "name": "Nav1.3 Inactivation",
+      "latex": "h_\\infty = \\frac{1}{1 + \\exp((V - V_{1/2,h})/k_h)}",
+      "type": "algebraic",
+      "domain": "ion-channels",
+      "description": "Nav1.3 steady-state inactivation"
+    },
+    {
+      "name": "Nav1.4 Activation",
+      "latex": "m_\\infty = \\frac{1}{1 + \\exp((V_{1/2,m} - V)/k_m)}",
+      "type": "algebraic",
+      "domain": "ion-channels",
+      "description": "Nav1.4 steady-state activation"
+    },
+    {
+      "name": "Nav1.4 Inactivation",
+      "latex": "h_\\infty = \\frac{1}{1 + \\exp((V - V_{1/2,h})/k_h)}",
+      "type": "algebraic",
+      "domain": "ion-channels",
+      "description": "Nav1.4 steady-state inactivation"
+    },
+    {
+      "name": "Nav1.5 Activation",
+      "latex": "m_\\infty = \\frac{1}{1 + \\exp((V_{1/2,m} - V)/k_m)}",
+      "type": "algebraic",
+      "domain": "ion-channels",
+      "description": "Nav1.5 steady-state activation"
+    },
+    {
+      "name": "Nav1.5 Inactivation",
+      "latex": "h_\\infty = \\frac{1}{1 + \\exp((V - V_{1/2,h})/k_h)}",
+      "type": "algebraic",
+      "domain": "ion-channels",
+      "description": "Nav1.5 steady-state inactivation"
+    },
+    {
+      "name": "Nav1.6 Activation",
+      "latex": "m_\\infty = \\frac{1}{1 + \\exp((V_{1/2,m} - V)/k_m)}",
+      "type": "algebraic",
+      "domain": "ion-channels",
+      "description": "Nav1.6 steady-state activation"
+    },
+    {
+      "name": "Nav1.6 Inactivation",
+      "latex": "h_\\infty = \\frac{1}{1 + \\exp((V - V_{1/2,h})/k_h)}",
+      "type": "algebraic",
+      "domain": "ion-channels",
+      "description": "Nav1.6 steady-state inactivation"
+    },
+    {
+      "name": "Nav1.7 Activation",
+      "latex": "m_\\infty = \\frac{1}{1 + \\exp((V_{1/2,m} - V)/k_m)}",
+      "type": "algebraic",
+      "domain": "ion-channels",
+      "description": "Nav1.7 steady-state activation"
+    },
+    {
+      "name": "Nav1.7 Inactivation",
+      "latex": "h_\\infty = \\frac{1}{1 + \\exp((V - V_{1/2,h})/k_h)}",
+      "type": "algebraic",
+      "domain": "ion-channels",
+      "description": "Nav1.7 steady-state inactivation"
+    },
+    {
+      "name": "Nav1.8 Activation",
+      "latex": "m_\\infty = \\frac{1}{1 + \\exp((V_{1/2,m} - V)/k_m)}",
+      "type": "algebraic",
+      "domain": "ion-channels",
+      "description": "Nav1.8 steady-state activation"
+    },
+    {
+      "name": "Nav1.8 Inactivation",
+      "latex": "h_\\infty = \\frac{1}{1 + \\exp((V - V_{1/2,h})/k_h)}",
+      "type": "algebraic",
+      "domain": "ion-channels",
+      "description": "Nav1.8 steady-state inactivation"
+    },
+    {
+      "name": "Nav1.9 Activation",
+      "latex": "m_\\infty = \\frac{1}{1 + \\exp((V_{1/2,m} - V)/k_m)}",
+      "type": "algebraic",
+      "domain": "ion-channels",
+      "description": "Nav1.9 steady-state activation"
+    },
+    {
+      "name": "Nav1.9 Inactivation",
+      "latex": "h_\\infty = \\frac{1}{1 + \\exp((V - V_{1/2,h})/k_h)}",
+      "type": "algebraic",
+      "domain": "ion-channels",
+      "description": "Nav1.9 steady-state inactivation"
+    },
+    {
+      "name": "HCN1 Activation",
+      "latex": "h_\\infty = \\frac{1}{1 + \\exp((V - V_{1/2})/k)}",
+      "type": "algebraic",
+      "domain": "ion-channels",
+      "description": "HCN1 steady-state activation"
+    },
+    {
+      "name": "HCN2 Activation",
+      "latex": "h_\\infty = \\frac{1}{1 + \\exp((V - V_{1/2})/k)}",
+      "type": "algebraic",
+      "domain": "ion-channels",
+      "description": "HCN2 steady-state activation"
+    },
+    {
+      "name": "HCN3 Activation",
+      "latex": "h_\\infty = \\frac{1}{1 + \\exp((V - V_{1/2})/k)}",
+      "type": "algebraic",
+      "domain": "ion-channels",
+      "description": "HCN3 steady-state activation"
+    },
+    {
+      "name": "HCN4 Activation",
+      "latex": "h_\\infty = \\frac{1}{1 + \\exp((V - V_{1/2})/k)}",
+      "type": "algebraic",
+      "domain": "ion-channels",
+      "description": "HCN4 steady-state activation"
+    },
+    {
+      "name": "Boltzmann Activation",
+      "latex": "m_\\infty(V) = \\frac{1}{1 + \\exp\\left(\\frac{V_{1/2} - V}{k}\\right)}",
+      "type": "algebraic",
+      "domain": "ion-channels",
+      "description": "Generic steady-state activation function"
+    },
+    {
+      "name": "beta1-AR GPCR Activation",
+      "latex": "R^* = \\frac{[L]/K_d}{1 + [L]/K_d} \\cdot R_{total}",
+      "type": "algebraic",
+      "domain": "GPCR",
+      "description": "beta1-AR (Gs-coupled): heart contractility, cAMP\u2191. Ligands: epinephrine,norepinephrine"
+    },
+    {
+      "name": "beta2-AR GPCR Activation",
+      "latex": "R^* = \\frac{[L]/K_d}{1 + [L]/K_d} \\cdot R_{total}",
+      "type": "algebraic",
+      "domain": "GPCR",
+      "description": "beta2-AR (Gs-coupled): bronchodilation, cAMP\u2191. Ligands: epinephrine"
+    },
+    {
+      "name": "alpha1-AR GPCR Activation",
+      "latex": "R^* = \\frac{[L]/K_d}{1 + [L]/K_d} \\cdot R_{total}",
+      "type": "algebraic",
+      "domain": "GPCR",
+      "description": "alpha1-AR (Gq-coupled): vasoconstriction, IP3/DAG. Ligands: norepinephrine"
+    },
+    {
+      "name": "alpha2-AR GPCR Activation",
+      "latex": "R^* = \\frac{[L]/K_d}{1 + [L]/K_d} \\cdot R_{total}",
+      "type": "algebraic",
+      "domain": "GPCR",
+      "description": "alpha2-AR (Gi-coupled): presynaptic inhibition, cAMP\u2193. Ligands: norepinephrine"
+    },
+    {
+      "name": "M1-mAChR GPCR Activation",
+      "latex": "R^* = \\frac{[L]/K_d}{1 + [L]/K_d} \\cdot R_{total}",
+      "type": "algebraic",
+      "domain": "GPCR",
+      "description": "M1-mAChR (Gq-coupled): cognitive, IP3/DAG. Ligands: acetylcholine"
+    },
+    {
+      "name": "M2-mAChR GPCR Activation",
+      "latex": "R^* = \\frac{[L]/K_d}{1 + [L]/K_d} \\cdot R_{total}",
+      "type": "algebraic",
+      "domain": "GPCR",
+      "description": "M2-mAChR (Gi-coupled): cardiac slowing, cAMP\u2193. Ligands: acetylcholine"
+    }
+  ],
+  "learning_rules": [
+    {
+      "name": "Hodgkin-Huxley Membrane Equation",
+      "latex": "C_m \\frac{dV}{dt} = -g_{Na} m^3 h (V - E_{Na}) - g_K n^4 (V - E_K) - g_L (V - E_L) + I_{ext}",
+      "description": "Main membrane potential equation from the Hodgkin-Huxley model describing action potential generation",
+      "rule_type": "pair-STDP",
+      "weight_dependence": "additive"
+    },
+    {
+      "name": "HH Sodium Activation (m)",
+      "latex": "\\frac{dm}{dt} = \\alpha_m(V)(1-m) - \\beta_m(V)m",
+      "description": "Sodium channel activation gating variable dynamics",
+      "rule_type": "triplet-STDP",
+      "weight_dependence": "multiplicative"
+    },
+    {
+      "name": "HH Alpha_m Rate",
+      "latex": "\\alpha_m(V) = \\frac{0.1(V+40)}{1 - \\exp(-(V+40)/10)}",
+      "description": "Forward rate constant for sodium activation",
+      "rule_type": "BCM",
+      "weight_dependence": "sliding-threshold"
+    },
+    {
+      "name": "HH Beta_m Rate",
+      "latex": "\\beta_m(V) = 4 \\exp(-(V+65)/18)",
+      "description": "Backward rate constant for sodium activation",
+      "rule_type": "Oja",
+      "weight_dependence": "multiplicative"
+    },
+    {
+      "name": "HH Sodium Inactivation (h)",
+      "latex": "\\frac{dh}{dt} = \\alpha_h(V)(1-h) - \\beta_h(V)h",
+      "description": "Sodium channel inactivation gating variable dynamics",
+      "rule_type": "calcium-based",
+      "weight_dependence": "multiplicative"
+    },
+    {
+      "name": "HH Potassium Activation (n)",
+      "latex": "\\frac{dn}{dt} = \\alpha_n(V)(1-n) - \\beta_n(V)n",
+      "description": "Potassium channel activation gating variable dynamics",
+      "rule_type": "Shouval-Ca",
+      "weight_dependence": "subtractive"
+    },
+    {
+      "name": "HH Alpha_n Rate",
+      "latex": "\\alpha_n(V) = \\frac{0.01(V+55)}{1 - \\exp(-(V+55)/10)}",
+      "description": "Forward rate constant for potassium activation",
+      "rule_type": "Symmetric STDP",
+      "weight_dependence": "additive"
+    },
+    {
+      "name": "HH Beta_n Rate",
+      "latex": "\\beta_n(V) = 0.125 \\exp(-(V+65)/80)",
+      "description": "Backward rate constant for potassium activation",
+      "rule_type": "Asymmetric STDP",
+      "weight_dependence": "additive"
+    },
+    {
+      "name": "Leaky Integrate-and-Fire",
+      "latex": "\\tau_m \\frac{dV}{dt} = -(V - V_{rest}) + R_m I_{ext}",
+      "description": "Simple neuron model with passive leak current and threshold-based spiking",
+      "rule_type": "Anti-Hebbian STDP",
+      "weight_dependence": "additive"
+    },
+    {
+      "name": "Exponential Integrate-and-Fire",
+      "latex": "\\tau_m \\frac{dV}{dt} = -(V - V_{rest}) + \\Delta_T \\exp\\left(\\frac{V - V_T}{\\Delta_T}\\right) + R_m I_{ext}",
+      "description": "LIF with exponential spike initiation for more realistic dynamics",
+      "rule_type": "Mexican Hat STDP",
+      "weight_dependence": "additive"
+    }
+  ],
+  "temporal_dynamics": [
+    {
+      "name": "Leaky Integrate-and-Fire",
+      "latex": "\\tau_m \\frac{dV}{dt} = -(V - V_{rest}) + R_m I_{ext}",
+      "type": "ODE",
+      "description": "Simple neuron model with passive leak current and threshold-based spiking"
+    },
+    {
+      "name": "Exponential Integrate-and-Fire",
+      "latex": "\\tau_m \\frac{dV}{dt} = -(V - V_{rest}) + \\Delta_T \\exp\\left(\\frac{V - V_T}{\\Delta_T}\\right) + R_m I_{ext}",
+      "type": "ODE",
+      "description": "LIF with exponential spike initiation for more realistic dynamics"
+    },
+    {
+      "name": "AdEx Adaptation Current",
+      "latex": "\\tau_w \\frac{dw}{dt} = a(V - V_{rest}) - w",
+      "type": "ODE",
+      "description": "Adaptation current dynamics in AdEx model"
+    },
+    {
+      "name": "Wilson-Cowan Excitatory",
+      "latex": "\\tau_E \\frac{dE}{dt} = -E + S_E(w_{EE}E - w_{EI}I + I_{ext})",
+      "type": "ODE",
+      "description": "Wilson-Cowan excitatory population rate equation"
+    },
+    {
+      "name": "Wilson-Cowan Inhibitory",
+      "latex": "\\tau_I \\frac{dI}{dt} = -I + S_I(w_{IE}E - w_{II}I)",
+      "type": "ODE",
+      "description": "Wilson-Cowan inhibitory population rate equation"
+    },
+    {
+      "name": "IP3R h (inactivation)",
+      "latex": "\\frac{dh}{dt} = \\frac{h_\\infty - h}{\\tau_h}, \\quad h_\\infty = \\frac{K_{inh}}{K_{inh} + [Ca^{2+}]}",
+      "type": "ODE",
+      "description": "IP3R Ca-dependent inactivation"
+    },
+    {
+      "name": "Quadratic Integrate-and-Fire (QIF)",
+      "latex": "\\tau \\frac{dV}{dt} = (V - V_{rest})(V - V_{th}) + RI",
+      "type": "ODE",
+      "description": "Canonical Type I neuron model"
+    },
+    {
+      "name": "MAT Model",
+      "latex": "\\frac{d\\theta}{dt} = -\\frac{\\theta - \\theta_0}{\\tau_\\theta} + \\alpha \\delta(t - t_{spike})",
+      "type": "ODE",
+      "description": "Adaptive threshold model"
+    },
+    {
+      "name": "Readily Releasable Pool (RRP)",
+      "latex": "\\frac{dR}{dt} = \\frac{R_0 - R}{\\tau_{rec}} - P_{rel} R \\delta(t - t_{spike})",
+      "type": "ODE",
+      "description": "RRP depletion and recovery"
+    },
+    {
+      "name": "Docked Vesicles (Tsodyks-Markram)",
+      "latex": "\\frac{dx}{dt} = \\frac{1-x}{\\tau_D} - u x \\delta(t - t_{spike})",
+      "type": "ODE",
+      "description": "Fraction of available vesicles"
+    },
+    {
+      "name": "Facilitation Variable (Tsodyks-Markram)",
+      "latex": "\\frac{du}{dt} = \\frac{U - u}{\\tau_F} + U(1-u) \\delta(t - t_{spike})",
+      "type": "ODE",
+      "description": "Use-dependent facilitation"
+    },
+    {
+      "name": "Augmentation",
+      "latex": "\\frac{dA}{dt} = -\\frac{A - 1}{\\tau_A} + \\Delta A \\cdot \\delta(t - t_{spike})",
+      "type": "ODE",
+      "description": "Slow enhancement lasting seconds"
+    },
+    {
+      "name": "Post-Tetanic Potentiation",
+      "latex": "\\frac{dP}{dt} = -\\frac{P - 1}{\\tau_P} + \\Delta P \\cdot H([Ca] - \\theta)",
+      "type": "ODE",
+      "description": "Minutes-long enhancement after tetanus"
+    },
+    {
+      "name": "Eligibility Trace",
+      "latex": "\\frac{de}{dt} = -\\frac{e}{\\tau_e} + STDP(\\Delta t) \\cdot \\delta(t - t_{spike})",
+      "type": "ODE",
+      "description": "Decaying trace of recent STDP events"
+    },
+    {
+      "name": "BCM Sliding Threshold",
+      "latex": "\\frac{d\\theta}{dt} = \\frac{\\bar{c}^2 - \\theta}{\\tau_\\theta}",
+      "type": "ODE",
+      "description": "Activity-dependent sliding threshold"
+    },
+    {
+      "name": "Wilson-Cowan (full)",
+      "latex": "\\tau_E \\frac{dE}{dt} = -E + (1-r_E E) S_E(w_{EE}E - w_{EI}I + I_E)",
+      "type": "ODE",
+      "description": "Excitatory population with refractory term"
+    },
+    {
+      "name": "Rate Model with Adaptation",
+      "latex": "\\tau_r \\frac{dr}{dt} = -r + S(I - a), \\quad \\tau_a \\frac{da}{dt} = -a + \\beta r",
+      "type": "ODE",
+      "description": "Firing rate with spike-frequency adaptation"
+    },
+    {
+      "name": "PING (Pyramidal-Interneuron Gamma)",
+      "latex": "\\tau_E \\frac{dE}{dt} = -E + S(w_{EE}E - w_{EI}I), \\quad \\tau_I \\frac{dI}{dt} = -I + S(w_{IE}E)",
+      "type": "ODE",
+      "description": "Gamma oscillation from E-I loop"
+    },
+    {
+      "name": "ING (Interneuron Gamma)",
+      "latex": "\\tau_I \\frac{dI}{dt} = -I + S(w_{II}I + I_{ext})",
+      "type": "ODE",
+      "description": "Gamma from mutual I-I inhibition"
+    },
+    {
+      "name": "Theta Oscillation",
+      "latex": "\\tau_{slow} \\frac{dh}{dt} = h_\\infty([Ca]) - h",
+      "type": "ODE",
+      "description": "Slow h-current for theta rhythm"
+    },
+    {
+      "name": "Continuous Hopfield",
+      "latex": "\\tau \\frac{dV_i}{dt} = -V_i + \\sum_j w_{ij} g(V_j) + I_i",
+      "type": "ODE",
+      "description": "Continuous-time analog network"
+    },
+    {
+      "name": "Ring Attractor (Head Direction)",
+      "latex": "\\tau \\frac{dm_i}{dt} = -m_i + \\phi\\left(\\sum_j w_{ij} m_j + I_i\\right)",
+      "type": "ODE",
+      "description": "Continuous attractor for head direction"
+    },
+    {
+      "name": "Persistent Activity (Bistable)",
+      "latex": "\\tau \\frac{dr}{dt} = -r + f(Jr + I_{ext})",
+      "type": "ODE",
+      "description": "Bistable attractor for persistent firing"
+    },
+    {
+      "name": "NMDA-based Persistence",
+      "latex": "\\tau_{NMDA} \\frac{ds}{dt} = -s + \\alpha (1-s) r",
+      "type": "ODE",
+      "description": "Slow NMDA maintains activity"
+    },
+    {
+      "name": "Mutual Inhibition Decision",
+      "latex": "\\tau \\frac{dr_i}{dt} = -r_i + f(I_i - w \\sum_{j \\neq i} r_j)",
+      "type": "ODE",
+      "description": "Winner-take-all with lateral inhibition"
+    }
+  ],
+  "summary": {
+    "ode": 214,
+    "algebraic": 164,
+    "current_equation": 118,
+    "rate_equation": 73,
+    "plasticity_rule": 13,
+    "pde": 7,
+    "sde": 3
+  }
+}
