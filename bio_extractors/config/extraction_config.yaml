@@ -1,0 +1,199 @@
+# Biological Database Extraction Configuration
+# Version: 1.0.0
+
+# Output configuration
+output:
+  directory: "extraction_results"  # Directory to save extracted data
+  format: "json"                   # Output format (json, csv)
+  save_to_db: true                 # Save to SQLite database
+  db_path: "bio_architecture.db"   # Database file path
+
+# Extraction settings
+extraction:
+  max_items_per_database: 500      # Maximum items to extract per database
+  parallel: true                    # Extract databases in parallel
+  max_workers: 4                    # Maximum parallel workers
+
+# Cache configuration
+cache:
+  enabled: true                     # Enable caching
+  directory: ".cache"               # Cache directory
+  ttl_minutes: 15                   # Cache time-to-live in minutes
+
+# Rate limiting (per database)
+rate_limits:
+  default_calls: 10                 # Default calls per period
+  default_period: 1.0               # Default period in seconds
+  kegg: 3                          # KEGG specific: 3 calls per second
+  brenda: 5                        # BRENDA: conservative limit
+  bioportal: 5                     # BioPortal: conservative limit
+
+# Database configuration
+# priority: Lower numbers are extracted first (1 = highest priority)
+# enabled: Whether to extract from this database
+databases:
+  # ===== MECHANISMS & PROCESSES (Priority 1) =====
+  GO:
+    enabled: true
+    priority: 1
+    description: "Gene Ontology - biological processes and molecular functions"
+    extraction_params:
+      aspect: null                  # null = all aspects, or specify: biological_process, molecular_function, cellular_component
+      max_terms: 500
+      focus_terms: []               # List of specific GO IDs to extract (empty = all)
+
+  Reactome:
+    enabled: true
+    priority: 1
+    description: "Reactome - pathways and reactions"
+    extraction_params:
+      species: "9606"               # Homo sapiens
+      top_level_only: false
+      pathway_categories: []        # Empty = all categories
+
+  KEGG:
+    enabled: true
+    priority: 1
+    description: "KEGG - metabolic and signaling pathways"
+    extraction_params:
+      organism: "hsa"               # Homo sapiens
+      pathway_types: []
+
+  # ===== NEUROSCIENCE (Priority 2) =====
+  AllenBrain:
+    enabled: true
+    priority: 2
+    description: "Allen Brain Atlas - brain structures and connectivity"
+    extraction_params:
+      data_type: "structure"        # structure, connectivity, expression
+      species: "mouse"
+
+  NeuroMorpho:
+    enabled: true
+    priority: 2
+    description: "NeuroMorpho - neuronal morphologies"
+    extraction_params:
+      cell_types: []                # Empty = all types
+      brain_regions: []
+      max_neurons: 500
+
+  CellOntology:
+    enabled: true
+    priority: 2
+    description: "Cell Ontology - cell type classifications"
+    extraction_params:
+      cell_type_filter: null        # null = all types
+      max_terms: 500
+
+  # ===== PROTEINS & ENZYMES (Priority 3) =====
+  UniProt:
+    enabled: true
+    priority: 3
+    description: "UniProt - protein families and domains"
+    extraction_params:
+      extraction_type: "families"   # families, domains, catalytic
+      organism: "9606"              # Homo sapiens
+      max_results: 500
+
+  InterPro:
+    enabled: true
+    priority: 3
+    description: "InterPro - protein domain architectures"
+    extraction_params:
+      entry_type: "domain"          # domain, family, site
+      max_entries: 500
+
+  BRENDA:
+    enabled: false                  # Disabled by default (requires authentication)
+    priority: 3
+    description: "BRENDA - enzyme catalytic mechanisms"
+    extraction_params:
+      ec_class: null                # null = all, or specify: "1.*.*.*" for oxidoreductases
+      max_enzymes: 500
+    requires_auth: true
+
+  # ===== METABOLIC (Priority 4) =====
+  ChEBI:
+    enabled: true
+    priority: 4
+    description: "ChEBI - chemical entities and biological roles"
+    extraction_params:
+      extraction_type: "roles"      # roles, cofactors, metabolites
+      parent_id: null
+      max_entities: 500
+
+  eQuilibrator:
+    enabled: false                  # Disabled by default (may require auth)
+    priority: 4
+    description: "eQuilibrator - thermodynamic parameters"
+    extraction_params:
+      reaction_ids: []
+      compound_ids: []
+      max_entries: 500
+    requires_auth: false
+
+  # ===== COGNITIVE (Priority 5) =====
+  CognitiveAtlas:
+    enabled: true
+    priority: 5
+    description: "Cognitive Atlas - cognitive concepts and tasks"
+    extraction_params:
+      extraction_type: "concepts"   # concepts, tasks, disorders
+      max_items: 500
+
+  CogPO:
+    enabled: false                  # Disabled by default (requires BioPortal API key)
+    priority: 5
+    description: "Cognitive Paradigm Ontology (via BioPortal)"
+    extraction_params:
+      max_terms: 500
+    requires_auth: true
+
+  MFO:
+    enabled: false                  # Disabled by default (requires BioPortal API key)
+    priority: 5
+    description: "Mental Functioning Ontology (via BioPortal)"
+    extraction_params:
+      max_terms: 500
+    requires_auth: true
+
+# Authentication credentials
+# IMPORTANT: Do NOT commit this file with real credentials!
+# Use environment variables or a separate credentials file.
+credentials:
+  # BRENDA credentials
+  brenda_email: null                # Your BRENDA account email
+  brenda_password: null             # Your BRENDA password
+
+  # BioPortal API key (for CogPO, MFO)
+  bioportal_api_key: null           # Get from https://bioportal.bioontology.org/account
+
+  # eQuilibrator (if required)
+  equilibrator_api_key: null
+
+# Entity filters
+filters:
+  # Only extract entities matching these criteria
+  min_confidence_score: 0.0         # Minimum confidence score (0-1)
+  validation_status: []             # Empty = all, or specify: [validated, reviewed]
+  exclude_deprecated: true          # Exclude deprecated entities
+
+# Logging configuration
+logging:
+  level: "INFO"                     # DEBUG, INFO, WARNING, ERROR
+  file: "extraction.log"
+  console: true
+
+# Performance tuning
+performance:
+  request_timeout: 30               # HTTP request timeout in seconds
+  retry_attempts: 3                 # Number of retry attempts
+  retry_delay: 1.0                  # Initial retry delay in seconds
+  backoff_factor: 2.0               # Exponential backoff multiplier
+
+# Data transformation
+transformation:
+  normalize_identifiers: true       # Normalize identifiers (e.g., GO:0001234 -> GO_0001234)
+  standardize_names: true           # Standardize entity names
+  extract_cross_references: true    # Extract cross-references to other databases
+  extract_relationships: true       # Extract hierarchical relationships

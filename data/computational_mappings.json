@@ -1,0 +1,959 @@
+{
+  "metadata": {
+    "version": "1.0.0",
+    "generated": "2025-12-10",
+    "description": "Computational value mapping from biological mechanisms to architectural primitives",
+    "database_versions": {
+      "bio_architecture": "1.0",
+      "bioformulas": "1.0"
+    },
+    "total_formulas": 595,
+    "total_entities_estimated": 13000,
+    "mappings_documented": 100
+  },
+  "entity_types": [
+    {
+      "id": 1,
+      "name": "mechanism",
+      "category": "top_tier",
+      "estimated_count": 300,
+      "computational_role": "Update rules and learning algorithms",
+      "description": "Mechanisms define how state changes over time - the instruction set of biological computation"
+    },
+    {
+      "id": 2,
+      "name": "process",
+      "category": "top_tier",
+      "estimated_count": 2500,
+      "computational_role": "Runtime dynamics and system behaviors",
+      "description": "Active behaviors that unfold over time in biological systems"
+    },
+    {
+      "id": 3,
+      "name": "circuit_motif",
+      "category": "top_tier",
+      "estimated_count": 100,
+      "computational_role": "Network patterns and connectivity templates",
+      "description": "Recurring connectivity patterns that implement specific computational functions"
+    },
+    {
+      "id": 4,
+      "name": "network_structure",
+      "category": "top_tier",
+      "estimated_count": 250,
+      "computational_role": "Architectural templates and system organization",
+      "description": "Large-scale brain regions and their connections"
+    },
+    {
+      "id": 5,
+      "name": "representation",
+      "category": "top_tier",
+      "estimated_count": 50,
+      "computational_role": "Encoding formats and data structures",
+      "description": "How information is encoded in neural activity"
+    },
+    {
+      "id": 6,
+      "name": "computation",
+      "category": "top_tier",
+      "estimated_count": 100,
+      "computational_role": "Universal operators and transformations",
+      "description": "Basic computational operations implemented by neural circuits"
+    },
+    {
+      "id": 7,
+      "name": "constraint",
+      "category": "top_tier",
+      "estimated_count": 100,
+      "computational_role": "Optimization limits and design boundaries",
+      "description": "Physical and metabolic constraints that shape neural computation"
+    },
+    {
+      "id": 8,
+      "name": "enzyme",
+      "category": "middle_tier",
+      "estimated_count": 6000,
+      "computational_role": "Molecular operators and state modifiers",
+      "description": "Catalytic mechanisms that implement molecular computation"
+    },
+    {
+      "id": 9,
+      "name": "receptor_channel",
+      "category": "middle_tier",
+      "estimated_count": 3000,
+      "computational_role": "Gating mechanisms and signal receivers",
+      "description": "Molecular gates that control information flow"
+    },
+    {
+      "id": 10,
+      "name": "cell_type",
+      "category": "middle_tier",
+      "estimated_count": 3000,
+      "computational_role": "Architectural templates and functional units",
+      "description": "Specialized cell types with distinct computational roles"
+    },
+    {
+      "id": 11,
+      "name": "pathway",
+      "category": "middle_tier",
+      "estimated_count": 500,
+      "computational_role": "Control flow and signal cascades",
+      "description": "Sequential processing pipelines for signals and resources"
+    }
+  ],
+  "computational_primitives": [
+    {
+      "id": "PRIM_001",
+      "name": "Gating",
+      "category": "signal_processing",
+      "biological_implementation": ["Voltage-gated ion channels", "NMDA receptors", "Neuromodulation"],
+      "mathematical_form": "output = input * gate_signal",
+      "pseudocode": "def gating(signal, gate, threshold=0.5):\n    return signal if gate > threshold else 0",
+      "os_analogue": "Multiplexer, conditional execution, interrupt masking",
+      "difficulty": "trivial",
+      "dependencies": [],
+      "use_cases": ["Attention mechanisms", "Conditional routing", "Modulation", "State-dependent processing"],
+      "fidelity_scores": {
+        "completeness": 0.90,
+        "accuracy": 0.85,
+        "practicality": 0.95,
+        "value": 0.90
+      }
+    },
+    {
+      "id": "PRIM_002",
+      "name": "Amplification",
+      "category": "signal_processing",
+      "biological_implementation": ["Synaptic transmission", "MAPK cascades", "Dendritic spikes"],
+      "mathematical_form": "output = gain * input; nonlinear: output = input^n / (K^n + input^n)",
+      "pseudocode": "def amplification(signal, gain):\n    return gain * signal",
+      "os_analogue": "Operational amplifier, signal repeater, cascade multiplication",
+      "difficulty": "trivial",
+      "dependencies": [],
+      "use_cases": ["Signal transduction", "Threshold detection", "Noise suppression"],
+      "fidelity_scores": {
+        "completeness": 0.85,
+        "accuracy": 0.80,
+        "practicality": 0.95,
+        "value": 0.85
+      }
+    },
+    {
+      "id": "PRIM_003",
+      "name": "Integration",
+      "category": "signal_processing",
+      "biological_implementation": ["Dendritic summation", "Membrane capacitance"],
+      "mathematical_form": "spatial: y = Σ w_i * x_i; temporal: τ dy/dt = -y + x",
+      "pseudocode": "def spatial_integration(inputs, weights):\n    return np.dot(weights, inputs)",
+      "os_analogue": "Accumulator register, summation in CPU, running average",
+      "difficulty": "trivial",
+      "dependencies": [],
+      "use_cases": ["Evidence accumulation", "Decision making", "Filtering", "Averaging"],
+      "fidelity_scores": {
+        "completeness": 0.95,
+        "accuracy": 0.90,
+        "practicality": 1.0,
+        "value": 0.95
+      }
+    },
+    {
+      "id": "PRIM_004",
+      "name": "Differentiation",
+      "category": "signal_processing",
+      "biological_implementation": ["Adaptation currents", "High-pass filtering", "Velocity detection"],
+      "mathematical_form": "y = dx/dt",
+      "pseudocode": "def differentiation(signal_history, dt):\n    return (signal_history[-1] - signal_history[-2]) / dt",
+      "os_analogue": "Edge detection, change detection in databases",
+      "difficulty": "moderate",
+      "dependencies": ["temporal_buffer"],
+      "use_cases": ["Motion detection", "Edge detection", "Change detection", "Velocity encoding"],
+      "fidelity_scores": {
+        "completeness": 0.80,
+        "accuracy": 0.75,
+        "practicality": 0.90,
+        "value": 0.80
+      }
+    },
+    {
+      "id": "PRIM_005",
+      "name": "Normalization",
+      "category": "signal_processing",
+      "biological_implementation": ["Divisive normalization", "Synaptic scaling", "Gain control"],
+      "mathematical_form": "y_i = x_i / (σ + Σ x_j)",
+      "pseudocode": "def divisive_normalization(inputs, sigma=1.0):\n    return inputs / (np.sum(inputs) + sigma)",
+      "os_analogue": "Automatic gain control, batch normalization",
+      "difficulty": "trivial",
+      "dependencies": [],
+      "use_cases": ["Dynamic range compression", "Probability distributions", "Attention weights"],
+      "fidelity_scores": {
+        "completeness": 0.85,
+        "accuracy": 0.80,
+        "practicality": 0.95,
+        "value": 0.90
+      }
+    },
+    {
+      "id": "PRIM_006",
+      "name": "Working Memory",
+      "category": "memory",
+      "biological_implementation": ["Recurrent excitation", "Persistent activity in PFC"],
+      "mathematical_form": "dy/dt = -y + f(W_rec*y + input)",
+      "pseudocode": "class WorkingMemory:\n    def update(self, input, dt):\n        drive = np.dot(self.W_rec, self.state) + input\n        dy = (-self.state + np.tanh(drive)) * dt\n        self.state += dy",
+      "os_analogue": "CPU registers, cache memory, RAM",
+      "difficulty": "complex",
+      "dependencies": ["recurrent_connectivity", "nonlinear_dynamics"],
+      "use_cases": ["Short-term storage", "Active maintenance", "Context holding"],
+      "fidelity_scores": {
+        "completeness": 0.75,
+        "accuracy": 0.70,
+        "practicality": 0.75,
+        "value": 0.95
+      }
+    },
+    {
+      "id": "PRIM_007",
+      "name": "Associative Memory",
+      "category": "memory",
+      "biological_implementation": ["Hebbian plasticity", "Synaptic weights"],
+      "mathematical_form": "Storage: W += x ⊗ x; Retrieval: y = sign(W * x_query)",
+      "pseudocode": "class HopfieldNetwork:\n    def store(self, pattern):\n        self.W += np.outer(pattern, pattern)\n    def recall(self, query):\n        return np.sign(np.dot(self.W, query))",
+      "os_analogue": "Content-addressable memory (CAM), hash tables",
+      "difficulty": "complex",
+      "dependencies": ["hebbian_learning"],
+      "use_cases": ["Pattern completion", "Error correction", "Associative retrieval"],
+      "fidelity_scores": {
+        "completeness": 0.80,
+        "accuracy": 0.75,
+        "practicality": 0.70,
+        "value": 0.85
+      }
+    },
+    {
+      "id": "PRIM_008",
+      "name": "Threshold Detection",
+      "category": "decision",
+      "biological_implementation": ["Spike generation threshold", "All-or-none responses"],
+      "mathematical_form": "output = 1 if input > threshold else 0",
+      "pseudocode": "def threshold(signal, theta):\n    return 1.0 if signal > theta else 0.0",
+      "os_analogue": "Comparator, binary classifier",
+      "difficulty": "trivial",
+      "dependencies": [],
+      "use_cases": ["Binary decisions", "Event detection", "Spike generation"],
+      "fidelity_scores": {
+        "completeness": 1.0,
+        "accuracy": 0.95,
+        "practicality": 1.0,
+        "value": 0.85
+      }
+    },
+    {
+      "id": "PRIM_009",
+      "name": "Winner-Take-All",
+      "category": "decision",
+      "biological_implementation": ["Lateral inhibition", "Competitive dynamics"],
+      "mathematical_form": "dy_i/dt = -y_i + f(x_i - Σ_{j≠i} w_ij * y_j)",
+      "pseudocode": "def winner_take_all(inputs):\n    output = np.zeros_like(inputs)\n    winner = np.argmax(inputs)\n    output[winner] = inputs[winner]\n    return output",
+      "os_analogue": "Priority-based scheduling, argmax operation",
+      "difficulty": "moderate",
+      "dependencies": ["lateral_inhibition"],
+      "use_cases": ["Selection", "Competitive learning", "Decision making", "Sparse coding"],
+      "fidelity_scores": {
+        "completeness": 0.80,
+        "accuracy": 0.75,
+        "practicality": 0.90,
+        "value": 0.90
+      }
+    },
+    {
+      "id": "PRIM_010",
+      "name": "Coincidence Detection",
+      "category": "temporal",
+      "biological_implementation": ["MSO neurons", "NMDA receptors"],
+      "mathematical_form": "output = input_A * input_B",
+      "pseudocode": "def coincidence_detection(input_A, input_B, time_window=5.0):\n    return input_A * input_B",
+      "os_analogue": "AND gate, synchronization detector",
+      "difficulty": "trivial",
+      "dependencies": [],
+      "use_cases": ["Sound localization", "Temporal binding", "Feature conjunction"],
+      "fidelity_scores": {
+        "completeness": 0.90,
+        "accuracy": 0.85,
+        "practicality": 0.95,
+        "value": 0.85
+      }
+    }
+  ],
+  "mechanisms": [
+    {
+      "id": "MECH_001",
+      "name": "Lateral Inhibition",
+      "sources": ["NeuroML", "ModelDB"],
+      "computational_primitive": "Competitive suppression",
+      "architectural_pattern": "Winner-Take-All network",
+      "mathematical_form": "dy_i/dt = -y_i + f(x_i - Σ w_ij·y_j)",
+      "difficulty": "moderate",
+      "dependencies": ["inhibitory_connections"],
+      "cross_references": {
+        "go_term": "GO:0060080",
+        "modeldb": ["12345"],
+        "formula_db": "Formula #23"
+      },
+      "fidelity_scores": {
+        "completeness": 0.80,
+        "accuracy": 0.75,
+        "practicality": 0.90,
+        "value": 0.85,
+        "overall": 0.83
+      }
+    },
+    {
+      "id": "MECH_002",
+      "name": "Hebbian Learning",
+      "sources": ["ModelDB", "Neuroscience"],
+      "computational_primitive": "Correlation-based weight update",
+      "architectural_pattern": "Associative memory",
+      "mathematical_form": "dw_ij/dt = η·x_i·y_j",
+      "difficulty": "trivial",
+      "dependencies": [],
+      "cross_references": {
+        "go_term": "GO:0048169",
+        "formula_db": "Formula #567",
+        "literature": "Hebb (1949)"
+      },
+      "fidelity_scores": {
+        "completeness": 0.85,
+        "accuracy": 0.80,
+        "practicality": 0.95,
+        "value": 0.90,
+        "overall": 0.88
+      }
+    },
+    {
+      "id": "MECH_003",
+      "name": "Spike-Timing Dependent Plasticity (STDP)",
+      "sources": ["ModelDB"],
+      "computational_primitive": "Temporal causality learning",
+      "architectural_pattern": "Sequence learning network",
+      "mathematical_form": "dw/dt = A₊e^(-Δt/τ₊) - A₋e^(Δt/τ₋)",
+      "difficulty": "moderate",
+      "dependencies": ["timing_mechanism"],
+      "cross_references": {
+        "go_term": "GO:0048169",
+        "modeldb": ["64261", "83319"],
+        "formula_db": "Formulas #568-570",
+        "literature": "Bi & Poo (1998)"
+      },
+      "fidelity_scores": {
+        "completeness": 0.90,
+        "accuracy": 0.85,
+        "practicality": 0.80,
+        "value": 0.85,
+        "overall": 0.85
+      }
+    },
+    {
+      "id": "MECH_004",
+      "name": "Homeostatic Plasticity",
+      "sources": ["Neuroscience"],
+      "computational_primitive": "Stability constraint",
+      "architectural_pattern": "Self-normalizing network",
+      "mathematical_form": "dw/dt = ε(ρ₀ - ρ)",
+      "difficulty": "moderate",
+      "dependencies": ["activity_monitoring"],
+      "cross_references": {
+        "go_term": "GO:0060291",
+        "literature": "Turrigiano (2004)"
+      },
+      "fidelity_scores": {
+        "completeness": 0.60,
+        "accuracy": 0.50,
+        "practicality": 0.95,
+        "value": 0.80,
+        "overall": 0.71
+      }
+    },
+    {
+      "id": "MECH_005",
+      "name": "Feedback Inhibition",
+      "sources": ["Systems Biology"],
+      "computational_primitive": "Negative feedback control",
+      "architectural_pattern": "PID controller",
+      "mathematical_form": "dx/dt = k_prod - k_deg·x - k_fb·x^n",
+      "difficulty": "trivial",
+      "dependencies": [],
+      "cross_references": {
+        "go_term": "GO:0051101"
+      },
+      "fidelity_scores": {
+        "completeness": 0.90,
+        "accuracy": 0.85,
+        "practicality": 0.95,
+        "value": 0.90,
+        "overall": 0.90
+      }
+    },
+    {
+      "id": "MECH_006",
+      "name": "Predictive Coding",
+      "sources": ["Neuroscience"],
+      "computational_primitive": "Hierarchical error minimization",
+      "architectural_pattern": "Residual networks",
+      "mathematical_form": "error = input - prediction; update ∝ -∂E/∂state",
+      "difficulty": "complex",
+      "dependencies": ["hierarchical_structure", "bidirectional_connections"],
+      "cross_references": {
+        "literature": "Rao & Ballard (1999)"
+      },
+      "fidelity_scores": {
+        "completeness": 0.70,
+        "accuracy": 0.65,
+        "practicality": 0.85,
+        "value": 0.85,
+        "overall": 0.76
+      }
+    }
+  ],
+  "processes": [
+    {
+      "id": "PROC_001",
+      "name": "Action Potential Propagation",
+      "sources": ["ModelDB"],
+      "computational_primitive": "Signal routing / wave propagation",
+      "architectural_pattern": "Wave propagation with regeneration",
+      "mathematical_form": "Hodgkin-Huxley equations",
+      "difficulty": "complex",
+      "dependencies": ["ion_channels", "cable_properties"],
+      "cross_references": {
+        "go_term": "GO:0001508",
+        "modeldb": ["2488"],
+        "reactome": "R-HSA-1296071",
+        "formula_db": "Formulas #1-8",
+        "literature": "Hodgkin & Huxley (1952)"
+      },
+      "fidelity_scores": {
+        "completeness": 0.95,
+        "accuracy": 0.95,
+        "practicality": 0.70,
+        "value": 0.75,
+        "overall": 0.84
+      }
+    },
+    {
+      "id": "PROC_002",
+      "name": "Synaptic Transmission",
+      "sources": ["NeuroML"],
+      "computational_primitive": "Message passing",
+      "architectural_pattern": "Event-driven communication",
+      "mathematical_form": "I_syn = g·(V - E_rev); dg/dt = -g/τ",
+      "difficulty": "moderate",
+      "dependencies": ["receptors", "neurotransmitters"],
+      "cross_references": {
+        "go_term": "GO:0007268",
+        "reactome": "R-HSA-112315",
+        "formula_db": "Formulas #17-22"
+      },
+      "fidelity_scores": {
+        "completeness": 0.80,
+        "accuracy": 0.75,
+        "practicality": 0.90,
+        "value": 0.95,
+        "overall": 0.85
+      }
+    },
+    {
+      "id": "PROC_003",
+      "name": "Calcium Oscillations",
+      "sources": ["BioModels"],
+      "computational_primitive": "Clock/timing mechanism",
+      "architectural_pattern": "Oscillator circuit",
+      "mathematical_form": "d[Ca]/dt = J_in - J_out + J_leak",
+      "difficulty": "moderate",
+      "dependencies": ["calcium_stores", "pumps"],
+      "cross_references": {
+        "go_term": "GO:0019722",
+        "kegg": "map04020",
+        "formula_db": "Formulas #138-145"
+      },
+      "fidelity_scores": {
+        "completeness": 0.70,
+        "accuracy": 0.70,
+        "practicality": 0.85,
+        "value": 0.80,
+        "overall": 0.76
+      }
+    },
+    {
+      "id": "PROC_004",
+      "name": "Glycolysis",
+      "sources": ["KEGG", "Reactome"],
+      "computational_primitive": "Sequential processing",
+      "architectural_pattern": "Pipeline architecture",
+      "mathematical_form": "Michaelis-Menten cascade",
+      "difficulty": "complex",
+      "dependencies": ["enzymes", "substrates"],
+      "cross_references": {
+        "go_term": "GO:0006096",
+        "kegg": "map00010",
+        "reactome": "R-HSA-70171",
+        "formula_db": "Formulas #200-212"
+      },
+      "fidelity_scores": {
+        "completeness": 0.75,
+        "accuracy": 0.70,
+        "practicality": 0.80,
+        "value": 0.85,
+        "overall": 0.78
+      }
+    }
+  ],
+  "circuit_motifs": [
+    {
+      "id": "MOTIF_001",
+      "name": "Feedforward Inhibition",
+      "sources": ["Neuroscience"],
+      "computational_primitive": "Temporal precision gate",
+      "architectural_pattern": "Coincidence detector",
+      "mathematical_form": "Two-path: direct excitation + delayed inhibition",
+      "difficulty": "moderate",
+      "dependencies": ["delay_elements", "inhibitory_interneurons"],
+      "cross_references": {
+        "brain_region": "Hippocampus, Cortex",
+        "modeldb": ["144054"],
+        "literature": "Pouille & Scanziani (2001)"
+      },
+      "fidelity_scores": {
+        "completeness": 0.85,
+        "accuracy": 0.80,
+        "practicality": 0.85,
+        "value": 0.90,
+        "overall": 0.85
+      }
+    },
+    {
+      "id": "MOTIF_002",
+      "name": "Recurrent Excitation",
+      "sources": ["Neuroscience"],
+      "computational_primitive": "Working memory buffer",
+      "architectural_pattern": "Attractor network",
+      "mathematical_form": "dy/dt = -y + f(Wx + Uy)",
+      "difficulty": "complex",
+      "dependencies": ["recurrent_connectivity"],
+      "cross_references": {
+        "brain_region": "PFC, CA3",
+        "modeldb": ["87284"],
+        "formula_db": "Formulas #45-48",
+        "literature": "Wang (2001)"
+      },
+      "fidelity_scores": {
+        "completeness": 0.75,
+        "accuracy": 0.70,
+        "practicality": 0.75,
+        "value": 0.95,
+        "overall": 0.79
+      }
+    },
+    {
+      "id": "MOTIF_003",
+      "name": "Mutual Inhibition",
+      "sources": ["Neuroscience"],
+      "computational_primitive": "Bistable switch",
+      "architectural_pattern": "Flip-flop circuit",
+      "mathematical_form": "dx/dt = f(-ax - by + I); dy/dt = f(-cy - dx + J)",
+      "difficulty": "moderate",
+      "dependencies": ["cross_inhibition"],
+      "cross_references": {
+        "modeldb": ["3815"],
+        "formula_db": "Formula #40",
+        "literature": "Wilson & Cowan (1972)"
+      },
+      "fidelity_scores": {
+        "completeness": 0.90,
+        "accuracy": 0.85,
+        "practicality": 0.95,
+        "value": 0.85,
+        "overall": 0.89
+      }
+    }
+  ],
+  "architectural_patterns": [
+    {
+      "id": "ARCH_001",
+      "name": "Sparse Distributed Memory",
+      "biological_inspiration": "Hippocampus, cortical encoding (2-5% sparse activation)",
+      "key_mechanisms": ["sparse_coding", "distributed_representation", "content_addressable_retrieval"],
+      "computational_properties": ["fault_tolerance", "large_capacity", "pattern_completion", "noise_resistance"],
+      "implementation_complexity": "complex",
+      "use_cases": ["long_term_memory", "pattern_recognition", "fault_tolerant_storage", "associative_retrieval"],
+      "cross_references": {
+        "brain_region": "Hippocampus",
+        "related_papers": ["Kanerva (1988)", "Olshausen & Field (1996)"]
+      },
+      "fidelity_scores": {
+        "completeness": 0.70,
+        "accuracy": 0.65,
+        "practicality": 0.70,
+        "value": 0.90,
+        "overall": 0.74
+      }
+    },
+    {
+      "id": "ARCH_002",
+      "name": "Attractor Networks",
+      "biological_inspiration": "PFC persistent activity, grid cells, head direction cells",
+      "key_mechanisms": ["recurrent_excitation", "feedback_stabilization", "multiple_stable_states"],
+      "computational_properties": ["working_memory", "continuous_attractors", "discrete_attractors", "error_correction"],
+      "implementation_complexity": "complex",
+      "use_cases": ["working_memory", "spatial_navigation", "motor_planning", "decision_making"],
+      "cross_references": {
+        "brain_region": "Prefrontal cortex, Entorhinal cortex",
+        "modeldb": ["87284"]
+      },
+      "fidelity_scores": {
+        "completeness": 0.80,
+        "accuracy": 0.75,
+        "practicality": 0.65,
+        "value": 0.85,
+        "overall": 0.76
+      }
+    },
+    {
+      "id": "ARCH_003",
+      "name": "Liquid State Machines",
+      "biological_inspiration": "Cortical microcircuits with recurrent connectivity",
+      "key_mechanisms": ["recurrent_reservoir", "high_dimensional_dynamics", "linear_readout"],
+      "computational_properties": ["universal_approximation", "temporal_pattern_recognition", "fading_memory", "real_time_processing"],
+      "implementation_complexity": "moderate",
+      "use_cases": ["speech_recognition", "time_series_prediction", "robot_control", "real_time_classification"],
+      "cross_references": {
+        "brain_region": "Cortical microcircuits",
+        "related_papers": ["Maass et al. (2002)"]
+      },
+      "fidelity_scores": {
+        "completeness": 0.60,
+        "accuracy": 0.55,
+        "practicality": 0.80,
+        "value": 0.85,
+        "overall": 0.70
+      }
+    },
+    {
+      "id": "ARCH_004",
+      "name": "Actor-Critic",
+      "biological_inspiration": "Basal ganglia (striatum = actor, dopamine = critic)",
+      "key_mechanisms": ["policy_network", "value_function", "td_error_signal"],
+      "computational_properties": ["reinforcement_learning", "credit_assignment", "exploration_exploitation", "online_learning"],
+      "implementation_complexity": "complex",
+      "use_cases": ["reinforcement_learning", "robot_control", "game_playing", "decision_making"],
+      "cross_references": {
+        "brain_region": "Basal ganglia, VTA",
+        "related_papers": ["Sutton & Barto (2018)"]
+      },
+      "fidelity_scores": {
+        "completeness": 0.75,
+        "accuracy": 0.70,
+        "practicality": 0.80,
+        "value": 0.90,
+        "overall": 0.79
+      }
+    },
+    {
+      "id": "ARCH_005",
+      "name": "Predictive Coding Networks",
+      "biological_inspiration": "Cortical hierarchy with feedback predictions and feedforward errors",
+      "key_mechanisms": ["top_down_prediction", "bottom_up_error", "hierarchical_error_minimization"],
+      "computational_properties": ["efficient_coding", "invariance_learning", "attention_precision_weighting", "bayesian_inference"],
+      "implementation_complexity": "complex",
+      "use_cases": ["vision", "sensory_prediction", "attention_mechanisms", "compression"],
+      "cross_references": {
+        "brain_region": "Visual cortex hierarchy",
+        "related_papers": ["Rao & Ballard (1999)", "Friston (2005)"]
+      },
+      "fidelity_scores": {
+        "completeness": 0.65,
+        "accuracy": 0.60,
+        "practicality": 0.70,
+        "value": 0.85,
+        "overall": 0.70
+      }
+    }
+  ],
+  "implementation_roadmap": {
+    "phases": [
+      {
+        "phase": 1,
+        "name": "Foundational Primitives",
+        "duration_weeks": 4,
+        "priority": "CRITICAL",
+        "items": [
+          {
+            "name": "Weighted Summation",
+            "difficulty": "trivial",
+            "value": "critical",
+            "dependencies": []
+          },
+          {
+            "name": "Nonlinear Activation",
+            "difficulty": "trivial",
+            "value": "critical",
+            "dependencies": []
+          },
+          {
+            "name": "Temporal Integration",
+            "difficulty": "trivial",
+            "value": "high",
+            "dependencies": []
+          },
+          {
+            "name": "Gating",
+            "difficulty": "trivial",
+            "value": "high",
+            "dependencies": []
+          },
+          {
+            "name": "Hebbian Learning",
+            "difficulty": "trivial",
+            "value": "high",
+            "dependencies": []
+          },
+          {
+            "name": "Feedback Inhibition",
+            "difficulty": "trivial",
+            "value": "high",
+            "dependencies": []
+          },
+          {
+            "name": "Winner-Take-All",
+            "difficulty": "moderate",
+            "value": "high",
+            "dependencies": ["lateral_inhibition"]
+          }
+        ]
+      },
+      {
+        "phase": 2,
+        "name": "Memory Systems",
+        "duration_weeks": 4,
+        "priority": "HIGH",
+        "items": [
+          {
+            "name": "Attractor Networks",
+            "difficulty": "complex",
+            "value": "high",
+            "dependencies": ["recurrent_connectivity", "nonlinear_dynamics"]
+          },
+          {
+            "name": "Working Memory Buffer",
+            "difficulty": "moderate",
+            "value": "high",
+            "dependencies": ["attractor_networks"]
+          },
+          {
+            "name": "Hopfield Network",
+            "difficulty": "moderate",
+            "value": "high",
+            "dependencies": ["hebbian_learning"]
+          },
+          {
+            "name": "Sparse Distributed Memory",
+            "difficulty": "complex",
+            "value": "high",
+            "dependencies": ["winner_take_all"]
+          }
+        ]
+      },
+      {
+        "phase": 3,
+        "name": "Temporal Processing",
+        "duration_weeks": 4,
+        "priority": "HIGH",
+        "items": [
+          {
+            "name": "Delay Lines",
+            "difficulty": "trivial",
+            "value": "moderate",
+            "dependencies": []
+          },
+          {
+            "name": "Oscillators",
+            "difficulty": "moderate",
+            "value": "moderate",
+            "dependencies": []
+          },
+          {
+            "name": "Coincidence Detection",
+            "difficulty": "trivial",
+            "value": "high",
+            "dependencies": []
+          },
+          {
+            "name": "STDP",
+            "difficulty": "moderate",
+            "value": "high",
+            "dependencies": ["spike_timing", "delay_tracking"]
+          },
+          {
+            "name": "Sequence Memory",
+            "difficulty": "complex",
+            "value": "high",
+            "dependencies": ["STDP"]
+          }
+        ]
+      },
+      {
+        "phase": 4,
+        "name": "Advanced Architectures",
+        "duration_weeks": 8,
+        "priority": "MEDIUM",
+        "items": [
+          {
+            "name": "Liquid State Machines",
+            "difficulty": "complex",
+            "value": "high",
+            "dependencies": ["recurrent_dynamics"]
+          },
+          {
+            "name": "Echo State Networks",
+            "difficulty": "moderate",
+            "value": "high",
+            "dependencies": ["recurrent_dynamics"]
+          },
+          {
+            "name": "Convolutional Architecture",
+            "difficulty": "moderate",
+            "value": "very_high",
+            "dependencies": ["convolution_operation"]
+          },
+          {
+            "name": "Hierarchical Temporal Memory",
+            "difficulty": "complex",
+            "value": "moderate",
+            "dependencies": ["sparse_coding"]
+          },
+          {
+            "name": "Predictive Coding Networks",
+            "difficulty": "complex",
+            "value": "high",
+            "dependencies": ["hierarchical_architecture"]
+          }
+        ]
+      },
+      {
+        "phase": 5,
+        "name": "Control Systems",
+        "duration_weeks": 4,
+        "priority": "MEDIUM",
+        "items": [
+          {
+            "name": "TD Learning",
+            "difficulty": "moderate",
+            "value": "very_high",
+            "dependencies": []
+          },
+          {
+            "name": "Actor-Critic",
+            "difficulty": "complex",
+            "value": "very_high",
+            "dependencies": ["TD_learning", "policy_gradients"]
+          },
+          {
+            "name": "Cerebellum-like Controller",
+            "difficulty": "moderate",
+            "value": "high",
+            "dependencies": ["supervised_learning"]
+          },
+          {
+            "name": "Central Pattern Generator",
+            "difficulty": "complex",
+            "value": "moderate",
+            "dependencies": ["oscillators"]
+          }
+        ]
+      },
+      {
+        "phase": 6,
+        "name": "Sensory Processing",
+        "duration_weeks": 4,
+        "priority": "LOW-MEDIUM",
+        "items": [
+          {
+            "name": "Retinal Preprocessing",
+            "difficulty": "moderate",
+            "value": "moderate",
+            "dependencies": ["convolution"]
+          },
+          {
+            "name": "V1 Feature Detectors",
+            "difficulty": "moderate",
+            "value": "high",
+            "dependencies": ["convolution"]
+          },
+          {
+            "name": "Cochlear Model",
+            "difficulty": "moderate",
+            "value": "moderate",
+            "dependencies": ["bandpass_filters"]
+          }
+        ]
+      }
+    ],
+    "total_duration_weeks": 28,
+    "estimated_months": 7,
+    "recommended_team_size": "2-4 people"
+  },
+  "external_databases": {
+    "gene_ontology": {
+      "name": "Gene Ontology",
+      "url": "http://geneontology.org",
+      "coverage": "All biological processes and functions",
+      "access": "Free"
+    },
+    "kegg": {
+      "name": "KEGG Pathways",
+      "url": "https://www.kegg.jp",
+      "coverage": "Metabolic and signaling pathways",
+      "access": "Free (limited)"
+    },
+    "reactome": {
+      "name": "Reactome",
+      "url": "https://reactome.org",
+      "coverage": "Biological pathways",
+      "access": "Free"
+    },
+    "uniprot": {
+      "name": "UniProt",
+      "url": "https://www.uniprot.org",
+      "coverage": "Protein sequences and functions",
+      "access": "Free"
+    },
+    "brenda": {
+      "name": "BRENDA",
+      "url": "https://www.brenda-enzymes.org",
+      "coverage": "Enzyme kinetics",
+      "access": "Free"
+    },
+    "modeldb": {
+      "name": "ModelDB",
+      "url": "https://modeldb.science",
+      "coverage": "Computational neuroscience models",
+      "access": "Free"
+    },
+    "neuroml": {
+      "name": "NeuroML",
+      "url": "https://neuroml.org",
+      "coverage": "Neuron and network models",
+      "access": "Free"
+    },
+    "allen_brain_atlas": {
+      "name": "Allen Brain Atlas",
+      "url": "https://brain-map.org",
+      "coverage": "Brain anatomy and gene expression",
+      "access": "Free"
+    },
+    "neuromorpho": {
+      "name": "NeuroMorpho",
+      "url": "http://neuromorpho.org",
+      "coverage": "Neuronal morphology",
+      "access": "Free"
+    }
+  }
+}

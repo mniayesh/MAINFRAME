@@ -1,0 +1,62 @@
+{
+  "extraction_summary": {
+    "total_databases": 9,
+    "total_items_extracted": 1300,
+    "total_errors": 1,
+    "start_time": "2025-12-10T03:34:56.841777",
+    "end_time": "2025-12-10T03:37:18.349518",
+    "duration_seconds": 141.507741
+  },
+  "database_breakdown": {
+    "Reactome": {
+      "item_count": 0,
+      "entity_types": {}
+    },
+    "GO": {
+      "item_count": 0,
+      "entity_types": {}
+    },
+    "KEGG": {
+      "item_count": 300,
+      "entity_types": {
+        "pathway": 300
+      }
+    },
+    "CellOntology": {
+      "item_count": 0,
+      "entity_types": {}
+    },
+    "AllenBrain": {
+      "item_count": 500,
+      "entity_types": {
+        "network_structure": 500
+      }
+    },
+    "NeuroMorpho": {
+      "item_count": 0,
+      "entity_types": {}
+    },
+    "UniProt": {
+      "item_count": 0,
+      "entity_types": {}
+    },
+    "ChEBI": {
+      "item_count": 0,
+      "entity_types": {}
+    },
+    "CognitiveAtlas": {
+      "item_count": 500,
+      "entity_types": {
+        "computation": 500
+      }
+    }
+  },
+  "errors": {
+    "InterPro": "'str' object has no attribute 'get'"
+  },
+  "entity_type_counts": {
+    "pathway": 300,
+    "network_structure": 500,
+    "computation": 500
+  }
+}
