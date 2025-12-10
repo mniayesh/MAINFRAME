@@ -1,0 +1,98 @@
+34,α-Synapse Temporal Convolution,Temporal convolution with exponential decay (α-synapse) instead of learnable kernels - single parameter τ controls time scale,"Drosophila brain: 1M synapses use exponential conductance decay (τ=5ms) for temporal filtering, creating natural short-term memory without LSTM complexity","class AlphaSynapseConv(nn.Module):
+    """"""Temporal convolution with exponential decay instead of learnable kernels""""""
+    def __init__(self, tau=5.0):
+        super().__init__()
+        self.tau = nn.Parameter(torch.tensor(tau))
+    def forward(self, x):
+        # x: [batch, time, features]
+        decay = torch.exp(-torch.arange(x.size(1)) / F.softplus(self.tau))
+        return F.conv1d(x.transpose(1,2), decay.view(1,1,-1)).transpose(1,2)","Nature 2024: Drosophila brain connectome (127k neurons, α-synapse dynamics)",2024-12-10
+35,Dale's Principle Network,Each neuron exclusively excitatory OR inhibitory (never both) - binary neurotransmitter classification forces architectural constraints,"Drosophila brain: ~55% cholinergic (exc), 24% glutamatergic (inh), 14% GABAergic (inh), 7% monoaminergic (exc). One neuron type = one sign.","class DalesNetwork(nn.Module):
+    """"""Each neuron is exclusively excitatory OR inhibitory (never both)""""""
+    def __init__(self, n_excitatory, n_inhibitory, n_features):
+        super().__init__()
+        self.W_exc = nn.Parameter(torch.randn(n_excitatory, n_features))
+        self.W_inh = nn.Parameter(torch.randn(n_inhibitory, n_features))
+    def forward(self, x):
+        exc_out = F.relu(x @ F.relu(self.W_exc.T))  # Force positive weights
+        inh_out = F.relu(x @ F.relu(self.W_inh.T))  # Force positive weights
+        return exc_out - inh_out  # Subtraction implements inhibition","Nature 2024: Fly brain with binary neuron classification",2024-12-10
+36,Ultra-Sparse Connectome Network,Learn connectivity topology not individual weights - all synapses have uniform magnitude Wsyn = 0.275mV,"Drosophila: 1M synapses / 127k² neurons = 0.008% connectivity. Topology > individual weights. Complete brain with <1% connection density.","class ConnectomeSparsity(nn.Module):
+    """"""Learn connectivity topology, not individual weights (all weights = Wsyn)""""""
+    def __init__(self, n_neurons, sparsity=0.008):  # 1M/127k² ≈ 0.008
+        super().__init__()
+        self.Wsyn = nn.Parameter(torch.tensor(0.275))
+        self.topology = nn.Parameter(torch.randn(n_neurons, n_neurons))
+        self.sparsity = sparsity
+    def forward(self, x):
+        # Gumbel-softmax for differentiable topology selection
+        mask = (torch.rand_like(self.topology) < self.sparsity).float()
+        return x @ (mask * torch.sign(self.topology) * F.softplus(self.Wsyn))","Nature 2024: Uniform synapse weights, connectivity is primary learning target",2024-12-10
+37,Circadian Oscillator Network,Neural layer with built-in 24-step oscillations using positive/negative regulatory feedback loops,"Drosophila circadian clock: CLK-CYC (positive) and PER-TIM (negative) create stable 24-hour rhythms via interlocked feedback loops","class CircadianOscillatorLayer(nn.Module):
+    """"""Neural layer with built-in oscillations via regulatory feedback""""""
+    def __init__(self, features):
+        super().__init__()
+        self.W_pos = nn.Parameter(torch.randn(features, features))
+        self.W_neg = nn.Parameter(torch.randn(features, features))
+        self.lambda_act = nn.Parameter(torch.ones(features) * 2.0)
+        self.lambda_rep = nn.Parameter(torch.ones(features) * -1.5)
+        self.delta = nn.Parameter(torch.ones(features) * 0.1)
+    def g(self, u):
+        return u / (1 + u**2)
+    def forward(self, x, state_pos, state_neg):
+        reg_signal = self.lambda_act * state_pos + self.lambda_rep * state_neg
+        modulated = self.g(reg_signal)
+        d_pos = F.relu(x @ self.W_pos) * modulated - self.delta * state_pos
+        new_pos = state_pos + d_pos
+        d_neg = F.relu(new_pos @ self.W_neg) - self.delta * state_neg
+        new_neg = state_neg + d_neg
+        return new_pos, new_neg","Cell 2009: Circadian ODE model with sigmoid modulation g(u)=u/(1+u²)",2024-12-10
+38,Odd-Sigmoid Activation,Activation function g(u) = u/(1+u²) - odd function, bounded [-1,1], smooth, integrates opposing signals nonlinearly,"Circadian clock: Sigmoid g() integrates positive (CLK-CYC activation) and negative (CWO repression) regulatory signals at transcription sites","class OddSigmoidActivation(nn.Module):
+    """"""Activation: g(u) = u/(1 + u²) - odd, bounded, smooth""""""
+    def forward(self, x):
+        return x / (1 + x**2)","Cell 2009: Nonlinear signal integration in gene regulatory networks",2024-12-10
+39,Regulatory Weight Network,Network with signed edge weights (λ_ji): positive=activation, negative=repression. Single parameter per regulation.,"Circadian genes: λ_CLK-CYC→per = +2.5 (activation), λ_CWO→per = -1.5 (repression). Biological networks use sparse signed graphs.","class RegulatoryWeightNetwork(nn.Module):
+    """"""Signed weights: positive=activation, negative=repression""""""
+    def __init__(self, n_nodes):
+        super().__init__()
+        self.Lambda = nn.Parameter(torch.randn(n_nodes, n_nodes))
+    def forward(self, x):
+        signed_weights = torch.tanh(self.Lambda)  # Keep in [-1, 1]
+        return x @ signed_weights","Cell 2009: Regulatory weight λ_ji in circadian ODEs",2024-12-10
+40,Spatially-Extended Neuron Layer,Neurons with multiple compartments - information propagates via cable equations within neurons. Each neuron has spatial extent.,"Drosophila projection neurons: 10+ compartments per neuron, cable propagation with Rm=16.5 kΩ·cm², space constant λ~100-300µm","class CompartmentalLayer(nn.Module):
+    """"""Neurons with spatial extent - multiple compartments per neuron""""""
+    def __init__(self, n_neurons, n_compartments_per_neuron):
+        super().__init__()
+        self.n_neurons = n_neurons
+        self.n_comp = n_compartments_per_neuron
+        self.Rm = nn.Parameter(torch.tensor(16.5))
+        self.Cm = nn.Parameter(torch.tensor(1.6))
+        self.Ri = nn.Parameter(torch.tensor(177.5))
+        self.axial_weights = nn.Parameter(torch.randn(n_neurons, n_compartments_per_neuron-1))
+    def forward(self, x, V_state):
+        V_new = V_state.clone()
+        V_new[:, :, 0] = V_new[:, :, 0] + x
+        for i in range(1, self.n_comp):
+            axial = self.axial_weights[:, i-1] * (V_new[:, :, i-1] - V_new[:, :, i])
+            leak = -V_new[:, :, i] / F.softplus(self.Rm)
+            dV = (axial + leak) / F.softplus(self.Cm)
+            V_new[:, :, i] = V_new[:, :, i] + dV
+        return V_new[:, :, -1], V_new","J Neurosci 2009: Compartmental model (Gouwens & Wilson)",2024-12-10
+41,Location-Dependent Input Weighting,Synaptic inputs automatically weighted by spatial location - distal inputs attenuated by cable properties (exp decay),"Dendritic integration: Distal synapses attenuated 50-70% at soma due to cable resistance. Provides automatic location-based weighting.","class DendriticWeighting(nn.Module):
+    """"""Inputs weighted by location - distal attenuated exponentially""""""
+    def __init__(self, n_inputs, space_constant=2.0):
+        super().__init__()
+        self.W = nn.Parameter(torch.randn(n_inputs))
+        self.positions = nn.Parameter(torch.linspace(0, 5, n_inputs))
+        self.lambda_space = nn.Parameter(torch.tensor(space_constant))
+    def forward(self, x):
+        attenuation = torch.exp(-self.positions / F.softplus(self.lambda_space))
+        weighted_inputs = self.W * attenuation * x
+        return weighted_inputs.sum()","J Neurosci 2009: Voltage attenuation in Drosophila dendrites",2024-12-10
+42,Electrotonic Distance Normalization,Normalize activations based on electrotonic distance (not physical depth) - compensate for signal attenuation,"Neurons amplify distal signals to compensate for cable attenuation. Electrotonic distance = physical_distance / space_constant λ","class ElectrotonicNorm(nn.Module):
+    """"""Normalize by electrotonic distance (not physical depth)""""""
+    def __init__(self, num_features):
+        super().__init__()
+        self.gamma = nn.Parameter(torch.ones(num_features))
+        self.beta = nn.Parameter(torch.zeros(num_features))
+        self.lambda
