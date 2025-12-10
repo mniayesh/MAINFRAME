@@ -11,6 +11,9 @@ env/
 # Cache
 .cache/
 *.cache
+*.sqlite
+bio_extractors/bio_extractors_cache/
+bio_extractors/bio_extractors_cache.sqlite
 
 # Logs
 *.log

@@ -4,11 +4,16 @@
 # ===== Core Dependencies =====
 requests>=2.31.0          # HTTP requests
 urllib3>=2.0.0            # URL handling
+requests-cache>=1.1.0     # Intelligent HTTP caching with TTL
+tenacity>=8.2.0           # Robust retry logic with exponential backoff
 
 # ===== Data Processing =====
 pyyaml>=6.0.1             # YAML configuration
 python-dateutil>=2.8.2    # Date parsing
 pandas>=2.0.0             # Data manipulation (optional, for analysis)
+
+# ===== Data Validation & Error Prevention =====
+pydantic>=2.5.0           # Data validation and parsing
 
 # ===== SOAP/XML APIs =====
 zeep>=4.2.1               # SOAP client (for BRENDA, ChEBI)
@@ -24,6 +29,7 @@ xmltodict>=0.13.0         # XML to dict conversion
 # ===== Logging & Progress =====
 tqdm>=4.65.0              # Progress bars (optional)
 colorlog>=6.7.0           # Colored logging (optional)
+rich>=13.7.0              # Beautiful terminal output and error display
 
 # ===== Rate Limiting =====
 # Implemented in base.py (no external dependency)
@@ -59,4 +65,4 @@ sphinx-rtd-theme>=1.3.0   # Read the Docs theme
 # seaborn>=0.12.0         # Statistical visualization
 
 # ===== Environment Management =====
-# python-dotenv>=1.0.0    # Environment variable management (optional)
+python-dotenv>=1.0.0      # Environment variable management (for API keys)
