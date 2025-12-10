@@ -787,3 +787,146 @@ ID,Name,Description,Use_In_Nature,Architecture_Code,Source,Created_Date
         # Update from connectome reconstruction
         self.positions.data = torch.tensor(connectome_data['xyz'])
         self.diameters.data = torch.tensor(connectome_data['diameter'])",ModelDB 118662: EM reconstruction of antennal lobe projection neurons,2025-12-10 11:25:11
+43,Leak Conductance + ATP Budgeting (Enhanced ARCH-7),"Leak current directly consumes ATP, linking passive conductance to metabolic drain and energy constraints",Drosophila neurons: Leak conductance (40% baseline ATP cost) with energy-dependent threshold modulation,"class ATPAwareLeakChannel(nn.Module):
+    def __init__(self, gmax=0.0003, e_rev=-60.0, ATP_cost=0.001):
+        super().__init__()
+        self.gmax = nn.Parameter(torch.tensor(gmax))
+        self.e_rev = torch.tensor(e_rev)
+        self.ATP_cost = ATP_cost
+    
+    def forward(self, v, ATP_pool, dt):
+        I_leak = self.gmax * (v - self.e_rev)
+        ATP_consumed = abs(I_leak) * self.ATP_cost * dt
+        ATP_pool = torch.clamp(ATP_pool - ATP_consumed, min=0)
+        # High ATP depletion raises threshold
+        threshold_adjustment = 1.0 / (ATP_pool / 10.0 + 0.1)
+        return I_leak, ATP_pool, threshold_adjustment",ModelDB 118662 + ARCH-7 integration: ATP-energy-conductance coupling,2025-12-10 20:02:02
+44,Dual-Channel Neurons + Cable Theory (Enhanced ARCH-9),Cable equation naturally separates fast (capacitive Cm dV/dt) from slow (resistive V/Rm) channels,Drosophila projection neurons: Fast Na+/K+ channels + slow Ca2+/neuropeptide modulation across dendritic tree,"class DualChannelCableEnhanced(nn.Module):
+    def __init__(self, Rm=13000, Ra=190, Cm=1.5, n_seg=640):
+        super().__init__()
+        self.Rm = Rm
+        self.Ra = Ra
+        self.Cm = Cm
+        self.n_seg = n_seg
+        self.V = nn.Parameter(torch.ones(n_seg) * -60.0)
+    
+    def forward(self, I_syn_fast, I_syn_slow, dt=0.01):
+        # Fast capacitive: immediate response
+        I_cap = self.Cm * (I_syn_fast / self.Cm)  # Capacitive current
+        
+        # Slow resistive: exponential with tau_m = Rm*Cm
+        I_res = self.V / self.Rm  # Resistive leak
+        
+        # Coupling component (axial)
+        # Combined: dV/dt = (1/Cm) * [I_cap - I_res + I_syn_slow]
+        dV_dt = (1/self.Cm) * (I_cap - I_res + I_syn_slow)
+        
+        self.V.data += dV_dt * dt
+        return self.V",Cable equation physics naturally implements dual-channel separation,2025-12-10 20:02:02
+45,Kuramoto Synchronization + Spatial Electrotonic Distance (Enhanced ARCH-16),"Coupling strength decays exponentially with electrotonic distance, explaining locality of synchrony",Drosophila central complex: Ring neurons (50 µm apart) synchronize locally; λ≈150 µm determines range,"class KuramotoSpatialElectronic(nn.Module):
+    def __init__(self, n_neurons=16, lambda_const=150.0, spacing=50.0):
+        super().__init__()
+        self.n = n_neurons
+        self.lambda_const = lambda_const
+        self.spacing = spacing
+        # Ring positions
+        angles = torch.linspace(0, 2*3.14159, n_neurons)
+        self.positions = torch.stack([
+            torch.cos(angles) * spacing,
+            torch.sin(angles) * spacing
+        ])
+    
+    def forward(self, theta, omega, K):
+        dtheta = omega.clone()
+        for i in range(self.n):
+            coupling = 0
+            for j in range(self.n):
+                if i != j:
+                    d_ij = torch.norm(self.positions[:, i] - self.positions[:, j])
+                    # Coupling decays with electrotonic distance
+                    spatial_factor = torch.exp(-d_ij / self.lambda_const)
+                    coupling += spatial_factor * torch.sin(theta[j] - theta[i])
+            dtheta[i] += (K / self.n) * coupling
+        return dtheta",Kuramoto model + cable theory electrotonic length constant,2025-12-10 20:02:02
+46,Bicoid Morphogen Gradient (Embryonic),Exponential concentration gradient establishing anterior-posterior axis via reaction-diffusion and threshold readout,Drosophila embryo: Bicoid protein gradient (λ≈100 µm) activates hunchback above threshold for body axis formation,"class BicoidGradient(nn.Module):
+    def __init__(self, source_strength=1.0, degradation_rate=0.01, diffusion=0.1):
+        super().__init__()
+        self.S0 = source_strength  # Anterior source
+        self.k_deg = degradation_rate  # Degradation rate
+        self.D = diffusion  # Diffusion coefficient
+        self.lambda_morph = 100.0  # µm, morphogenetic length scale
+    
+    def forward(self, x):
+        # Steady-state: c(x) = (S0/k) * exp(-x/lambda)
+        # Hunchback activation: if c(x) > threshold → hunchback on
+        c_x = (self.S0 / self.k_deg) * torch.exp(-x / self.lambda_morph)
+        threshold = 0.5 * (self.S0 / self.k_deg)
+        hunchback = (c_x > threshold).float()
+        return c_x, hunchback","KEGG pathway hsa04392 (Hippo signaling, Drosophila reference)",2025-12-10 20:02:02
+47,Hippo Signaling Cascade (Growth Control),Kinase cascade controlling organ size via Warts-mediated Yorkie/YAP phosphorylation,Drosophila organ development: Hippo→Warts→Yorkie controls proliferation vs apoptosis balance,"class HippoSignaling(nn.Module):
+    def __init__(self):
+        super().__init__()
+    
+    def forward(self, activation_signal):
+        # Kinase cascade activation
+        # d[Warts*]/dt = k_act*[Hippo*]*[Warts] - k_deact*[Warts*]
+        k_act = 0.1
+        k_deact = 0.01
+        warts_active = k_act * activation_signal - k_deact
+        
+        # Yorkie/YAP inhibition
+        # d[YAP_inactive]/dt = k_phos*[Warts*]*[YAP] - k_dephos*[YAP_inactive]
+        yorkie_inactive = k_act * warts_active
+        yorkie_active = 1.0 - yorkie_inactive
+        
+        # Gene expression (Hill function)
+        # mRNA = beta * f([YAP]) - delta*[mRNA]
+        beta = 1.0
+        delta = 0.1
+        mrna_rate = beta * (yorkie_active**2) / (1.0 + yorkie_active**2) - delta
+        
+        return warts_active, yorkie_active, mrna_rate",KEGG pathway hsa04392: Hippo signaling pathway,2025-12-10 20:02:02
+48,Apoptosis Cascade (Programmed Cell Death),Caspase-mediated cell death pathway with Bcl-2 family regulation. Drosophila has simplified apoptosis vs mammals,Drosophila development: Selective neuronal pruning via caspase cascade and Bcl-2 balance,"class ApoptosisPathway(nn.Module):
+    def __init__(self):
+        super().__init__()
+    
+    def forward(self, death_signal, bcl2_ratio):
+        # Caspase activation cascade
+        # d[Caspase*]/dt = k_act*[Init_Caspase*]*[Procaspase] - k_inhib*[IAP]*[Caspase*]
+        k_act = 0.5
+        k_inhib = 0.1
+        
+        caspase_active = k_act * death_signal - k_inhib * (1.0 - bcl2_ratio)
+        
+        # Bcl-2 family regulation
+        # Survival_prob = f(Bcl2_ratio) where Bcl2_ratio = [Anti-apoptotic]/[Pro-apoptotic]
+        survival_prob = torch.sigmoid(bcl2_ratio - 0.5)
+        
+        # Final apoptosis commitment
+        apoptosis_rate = caspase_active * (1.0 - survival_prob)
+        
+        return caspase_active, apoptosis_rate, survival_prob",KEGG pathway hsa04215: Apoptosis pathway,2025-12-10 20:02:02
+49,Toll-Like Receptor Signaling (Immune Response),Pattern recognition cascade from Drosophila Toll receptor to mammalian TLR signaling. Dual pathway activation,Drosophila innate immunity: Toll receptor (ancestral TLR) activates MyD88-dependent and -independent pathways,"class TollSignaling(nn.Module):
+    def __init__(self):
+        super().__init__()
+    
+    def forward(self, pamp_signal):  # PAMP = pathogen-associated molecular pattern
+        # Receptor activation
+        # d[TLR*]/dt = k_on*[PAMP]*[TLR] - k_off*[TLR*]
+        k_on = 0.1
+        k_off = 0.01
+        tlr_active = k_on * pamp_signal - k_off
+        
+        # MyD88-dependent pathway (fast)
+        # d[MyD88_complex]/dt = k_bind*[TLR*]*[MyD88] - k_dissoc*[MyD88_complex]
+        myd88_active = 0.5 * tlr_active  # Fast activation
+        
+        # NF-κB nuclear translocation (slow)
+        # d[NF-κB_nuc]/dt = k_transloc*[IκB_deg] - k_export*[NF-κB_nuc]
+        nfkb_active = 0.1 * myd88_active  # Slower, downstream
+        
+        # Dual pathway output
+        fast_response = myd88_active
+        slow_response = nfkb_active
+        
+        return tlr_active, fast_response, slow_response",KEGG pathway hsa04620: Toll-like receptor signaling pathway (Drosophila homolog),2025-12-10 20:02:02
