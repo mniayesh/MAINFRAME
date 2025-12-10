@@ -1,0 +1,666 @@
+{
+  "positive_feedback": [
+    {
+      "id": 12,
+      "name": "Izhikevich Membrane Equation",
+      "latex": "\\frac{dv}{dt} = 0.04v^2 + 5v + 140 - u + I",
+      "description": "Izhikevich model membrane potential dynamics",
+      "domain": "computational-neuroscience"
+    },
+    {
+      "id": 13,
+      "name": "Izhikevich Recovery Variable",
+      "latex": "\\frac{du}{dt} = a(bv - u)",
+      "description": "Izhikevich model recovery variable dynamics",
+      "domain": "computational-neuroscience"
+    },
+    {
+      "id": 14,
+      "name": "FitzHugh-Nagumo Voltage",
+      "latex": "\\frac{dv}{dt} = v - \\frac{v^3}{3} - w + I_{ext}",
+      "description": "FitzHugh-Nagumo model - simplified HH capturing excitability",
+      "domain": "computational-neuroscience"
+    },
+    {
+      "id": 15,
+      "name": "FitzHugh-Nagumo Recovery",
+      "latex": "\\frac{dw}{dt} = \\epsilon(v + a - bw)",
+      "description": "FitzHugh-Nagumo recovery variable",
+      "domain": "computational-neuroscience"
+    },
+    {
+      "id": 41,
+      "name": "Hill Equation",
+      "latex": "v = \\frac{V_{max} [S]^n}{K_{0.5}^n + [S]^n}",
+      "description": "Cooperative binding with Hill coefficient",
+      "domain": "enzyme-kinetics"
+    },
+    {
+      "id": 56,
+      "name": "Activated Transcription (Hill)",
+      "latex": "\\frac{d[mRNA]}{dt} = \\beta \\frac{[TF]^n}{K^n + [TF]^n} - \\delta [mRNA]",
+      "description": "Transcription activated by transcription factor",
+      "domain": "gene-regulation"
+    },
+    {
+      "id": 57,
+      "name": "Repressed Transcription (Hill)",
+      "latex": "\\frac{d[mRNA]}{dt} = \\beta \\frac{K^n}{K^n + [R]^n} - \\delta [mRNA]",
+      "description": "Transcription repressed by repressor",
+      "domain": "gene-regulation"
+    },
+    {
+      "id": 546,
+      "name": "Force-Velocity (Hill)",
+      "latex": "(F + a)(v + b) = (F_0 + a) b",
+      "description": "Hill's muscle force-velocity relation",
+      "domain": "muscle"
+    },
+    {
+      "id": 601,
+      "name": "BRENDA: Hill Equation",
+      "latex": "v = \\frac{V_{max} [S]^n}{K_{0.5}^n + [S]^n}",
+      "description": "Cooperative enzyme kinetics (Hill equation)",
+      "domain": "enzyme-kinetics"
+    },
+    {
+      "id": 15517,
+      "name": "BIOMD0000000235: E_Gcad_Hill_Kinetic",
+      "latex": "v = \\frac{E_{Gcad S1} P_{Gcad HillK} time^{P_{Gcad HillH}}}{P_{Gcad theta1}^{P_{Gcad HillH}} + time^{P_{Gcad HillH}}} + E_{Gcad S2} P_{Gcad HillK} \\left(- \\frac{time^{P_{Gcad HillH}}}{P_{Gcad theta2}^{P_{Gcad HillH}} + time^{P_{Gcad HillH}}} + 1\\right)",
+      "description": "Reaction rate law from BioModels BIOMD0000000235: E_Gcad_Hill_Kinetic",
+      "domain": "biochemistry"
+    }
+  ],
+  "bistable_switches": [
+    {
+      "id": 60,
+      "name": "Toggle Switch Gene 1",
+      "latex": "\\frac{du}{dt} = \\frac{\\alpha_1}{1 + v^\\beta} - u",
+      "description": "Genetic toggle switch - gene u dynamics",
+      "domain": "synthetic-biology"
+    },
+    {
+      "id": 61,
+      "name": "Toggle Switch Gene 2",
+      "latex": "\\frac{dv}{dt} = \\frac{\\alpha_2}{1 + u^\\gamma} - v",
+      "description": "Genetic toggle switch - gene v dynamics",
+      "domain": "synthetic-biology"
+    },
+    {
+      "id": 581,
+      "name": "Persistent Activity (Bistable)",
+      "latex": "\\tau \\frac{dr}{dt} = -r + f(Jr + I_{ext})",
+      "description": "Bistable attractor for persistent firing",
+      "domain": "working-memory"
+    }
+  ],
+  "plasticity_rules": [
+    {
+      "id": 25,
+      "name": "Pair-Based STDP",
+      "latex": "\\Delta w = \\begin{cases} A_+ \\exp(-\\Delta t / \\tau_+) & \\text{if } \\Delta t > 0 \\\\ -A_- \\exp(\\Delta t / \\tau_-) & \\text{if } \\Delta t < 0 \\end{cases}",
+      "description": "Classic spike-timing dependent plasticity rule",
+      "domain": "synaptic-plasticity"
+    },
+    {
+      "id": 26,
+      "name": "Triplet STDP Rule",
+      "latex": "\\Delta w = r_1(t) \\left( A_2^+ + A_3^+ r_2(t-\\epsilon) \\right) - o_1(t) \\left( A_2^- + A_3^- o_2(t-\\epsilon) \\right)",
+      "description": "Triplet STDP capturing frequency dependence",
+      "domain": "synaptic-plasticity"
+    },
+    {
+      "id": 27,
+      "name": "BCM Plasticity Rule",
+      "latex": "\\frac{dw}{dt} = \\eta \\phi(c) c_{pre}",
+      "description": "Bienenstock-Cooper-Munro rule with sliding threshold",
+      "domain": "synaptic-plasticity"
+    },
+    {
+      "id": 29,
+      "name": "Oja's Learning Rule",
+      "latex": "\\Delta w_i = \\eta y (x_i - y w_i)",
+      "description": "Hebbian rule with weight normalization (PCA)",
+      "domain": "synaptic-plasticity"
+    },
+    {
+      "id": 30,
+      "name": "Calcium-Based Plasticity",
+      "latex": "\\frac{dw}{dt} = \\gamma_p \\Omega([Ca^{2+}]) - \\gamma_d \\Omega([Ca^{2+}]) w",
+      "description": "Plasticity driven by calcium concentration levels",
+      "domain": "synaptic-plasticity"
+    },
+    {
+      "id": 495,
+      "name": "Symmetric STDP",
+      "latex": "\\Delta w = A \\exp(-|\\Delta t|/\\tau)",
+      "description": "both pre and post-before-pre cause LTP",
+      "domain": "STDP"
+    },
+    {
+      "id": 496,
+      "name": "Asymmetric STDP",
+      "latex": "\\Delta w = A_+ e^{-\\Delta t/\\tau_+} - A_- e^{\\Delta t/\\tau_-}",
+      "description": "classic Hebbian timing",
+      "domain": "STDP"
+    },
+    {
+      "id": 497,
+      "name": "Anti-Hebbian STDP",
+      "latex": "\\Delta w = -A_+ e^{-\\Delta t/\\tau_+} + A_- e^{\\Delta t/\\tau_-}",
+      "description": "found in some interneurons",
+      "domain": "STDP"
+    },
+    {
+      "id": 498,
+      "name": "Mexican Hat STDP",
+      "latex": "\\Delta w = A_1 e^{-\\Delta t^2/2\\sigma_1^2} - A_2 e^{-\\Delta t^2/2\\sigma_2^2}",
+      "description": "DoG temporal window",
+      "domain": "STDP"
+    }
+  ],
+  "mapk_cascade": [
+    {
+      "id": 382,
+      "name": "MAPKKK Activation (Raf)",
+      "latex": "\\frac{d[Raf^*]}{dt} = \\frac{k_1 [RasGTP][Raf]}{K_{m1} + [Raf]} - \\frac{k_2 [Raf^*]}{K_{m2} + [Raf^*]}",
+      "description": "Ras-GTP activates Raf (MAPKKK)",
+      "domain": "MAPK"
+    },
+    {
+      "id": 383,
+      "name": "MAPKK Activation (MEK)",
+      "latex": "\\frac{d[MEK^*]}{dt} = \\frac{k_3 [Raf^*][MEK]}{K_{m3} + [MEK]} - \\frac{k_4 [MEK^*]}{K_{m4} + [MEK^*]}",
+      "description": "Raf activates MEK (MAPKK) - dual phosphorylation",
+      "domain": "MAPK"
+    },
+    {
+      "id": 384,
+      "name": "MAPKK Double Phosphorylation",
+      "latex": "\\frac{d[MEK_{pp}]}{dt} = \\frac{k_3' [Raf^*][MEK_p]}{K_{m3'} + [MEK_p]} - \\frac{k_4' [MEK_{pp}]}{K_{m4'} + [MEK_{pp}]}",
+      "description": "Second phosphorylation of MEK",
+      "domain": "MAPK"
+    },
+    {
+      "id": 385,
+      "name": "MAPK Activation (ERK)",
+      "latex": "\\frac{d[ERK^*]}{dt} = \\frac{k_5 [MEK^*][ERK]}{K_{m5} + [ERK]} - \\frac{k_6 [ERK^*]}{K_{m6} + [ERK^*]}",
+      "description": "MEK activates ERK (MAPK)",
+      "domain": "MAPK"
+    },
+    {
+      "id": 386,
+      "name": "ERK Double Phosphorylation",
+      "latex": "\\frac{d[ERK_{pp}]}{dt} = \\frac{k_5' [MEK^*][ERK_p]}{K_{m5'} + [ERK_p]} - \\frac{k_6' [ERK_{pp}]}{K_{m6'} + [ERK_{pp}]}",
+      "description": "Second phosphorylation of ERK",
+      "domain": "MAPK"
+    },
+    {
+      "id": 387,
+      "name": "ERK Negative Feedback to Raf",
+      "latex": "k_1^{eff} = \\frac{k_1}{1 + [ERK^*]/K_i}",
+      "description": "ERK phosphorylates Raf reducing its activation",
+      "domain": "MAPK"
+    },
+    {
+      "id": 388,
+      "name": "ERK Negative Feedback to SOS",
+      "latex": "\\frac{d[SOS]}{dt} = -k_{phos} [ERK^*][SOS] + k_{dephos} [SOS_p]",
+      "description": "ERK phosphorylates SOS reducing Ras activation",
+      "domain": "MAPK"
+    },
+    {
+      "id": 389,
+      "name": "JNK Activation",
+      "latex": "\\frac{d[JNK^*]}{dt} = \\frac{k_{act} [MKK4/7^*][JNK]}{K_m + [JNK]} - \\frac{k_{deact} [JNK^*]}{K_m' + [JNK^*]}",
+      "description": "JNK MAPK pathway: stress, apoptosis. Activates c-Jun",
+      "domain": "MAPK"
+    },
+    {
+      "id": 390,
+      "name": "p38 Activation",
+      "latex": "\\frac{d[p38^*]}{dt} = \\frac{k_{act} [MKK3/6^*][p38]}{K_m + [p38]} - \\frac{k_{deact} [p38^*]}{K_m' + [p38^*]}",
+      "description": "p38 MAPK pathway: stress, inflammation. Activates ATF2",
+      "domain": "MAPK"
+    },
+    {
+      "id": 391,
+      "name": "ERK5 Activation",
+      "latex": "\\frac{d[ERK5^*]}{dt} = \\frac{k_{act} [MEK5^*][ERK5]}{K_m + [ERK5]} - \\frac{k_{deact} [ERK5^*]}{K_m' + [ERK5^*]}",
+      "description": "ERK5 MAPK pathway: growth, survival. Activates MEF2",
+      "domain": "MAPK"
+    }
+  ],
+  "glycolysis": [
+    {
+      "id": 192,
+      "name": "Hexokinase (HK)",
+      "latex": "v_{HK} = \\frac{V_{max} [glucose]}{K_m + [glucose]}",
+      "description": "Glycolysis step: Glucose + ATP \u2192 G6P + ADP",
+      "domain": "glycolysis"
+    },
+    {
+      "id": 193,
+      "name": "Phosphoglucose Isomerase (PGI)",
+      "latex": "v_{PGI} = \\frac{V_{max} [G6P]}{K_m + [G6P]}",
+      "description": "Glycolysis step: G6P \u21cc F6P",
+      "domain": "glycolysis"
+    },
+    {
+      "id": 194,
+      "name": "Phosphofructokinase-1 (PFK1)",
+      "latex": "v_{PFK1} = \\frac{V_{max} [F6P]}{K_m + [F6P]}",
+      "description": "Glycolysis step: F6P + ATP \u2192 F1,6BP + ADP",
+      "domain": "glycolysis"
+    },
+    {
+      "id": 195,
+      "name": "Aldolase (ALDO)",
+      "latex": "v_{ALDO} = \\frac{V_{max} [F1,6BP]}{K_m + [F1,6BP]}",
+      "description": "Glycolysis step: F1,6BP \u21cc DHAP + G3P",
+      "domain": "glycolysis"
+    },
+    {
+      "id": 196,
+      "name": "Triose Phosphate Isomerase (TPI)",
+      "latex": "v_{TPI} = \\frac{V_{max} [DHAP]}{K_m + [DHAP]}",
+      "description": "Glycolysis step: DHAP \u21cc G3P",
+      "domain": "glycolysis"
+    },
+    {
+      "id": 197,
+      "name": "G3P Dehydrogenase (GAPDH)",
+      "latex": "v_{GAPDH} = \\frac{V_{max} [G3P]}{K_m + [G3P]}",
+      "description": "Glycolysis step: G3P + NAD+ + Pi \u21cc 1,3BPG + NADH",
+      "domain": "glycolysis"
+    },
+    {
+      "id": 198,
+      "name": "Phosphoglycerate Kinase (PGK)",
+      "latex": "v_{PGK} = \\frac{V_{max} [1,3BPG]}{K_m + [1,3BPG]}",
+      "description": "Glycolysis step: 1,3BPG + ADP \u21cc 3PG + ATP",
+      "domain": "glycolysis"
+    },
+    {
+      "id": 199,
+      "name": "Phosphoglycerate Mutase (PGM)",
+      "latex": "v_{PGM} = \\frac{V_{max} [3PG]}{K_m + [3PG]}",
+      "description": "Glycolysis step: 3PG \u21cc 2PG",
+      "domain": "glycolysis"
+    },
+    {
+      "id": 200,
+      "name": "Enolase (ENO)",
+      "latex": "v_{ENO} = \\frac{V_{max} [2PG]}{K_m + [2PG]}",
+      "description": "Glycolysis step: 2PG \u21cc PEP + H2O",
+      "domain": "glycolysis"
+    },
+    {
+      "id": 201,
+      "name": "Pyruvate Kinase (PK)",
+      "latex": "v_{PK} = \\frac{V_{max} [PEP]}{K_m + [PEP]}",
+      "description": "Glycolysis step: PEP + ADP \u2192 Pyruvate + ATP",
+      "domain": "glycolysis"
+    },
+    {
+      "id": 202,
+      "name": "PFK1 Allosteric Regulation",
+      "latex": "v_{PFK1} = V_{max} \\frac{[F6P]^n [ATP]}{(K_{F6P}^n + [F6P]^n)(K_{ATP} + [ATP])} \\cdot \\frac{K_i^m}{K_i^m + [ATP]^m} \\cdot \\frac{[AMP]^p + K_a^p}{K_a^p}",
+      "description": "PFK1 with ATP inhibition, AMP activation, F6P cooperativity",
+      "domain": "glycolysis"
+    },
+    {
+      "id": 203,
+      "name": "Pyruvate Kinase Allosteric",
+      "latex": "v_{PK} = V_{max} \\frac{[PEP]^n [ADP]}{(K_{PEP}^n + [PEP]^n)(K_{ADP} + [ADP])} \\cdot \\frac{[F1,6BP]}{K_a + [F1,6BP]}",
+      "description": "PK with F1,6BP feedforward activation",
+      "domain": "glycolysis"
+    }
+  ],
+  "ion_channels": [
+    {
+      "id": 105,
+      "name": "Kv1.1 Potassium Current (KCNA1)",
+      "latex": "I_{Kv1.1} = g_{Kv1.1} n^4 (V - E_K)",
+      "description": "Kv1.1 potassium channel in axons, dendrites",
+      "domain": "ion-channels"
+    },
+    {
+      "id": 106,
+      "name": "Kv1.2 Potassium Current (KCNA2)",
+      "latex": "I_{Kv1.2} = g_{Kv1.2} n^4 (V - E_K)",
+      "description": "Kv1.2 potassium channel in axons, juxtaparanodal",
+      "domain": "ion-channels"
+    },
+    {
+      "id": 107,
+      "name": "Kv1.3 Potassium Current (KCNA3)",
+      "latex": "I_{Kv1.3} = g_{Kv1.3} n^4 (V - E_K)",
+      "description": "Kv1.3 potassium channel in T lymphocytes",
+      "domain": "ion-channels"
+    },
+    {
+      "id": 108,
+      "name": "Kv1.4 Potassium Current (KCNA4)",
+      "latex": "I_{Kv1.4} = g_{Kv1.4} n^4 (V - E_K)",
+      "description": "Kv1.4 potassium channel in A-type, inactivating",
+      "domain": "ion-channels"
+    },
+    {
+      "id": 109,
+      "name": "Kv2.1 Potassium Current (KCNB1)",
+      "latex": "I_{Kv2.1} = g_{Kv2.1} n^4 (V - E_K)",
+      "description": "Kv2.1 potassium channel in somatic delayed rectifier",
+      "domain": "ion-channels"
+    },
+    {
+      "id": 110,
+      "name": "Kv3.1 Potassium Current (KCNC1)",
+      "latex": "I_{Kv3.1} = g_{Kv3.1} n^4 (V - E_K)",
+      "description": "Kv3.1 potassium channel in fast-spiking interneurons",
+      "domain": "ion-channels"
+    },
+    {
+      "id": 111,
+      "name": "Kv3.2 Potassium Current (KCNC2)",
+      "latex": "I_{Kv3.2} = g_{Kv3.2} n^4 (V - E_K)",
+      "description": "Kv3.2 potassium channel in fast repolarization",
+      "domain": "ion-channels"
+    },
+    {
+      "id": 112,
+      "name": "Kv4.2 Potassium Current (KCND2)",
+      "latex": "I_{Kv4.2} = g_{Kv4.2} n^4 (V - E_K)",
+      "description": "Kv4.2 potassium channel in A-type, somatodendritic",
+      "domain": "ion-channels"
+    },
+    {
+      "id": 113,
+      "name": "Kv4.3 Potassium Current (KCND3)",
+      "latex": "I_{Kv4.3} = g_{Kv4.3} n^4 (V - E_K)",
+      "description": "Kv4.3 potassium channel in A-type, cardiac",
+      "domain": "ion-channels"
+    },
+    {
+      "id": 114,
+      "name": "Kv7.1 Potassium Current (KCNQ1)",
+      "latex": "I_{Kv7.1} = g_{Kv7.1} n^4 (V - E_K)",
+      "description": "Kv7.1 potassium channel in cardiac IKs",
+      "domain": "ion-channels"
+    },
+    {
+      "id": 115,
+      "name": "Kv7.2 Potassium Current (KCNQ2)",
+      "latex": "I_{Kv7.2} = g_{Kv7.2} n^4 (V - E_K)",
+      "description": "Kv7.2 potassium channel in M-current",
+      "domain": "ion-channels"
+    },
+    {
+      "id": 116,
+      "name": "Kv7.3 Potassium Current (KCNQ3)",
+      "latex": "I_{Kv7.3} = g_{Kv7.3} n^4 (V - E_K)",
+      "description": "Kv7.3 potassium channel in M-current",
+      "domain": "ion-channels"
+    }
+  ],
+  "enzyme_cooperativity": [
+    {
+      "id": 41,
+      "name": "Hill Equation",
+      "latex": "v = \\frac{V_{max} [S]^n}{K_{0.5}^n + [S]^n}",
+      "description": "Cooperative binding with Hill coefficient",
+      "domain": "enzyme-kinetics",
+      "hill_n": 2.0,
+      "enzyme": "cooperative enzyme"
+    },
+    {
+      "id": 202,
+      "name": "PFK1 Allosteric Regulation",
+      "latex": "v_{PFK1} = V_{max} \\frac{[F6P]^n [ATP]}{(K_{F6P}^n + [F6P]^n)(K_{ATP} + [ATP])} \\cdot \\frac{K_i^m}{K_i^m + [ATP]^m} \\cdot \\frac{[AMP]^p + K_a^p}{K_a^p}",
+      "description": "PFK1 with ATP inhibition, AMP activation, F6P cooperativity",
+      "domain": "glycolysis",
+      "hill_n": 2.0,
+      "enzyme": "PFK1"
+    },
+    {
+      "id": 203,
+      "name": "Pyruvate Kinase Allosteric",
+      "latex": "v_{PK} = V_{max} \\frac{[PEP]^n [ADP]}{(K_{PEP}^n + [PEP]^n)(K_{ADP} + [ADP])} \\cdot \\frac{[F1,6BP]}{K_a + [F1,6BP]}",
+      "description": "PK with F1,6BP feedforward activation",
+      "domain": "glycolysis",
+      "hill_n": 3.0,
+      "enzyme": "PK"
+    },
+    {
+      "id": 212,
+      "name": "IDH NAD-dependent Regulation",
+      "latex": "v_{IDH} = V_{max} \\frac{[Isocitrate]^n [NAD^+]}{(K_m^n + [Isocitrate]^n)(K_{NAD} + [NAD^+])} \\cdot \\frac{K_i}{K_i + [NADH]} \\cdot \\frac{[ADP] + K_a}{K_a}",
+      "description": "IDH with NADH product inhibition and ADP activation",
+      "domain": "TCA-cycle",
+      "hill_n": 2.0,
+      "enzyme": "IDH"
+    }
+  ],
+  "inhibition_patterns": [
+    {
+      "id": 32,
+      "name": "Wilson-Cowan Inhibitory",
+      "latex": "\\tau_I \\frac{dI}{dt} = -I + S_I(w_{IE}E - w_{II}I)",
+      "description": "Wilson-Cowan inhibitory population rate equation",
+      "domain": "neural-networks"
+    },
+    {
+      "id": 38,
+      "name": "Competitive Inhibition",
+      "latex": "v = \\frac{V_{max} [S]}{K_m \\left(1 + \\frac{[I]}{K_i}\\right) + [S]}",
+      "description": "Enzyme kinetics with competitive inhibitor",
+      "domain": "enzyme-kinetics"
+    },
+    {
+      "id": 39,
+      "name": "Non-competitive Inhibition",
+      "latex": "v = \\frac{V_{max} [S]}{(K_m + [S])\\left(1 + \\frac{[I]}{K_i}\\right)}",
+      "description": "Enzyme kinetics with non-competitive inhibitor",
+      "domain": "enzyme-kinetics"
+    },
+    {
+      "id": 40,
+      "name": "Uncompetitive Inhibition",
+      "latex": "v = \\frac{V_{max} [S]}{K_m + [S]\\left(1 + \\frac{[I]}{K_i}\\right)}",
+      "description": "Enzyme kinetics with uncompetitive inhibitor",
+      "domain": "enzyme-kinetics"
+    },
+    {
+      "id": 42,
+      "name": "Substrate Inhibition",
+      "latex": "v = \\frac{V_{max} [S]}{K_m + [S] + \\frac{[S]^2}{K_{si}}}",
+      "description": "Enzyme kinetics with excess substrate inhibition",
+      "domain": "enzyme-kinetics"
+    },
+    {
+      "id": 396,
+      "name": "AKT \u2192 GSK3\u03b2 (inhibition)",
+      "latex": "\\frac{d[GSK3\u03b2_{phos}]}{dt} = k_{AKT} [AKT^*][GSK3\u03b2] - k_{PP} [GSK3\u03b2_{phos}]",
+      "description": "AKT inhibition of GSK3\u03b2: glycogen synthesis, Wnt",
+      "domain": "PI3K-AKT"
+    },
+    {
+      "id": 397,
+      "name": "AKT \u2192 FOXO (inhibition)",
+      "latex": "\\frac{d[FOXO_{phos}]}{dt} = k_{AKT} [AKT^*][FOXO] - k_{PP} [FOXO_{phos}]",
+      "description": "AKT inhibition of FOXO: apoptosis genes",
+      "domain": "PI3K-AKT"
+    },
+    {
+      "id": 398,
+      "name": "AKT \u2192 BAD (inhibition)",
+      "latex": "\\frac{d[BAD_{phos}]}{dt} = k_{AKT} [AKT^*][BAD] - k_{PP} [BAD_{phos}]",
+      "description": "AKT inhibition of BAD: pro-apoptotic",
+      "domain": "PI3K-AKT"
+    },
+    {
+      "id": 399,
+      "name": "AKT \u2192 TSC2 (inhibition)",
+      "latex": "\\frac{d[TSC2_{phos}]}{dt} = k_{AKT} [AKT^*][TSC2] - k_{PP} [TSC2_{phos}]",
+      "description": "AKT inhibition of TSC2: mTORC1 activation",
+      "domain": "PI3K-AKT"
+    },
+    {
+      "id": 435,
+      "name": "Lateral Inhibition",
+      "latex": "\\frac{d[D]}{dt} = k_{syn} \\frac{K_i^n}{K_i^n + [Hes]^n} - k_{deg} [D]",
+      "description": "Hes represses Delta, creating lateral inhibition",
+      "domain": "Notch"
+    }
+  ],
+  "neuron_models": [
+    {
+      "id": 1,
+      "name": "Hodgkin-Huxley Membrane Equation",
+      "latex": "C_m \\frac{dV}{dt} = -g_{Na} m^3 h (V - E_{Na}) - g_K n^4 (V - E_K) - g_L (V - E_L) + I_{ext}",
+      "description": "Main membrane potential equation from the Hodgkin-Huxley model describing action potential generation",
+      "domain": "electrophysiology"
+    },
+    {
+      "id": 11,
+      "name": "AdEx Adaptation Current",
+      "latex": "\\tau_w \\frac{dw}{dt} = a(V - V_{rest}) - w",
+      "description": "Adaptation current dynamics in AdEx model",
+      "domain": "computational-neuroscience"
+    },
+    {
+      "id": 12,
+      "name": "Izhikevich Membrane Equation",
+      "latex": "\\frac{dv}{dt} = 0.04v^2 + 5v + 140 - u + I",
+      "description": "Izhikevich model membrane potential dynamics",
+      "domain": "computational-neuroscience"
+    },
+    {
+      "id": 13,
+      "name": "Izhikevich Recovery Variable",
+      "latex": "\\frac{du}{dt} = a(bv - u)",
+      "description": "Izhikevich model recovery variable dynamics",
+      "domain": "computational-neuroscience"
+    },
+    {
+      "id": 14,
+      "name": "FitzHugh-Nagumo Voltage",
+      "latex": "\\frac{dv}{dt} = v - \\frac{v^3}{3} - w + I_{ext}",
+      "description": "FitzHugh-Nagumo model - simplified HH capturing excitability",
+      "domain": "computational-neuroscience"
+    },
+    {
+      "id": 15,
+      "name": "FitzHugh-Nagumo Recovery",
+      "latex": "\\frac{dw}{dt} = \\epsilon(v + a - bw)",
+      "description": "FitzHugh-Nagumo recovery variable",
+      "domain": "computational-neuroscience"
+    },
+    {
+      "id": 73,
+      "name": "Goldman-Hodgkin-Katz Voltage Equation",
+      "latex": "V_m = \\frac{RT}{F} \\ln \\frac{P_K[K^+]_o + P_{Na}[Na^+]_o + P_{Cl}[Cl^-]_i}{P_K[K^+]_i + P_{Na}[Na^+]_i + P_{Cl}[Cl^-]_o}",
+      "description": "Resting membrane potential from multiple ions",
+      "domain": "electrophysiology"
+    },
+    {
+      "id": 450,
+      "name": "GLIF Model (Allen Institute)",
+      "latex": "C\\frac{dV}{dt} = -g_L(V - E_L) + I - I_{AHP} - I_{ASC}",
+      "description": "Generalized LIF with after-spike currents",
+      "domain": "computational-neuroscience"
+    },
+    {
+      "id": 559,
+      "name": "Fokker-Planck (LIF)",
+      "latex": "\\tau_m \\frac{\\partial p}{\\partial t} = \\frac{\\partial}{\\partial V}[(V - \\mu)p] + \\frac{\\sigma^2}{2}\\frac{\\partial^2 p}{\\partial V^2}",
+      "description": "Probability density for membrane potential",
+      "domain": "mean-field"
+    },
+    {
+      "id": 31965,
+      "name": "BIOMD0000000663: Uninfected Tcell proliferation",
+      "latex": "v = compartment \\operatorname{generic}_{modifier function 2 1}{\\left(r,v,x \\right)}",
+      "description": "Reaction rate law from BioModels BIOMD0000000663: Uninfected Tcell proliferation",
+      "domain": "biochemistry"
+    },
+    {
+      "id": 31966,
+      "name": "BIOMD0000000663: Reduction in x-proliferation due to carry capacity",
+      "latex": "v = compartment \\operatorname{function}_{for x degrad 2 1}{\\left(k,r,v,x,y \\right)}",
+      "description": "Reaction rate law from BioModels BIOMD0000000663: Reduction in x-proliferation due to carry capacity",
+      "domain": "biochemistry"
+    },
+    {
+      "id": 31970,
+      "name": "BIOMD0000000663: Reduction in y-proliferation due to carry capacity",
+      "latex": "v = compartment \\operatorname{function}_{for y degrad 2 1}{\\left(k,r,v,x,y \\right)}",
+      "description": "Reaction rate law from BioModels BIOMD0000000663: Reduction in y-proliferation due to carry capacity",
+      "domain": "biochemistry"
+    },
+    {
+      "id": 31972,
+      "name": "BIOMD0000000663: HIV proliferation",
+      "latex": "v = compartment \\operatorname{generic}_{function 3 1}{\\left(\\eta,y \\right)}",
+      "description": "Reaction rate law from BioModels BIOMD0000000663: HIV proliferation",
+      "domain": "biochemistry"
+    },
+    {
+      "id": 32374,
+      "name": "BIOMD0000000687: Host cell proliferation",
+      "latex": "v = COMpartment * Constant_flux__irreversible(lambda)",
+      "description": "Reaction rate law from BioModels BIOMD0000000687: Host cell proliferation",
+      "domain": "biochemistry"
+    },
+    {
+      "id": 32388,
+      "name": "BIOMD0000000687: Infection-induced CTL proliferation stimulation",
+      "latex": "v = COMpartment \\operatorname{function}_{3}{\\left(ca,y_{0},y_{1},z_{a} \\right)}",
+      "description": "Reaction rate law from BioModels BIOMD0000000687: Infection-induced CTL proliferation stimulation",
+      "domain": "biochemistry"
+    },
+    {
+      "id": 32519,
+      "name": "BIOMD0000000688: Host cell proliferation",
+      "latex": "v = COMpartment * Constant_flux__irreversible(lambda)",
+      "description": "Reaction rate law from BioModels BIOMD0000000688: Host cell proliferation",
+      "domain": "biochemistry"
+    },
+    {
+      "id": 32533,
+      "name": "BIOMD0000000688: Infection-induced CTL proliferation stimulation",
+      "latex": "v = COMpartment \\operatorname{function}_{3}{\\left(ca,y_{0},y_{1},z_{a} \\right)}",
+      "description": "Reaction rate law from BioModels BIOMD0000000688: Infection-induced CTL proliferation stimulation",
+      "domain": "biochemistry"
+    },
+    {
+      "id": 47356,
+      "name": "KEGG R04141: Production of -Methylumbelliferone",
+      "latex": "\\frac{d[_Methylumbelliferone]}{dt} = k_{f} [_Methylumbelliferyl_acetate] [HO]",
+      "description": "ODE from KEGG reaction R04141: 4-methylumbelliferyl-acetate acylhydrolase",
+      "domain": "metabolism"
+    },
+    {
+      "id": 47358,
+      "name": "KEGG R04141: 4-methylumbelliferyl-acetate acylhydrolase",
+      "latex": "v = k_{f} [4-Methylumbelliferyl acetate] [H2O]",
+      "description": "Reaction rate from KEGG R04141",
+      "domain": "metabolism"
+    },
+    {
+      "id": 60465,
+      "name": "Reactome R-HSA-2067713: GP369 inhibits activation of amplified FGFR2 signaling",
+      "latex": "v = k [GP369 [extracellular region]] [Overexpressed FGFR2 homodimers [plasma membrane]]",
+      "description": "Reaction rate (binding): GP369 inhibits activation of amplified FGFR2 signaling",
+      "domain": "cell-signaling"
+    }
+  ],
+  "pathway_summary": {
+    "JAK-STAT": 5,
+    "NF-kB": 5,
+    "Notch": 4,
+    "PI3K-AKT": 10,
+    "Wnt": 5,
+    "cAMP": 5
+  }
+}

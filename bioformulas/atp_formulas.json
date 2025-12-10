@@ -1,0 +1,302 @@
+[
+  {
+    "id": 9004,
+    "name": "BIOMD0000000054: ATP consumption by ion pump",
+    "description": "Reaction rate law from BioModels BIOMD0000000054: ATP consumption by ion pump",
+    "latex": "v = i T W_{2} cell",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry",
+    "origin": "BIOMD0000000054"
+  },
+  {
+    "id": 9072,
+    "name": "BIOMD0000000059: ATP_production",
+    "description": "Reaction rate law from BioModels BIOMD0000000059: ATP_production",
+    "latex": "v = ADP_{cyt} Cytoplasm kadp",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry",
+    "origin": "BIOMD0000000059"
+  },
+  {
+    "id": 9076,
+    "name": "BIOMD0000000059: ATP_Ca_dependent_consumption",
+    "description": "Reaction rate law from BioModels BIOMD0000000059: ATP_Ca_dependent_consumption",
+    "latex": "v = ATP_{cyt} Ca_{cyt} Cytoplasm katpca",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry",
+    "origin": "BIOMD0000000059"
+  },
+  {
+    "id": 9077,
+    "name": "BIOMD0000000059: ATP_consumption",
+    "description": "Reaction rate law from BioModels BIOMD0000000059: ATP_consumption",
+    "latex": "v = ATP_{cyt} Cytoplasm katp",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry",
+    "origin": "BIOMD0000000059"
+  },
+  {
+    "id": 9538,
+    "name": "BIOMD0000000061: ATP consumption",
+    "description": "Reaction rate law from BioModels BIOMD0000000061: ATP consumption",
+    "latex": "v = ATP cytosol k_{23}",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry",
+    "origin": "BIOMD0000000061"
+  },
+  {
+    "id": 9979,
+    "name": "BIOMD0000000091: ATPconsumption",
+    "description": "Reaction rate law from BioModels BIOMD0000000091: ATPconsumption",
+    "latex": "v = ATP k_{19}",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry",
+    "origin": "BIOMD0000000091"
+  },
+  {
+    "id": 18726,
+    "name": "BIOMD0000000390: ATP synthesis",
+    "description": "Reaction rate law from BioModels BIOMD0000000390: ATP synthesis",
+    "latex": "v = chloroplast \\operatorname{function}_{10}{\\left(V_{6},ADP,\\Pi,K_{1},K_{2} \\right)}",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry",
+    "origin": "BIOMD0000000390"
+  },
+  {
+    "id": 46458,
+    "name": "Reactome R-HSA-9857649: Production of ATP [extracellular region]",
+    "description": "Production of ATP [extracellular region] via transition",
+    "latex": "\\frac{d[ATP_extracellular_region]}{dt} = k [ATP [cytosol]]",
+    "symbolic": null,
+    "python": null,
+    "domain": "cell-signaling",
+    "origin": "R-HSA-9857649"
+  },
+  {
+    "id": 46460,
+    "name": "Reactome R-HSA-9905999: Production of ATP [extracellular region]",
+    "description": "Production of ATP [extracellular region] via transition",
+    "latex": "\\frac{d[ATP_extracellular_region]}{dt} = k [ATP [cytosol]]",
+    "symbolic": null,
+    "python": null,
+    "domain": "cell-signaling",
+    "origin": "R-HSA-9905999"
+  },
+  {
+    "id": 46473,
+    "name": "Reactome R-HSA-9855161: Production of ATP [extracellular region]",
+    "description": "Production of ATP [extracellular region] via transition",
+    "latex": "\\frac{d[ATP_extracellular_region]}{dt} = k [ATP [cytosol]]",
+    "symbolic": null,
+    "python": null,
+    "domain": "cell-signaling",
+    "origin": "R-HSA-9855161"
+  },
+  {
+    "id": 46522,
+    "name": "Reactome R-HSA-9640175: Production of v-ATPase:Ragulator:RRAGA,B:GDP:RRAGC,D:GDP:SLC38A9:Arg [lysosomal membrane]",
+    "description": "Production of v-ATPase:Ragulator:RRAGA,B:GDP:RRAGC,D:GDP:SLC38A9:Arg [lysosomal membrane] via binding",
+    "latex": "\\frac{d[v_ATPase:Ragulator:RRAGA,B:GDP:RRAGC,D:GDP:SLC38A9:Arg_lysosomal_membrane]}{dt} = k [SLC38A9:L-Arg [lysosomal membrane]] [v-ATPase:Ragulator:RRAGA,B:GDP:RRAGC,D:GDP [lysosomal membrane]]",
+    "symbolic": null,
+    "python": null,
+    "domain": "cell-signaling",
+    "origin": "R-HSA-9640175"
+  },
+  {
+    "id": 46524,
+    "name": "Reactome R-HSA-9645608: Production of v-ATPase:Ragulator:RRAGA,B:GTP:RRAGC,D:GDP:mTORC1 [lysosomal membrane]",
+    "description": "Production of v-ATPase:Ragulator:RRAGA,B:GTP:RRAGC,D:GDP:mTORC1 [lysosomal membrane] via binding",
+    "latex": "\\frac{d[v_ATPase:Ragulator:RRAGA,B:GTP:RRAGC,D:GDP:mTORC1_lysosomal_membrane]}{dt} = k [v-ATPase:Ragulator:RRAGA,B:GTP:RRAGC,D:GDP [lysosomal membrane]] [mTORC1 [cytosol]]",
+    "symbolic": null,
+    "python": null,
+    "domain": "cell-signaling",
+    "origin": "R-HSA-9645608"
+  },
+  {
+    "id": 46527,
+    "name": "Reactome R-HSA-9640168: Production of v-ATPase:Ragulator:RRAGA,B:GTP:RRAGC,D:GDP [lysosomal membrane]",
+    "description": "Production of v-ATPase:Ragulator:RRAGA,B:GTP:RRAGC,D:GDP [lysosomal membrane] via dissociation",
+    "latex": "\\frac{d[v_ATPase:Ragulator:RRAGA,B:GTP:RRAGC,D:GDP_lysosomal_membrane]}{dt} = k [v-ATPase:Ragulator:RRAGA,B:GTP:RRAGC,D:GDP:SLC38A9:Arg [lysosomal membrane]]",
+    "symbolic": null,
+    "python": null,
+    "domain": "cell-signaling",
+    "origin": "R-HSA-9640168"
+  },
+  {
+    "id": 46529,
+    "name": "Reactome R-HSA-9646468: Production of v-ATPase:Ragulator:RRAGA,B:GTP:RRAGC,D:GDP:mTORC1:RHEB:GTP [lysosomal membrane]",
+    "description": "Production of v-ATPase:Ragulator:RRAGA,B:GTP:RRAGC,D:GDP:mTORC1:RHEB:GTP [lysosomal membrane] via binding",
+    "latex": "\\frac{d[v_ATPase:Ragulator:RRAGA,B:GTP:RRAGC,D:GDP:mTORC1:RHEB:GTP_lysosomal_membrane]}{dt} = k [RHEB:GTP [lysosomal membrane]] [v-ATPase:Ragulator:RRAGA,B:GTP:RRAGC,D:GDP:mTORC1 [lysosomal membrane]]",
+    "symbolic": null,
+    "python": null,
+    "domain": "cell-signaling",
+    "origin": "R-HSA-9646468"
+  },
+  {
+    "id": 46600,
+    "name": "Reactome R-HSA-9678925: Production of HSP90:ATP:FKBP4:PTGES3:NR3C1:NR3C1 agonists [cytosol]",
+    "description": "Production of HSP90:ATP:FKBP4:PTGES3:NR3C1:NR3C1 agonists [cytosol] via binding",
+    "latex": "\\frac{d[HSP90:ATP:FKBP4:PTGES3:NR3C1:NR3C1_agonists_cytosol]}{dt} = k [NR3C1 agonists [cytosol]] [HSP90:ATP:FKBP4:PTGES3:NR3C1 [cytosol]]",
+    "symbolic": null,
+    "python": null,
+    "domain": "cell-signaling",
+    "origin": "R-HSA-9678925"
+  },
+  {
+    "id": 46634,
+    "name": "Reactome R-HSA-9690534: Production of HSP90:ATP:FKBP4:PTGES3:NR3C1:NR3C1 ligands [cytosol]",
+    "description": "Production of HSP90:ATP:FKBP4:PTGES3:NR3C1:NR3C1 ligands [cytosol] via binding",
+    "latex": "\\frac{d[HSP90:ATP:FKBP4:PTGES3:NR3C1:NR3C1_ligands_cytosol]}{dt} = k [NR3C1 ligands [nucleoplasm]] [HSP90:ATP:FKBP4:PTGES3:NR3C1 [cytosol]]",
+    "symbolic": null,
+    "python": null,
+    "domain": "cell-signaling",
+    "origin": "R-HSA-9690534"
+  },
+  {
+    "id": 46707,
+    "name": "Reactome R-HSA-3371590: Production of HSP40:HSP70:ATP:nascent protein [cytosol]",
+    "description": "Production of HSP40:HSP70:ATP:nascent protein [cytosol] via binding",
+    "latex": "\\frac{d[HSP40:HSP70:ATP:nascent_protein_cytosol]}{dt} = k [HSP70:ATP [cytosol]] [HSP40:nascent protein [cytosol]]",
+    "symbolic": null,
+    "python": null,
+    "domain": "cell-signaling",
+    "origin": "R-HSA-3371590"
+  },
+  {
+    "id": 46709,
+    "name": "Reactome R-HSA-9705926: Production of HSP90:ATP:FKBP4:PTGES3:AR:AR agonists [cytosol]",
+    "description": "Production of HSP90:ATP:FKBP4:PTGES3:AR:AR agonists [cytosol] via binding",
+    "latex": "\\frac{d[HSP90:ATP:FKBP4:PTGES3:AR:AR_agonists_cytosol]}{dt} = k [AR agonists [cytosol]] [HSP90:ATP:FKBP4:PTGES3:AR [cytosol]]",
+    "symbolic": null,
+    "python": null,
+    "domain": "cell-signaling",
+    "origin": "R-HSA-9705926"
+  },
+  {
+    "id": 46711,
+    "name": "Reactome R-HSA-9705925: Production of HSP90:ATP:FKBP4:PTGES3:AR:Androgens [cytosol]",
+    "description": "Production of HSP90:ATP:FKBP4:PTGES3:AR:Androgens [cytosol] via binding",
+    "latex": "\\frac{d[HSP90:ATP:FKBP4:PTGES3:AR:Androgens_cytosol]}{dt} = k [Androgens [cytosol]] [HSP90:ATP:FKBP4:PTGES3:AR [cytosol]]",
+    "symbolic": null,
+    "python": null,
+    "domain": "cell-signaling",
+    "origin": "R-HSA-9705925"
+  },
+  {
+    "id": 46713,
+    "name": "Reactome R-HSA-5618085: Production of HSP90:ATP:FKBP4:STIP1:HSP70:nascent protein [cytosol]",
+    "description": "Production of HSP90:ATP:FKBP4:STIP1:HSP70:nascent protein [cytosol] via binding",
+    "latex": "\\frac{d[HSP90:ATP:FKBP4:STIP1:HSP70:nascent_protein_cytosol]}{dt} = k [HSP90:ATP:STIP1:HSP70:nascent protein [cytosol]] [FKBP4 [cytosol]]",
+    "symbolic": null,
+    "python": null,
+    "domain": "cell-signaling",
+    "origin": "R-HSA-5618085"
+  },
+  {
+    "id": 46715,
+    "name": "Reactome R-HSA-5618107: Production of HSP90:ATP:STIP1:HSP70:nascent protein [cytosol]",
+    "description": "Production of HSP90:ATP:STIP1:HSP70:nascent protein [cytosol] via binding",
+    "latex": "\\frac{d[HSP90:ATP:STIP1:HSP70:nascent_protein_cytosol]}{dt} = k [ATP [cytosol]] [HSP90:STIP1:HSP70:nascent protein [cytosol]]",
+    "symbolic": null,
+    "python": null,
+    "domain": "cell-signaling",
+    "origin": "R-HSA-5618107"
+  },
+  {
+    "id": 46718,
+    "name": "Reactome R-HSA-5618073: Production of HSP90:ATP:FKBP4:PTGES3:nascent protein: [cytosol]",
+    "description": "Production of HSP90:ATP:FKBP4:PTGES3:nascent protein: [cytosol] via transition",
+    "latex": "\\frac{d[HSP90:ATP:FKBP4:PTGES3:nascent_protein:_cytosol]}{dt} = k [HSP90:ATP:FKBP5:PTGES3:nascent protein: [cytosol]] [FKBP4 [cytosol]]",
+    "symbolic": null,
+    "python": null,
+    "domain": "cell-signaling",
+    "origin": "R-HSA-5618073"
+  },
+  {
+    "id": 46720,
+    "name": "Reactome R-HSA-5618105: Production of HSP90:ATP:FKBP5:STIP1:HSP70:nascent protein [cytosol]",
+    "description": "Production of HSP90:ATP:FKBP5:STIP1:HSP70:nascent protein [cytosol] via binding",
+    "latex": "\\frac{d[HSP90:ATP:FKBP5:STIP1:HSP70:nascent_protein_cytosol]}{dt} = k [HSP90:ATP:STIP1:HSP70:nascent protein [cytosol]] [FKBP5 [cytosol]]",
+    "symbolic": null,
+    "python": null,
+    "domain": "cell-signaling",
+    "origin": "R-HSA-5618105"
+  },
+  {
+    "id": 46726,
+    "name": "Reactome R-HSA-9725885: Production of HSP90:ATP:FKBP4:PTGES3:PGR:P4 [cytosol]",
+    "description": "Production of HSP90:ATP:FKBP4:PTGES3:PGR:P4 [cytosol] via binding",
+    "latex": "\\frac{d[HSP90:ATP:FKBP4:PTGES3:PGR:P4_cytosol]}{dt} = k [P4 [cytosol]] [HSP90:ATP:FKBP4:PTGES3:PGR [cytosol]]",
+    "symbolic": null,
+    "python": null,
+    "domain": "cell-signaling",
+    "origin": "R-HSA-9725885"
+  },
+  {
+    "id": 46728,
+    "name": "Reactome R-HSA-5618099: Production of HSP90:ATP:FKBP4:PTGES3:NR3C2:NR3C2 ligands [cytosol]",
+    "description": "Production of HSP90:ATP:FKBP4:PTGES3:NR3C2:NR3C2 ligands [cytosol] via binding",
+    "latex": "\\frac{d[HSP90:ATP:FKBP4:PTGES3:NR3C2:NR3C2_ligands_cytosol]}{dt} = k [HSP90:ATP:FKBP4:PTGES3:NR3C2 [cytosol]] [NR3C2 ligands [cytosol]]",
+    "symbolic": null,
+    "python": null,
+    "domain": "cell-signaling",
+    "origin": "R-HSA-5618099"
+  },
+  {
+    "id": 46730,
+    "name": "Reactome R-HSA-9706837: Production of HSP90:ATP:FKBP4:PTGES3:AR:AR antagonists [cytosol]",
+    "description": "Production of HSP90:ATP:FKBP4:PTGES3:AR:AR antagonists [cytosol] via binding",
+    "latex": "\\frac{d[HSP90:ATP:FKBP4:PTGES3:AR:AR_antagonists_cytosol]}{dt} = k [AR antagonists [cytosol]] [HSP90:ATP:FKBP4:PTGES3:AR [cytosol]]",
+    "symbolic": null,
+    "python": null,
+    "domain": "cell-signaling",
+    "origin": "R-HSA-9706837"
+  },
+  {
+    "id": 46952,
+    "name": "Reactome R-HSA-5252041: Production of Hikeshi:HSP70s:ATP [nucleoplasm]",
+    "description": "Production of Hikeshi:HSP70s:ATP [nucleoplasm] via transition",
+    "latex": "\\frac{d[Hikeshi:HSP70s:ATP_nucleoplasm]}{dt} = k [Hikeshi:HSP70s:ATP [cytosol]]",
+    "symbolic": null,
+    "python": null,
+    "domain": "cell-signaling",
+    "origin": "R-HSA-5252041"
+  },
+  {
+    "id": 46961,
+    "name": "Reactome R-HSA-5252079: Production of HSP70s:ATP [cytosol]",
+    "description": "Production of HSP70s:ATP [cytosol] via transition",
+    "latex": "\\frac{d[HSP70s:ATP_cytosol]}{dt} = k [HSP70s:ADP [cytosol]] [ATP [cytosol]]",
+    "symbolic": null,
+    "python": null,
+    "domain": "cell-signaling",
+    "origin": "R-HSA-5252079"
+  },
+  {
+    "id": 52775,
+    "name": "Reactome R-HSA-9858883: Production of MITF-M dimer:MITF-dependent v-ATPase target genes [nucleoplasm]",
+    "description": "Production of MITF-M dimer:MITF-dependent v-ATPase target genes [nucleoplasm] via transition",
+    "latex": "\\frac{d[MITF_M_dimer:MITF_dependent_v_ATPase_target_genes_nucleoplasm]}{dt} = k [MITF-M dependent v-ATPase target genes [nucleoplasm]] [MITF-M dimer [nucleoplasm]]",
+    "symbolic": null,
+    "python": null,
+    "domain": "cell-signaling",
+    "origin": "R-HSA-9858883"
+  },
+  {
+    "id": 53063,
+    "name": "Reactome R-HSA-375160: Production of NCAM-1:ATP [plasma membrane]",
+    "description": "Production of NCAM-1:ATP [plasma membrane] via binding",
+    "latex": "\\frac{d[NCAM_1:ATP_plasma_membrane]}{dt} = k [ATP [extracellular region]] [NCAM1 [plasma membrane]]",
+    "symbolic": null,
+    "python": null,
+    "domain": "cell-signaling",
+    "origin": "R-HSA-375160"
+  }
+]

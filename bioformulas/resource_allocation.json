@@ -1,0 +1,65 @@
+[
+  {
+    "id": 17326,
+    "name": "BIOMD0000000337: resource production",
+    "description": "Reaction rate law from BioModels BIOMD0000000337: resource production",
+    "latex": "v = v",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry"
+  },
+  {
+    "id": 17327,
+    "name": "BIOMD0000000337: resource consumption and cell growth 1",
+    "description": "Reaction rate law from BioModels BIOMD0000000337: resource consumption and cell growth 1",
+    "latex": "v = N1 * S / (1 + S)",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry"
+  },
+  {
+    "id": 17328,
+    "name": "BIOMD0000000337: resource consumption and cell growth 2",
+    "description": "Reaction rate law from BioModels BIOMD0000000337: resource consumption and cell growth 2",
+    "latex": "v = N2 * 20 * S / (1 + S)",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry"
+  },
+  {
+    "id": 30435,
+    "name": "BIOMD0000000613: PTH_max_capacity_increase",
+    "description": "Reaction rate law from BioModels BIOMD0000000613: PTH_max_capacity_increase",
+    "latex": "v = PTin",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry"
+  },
+  {
+    "id": 30436,
+    "name": "BIOMD0000000613: PTH_max_capacity_decrease",
+    "description": "Reaction rate law from BioModels BIOMD0000000613: PTH_max_capacity_decrease",
+    "latex": "v = PTmax PTout",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry"
+  },
+  {
+    "id": 31966,
+    "name": "BIOMD0000000663: Reduction in x-proliferation due to carry capacity",
+    "description": "Reaction rate law from BioModels BIOMD0000000663: Reduction in x-proliferation due to carry capacity",
+    "latex": "v = compartment \\operatorname{function}_{for x degrad 2 1}{\\left(k,r,v,x,y \\right)}",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry"
+  },
+  {
+    "id": 31970,
+    "name": "BIOMD0000000663: Reduction in y-proliferation due to carry capacity",
+    "description": "Reaction rate law from BioModels BIOMD0000000663: Reduction in y-proliferation due to carry capacity",
+    "latex": "v = compartment \\operatorname{function}_{for y degrad 2 1}{\\left(k,r,v,x,y \\right)}",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry"
+  }
+]

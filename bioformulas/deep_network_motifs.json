@@ -1,0 +1,2731 @@
+{
+  "reaction_networks": {
+    "reactions": [],
+    "feedforward_loops": [],
+    "fanout_patterns": [],
+    "fanin_patterns": [],
+    "total_reactions": 0,
+    "total_metabolites": 0
+  },
+  "pathway_analysis": {
+    "glycolysis": {
+      "count": 12,
+      "formulas": [
+        {
+          "formula_id": 192,
+          "name": "Hexokinase (HK)",
+          "description": "Glycolysis step: Glucose + ATP \u2192 G6P + ADP",
+          "latex": "v_{HK} = \\frac{V_{max} [glucose]}{K_m + [glucose]}",
+          "formula_type": "rate_equation",
+          "parameters": []
+        },
+        {
+          "formula_id": 193,
+          "name": "Phosphoglucose Isomerase (PGI)",
+          "description": "Glycolysis step: G6P \u21cc F6P",
+          "latex": "v_{PGI} = \\frac{V_{max} [G6P]}{K_m + [G6P]}",
+          "formula_type": "rate_equation",
+          "parameters": []
+        },
+        {
+          "formula_id": 194,
+          "name": "Phosphofructokinase-1 (PFK1)",
+          "description": "Glycolysis step: F6P + ATP \u2192 F1,6BP + ADP",
+          "latex": "v_{PFK1} = \\frac{V_{max} [F6P]}{K_m + [F6P]}",
+          "formula_type": "rate_equation",
+          "parameters": []
+        },
+        {
+          "formula_id": 195,
+          "name": "Aldolase (ALDO)",
+          "description": "Glycolysis step: F1,6BP \u21cc DHAP + G3P",
+          "latex": "v_{ALDO} = \\frac{V_{max} [F1,6BP]}{K_m + [F1,6BP]}",
+          "formula_type": "rate_equation",
+          "parameters": []
+        },
+        {
+          "formula_id": 196,
+          "name": "Triose Phosphate Isomerase (TPI)",
+          "description": "Glycolysis step: DHAP \u21cc G3P",
+          "latex": "v_{TPI} = \\frac{V_{max} [DHAP]}{K_m + [DHAP]}",
+          "formula_type": "rate_equation",
+          "parameters": []
+        },
+        {
+          "formula_id": 197,
+          "name": "G3P Dehydrogenase (GAPDH)",
+          "description": "Glycolysis step: G3P + NAD+ + Pi \u21cc 1,3BPG + NADH",
+          "latex": "v_{GAPDH} = \\frac{V_{max} [G3P]}{K_m + [G3P]}",
+          "formula_type": "rate_equation",
+          "parameters": []
+        },
+        {
+          "formula_id": 198,
+          "name": "Phosphoglycerate Kinase (PGK)",
+          "description": "Glycolysis step: 1,3BPG + ADP \u21cc 3PG + ATP",
+          "latex": "v_{PGK} = \\frac{V_{max} [1,3BPG]}{K_m + [1,3BPG]}",
+          "formula_type": "rate_equation",
+          "parameters": []
+        },
+        {
+          "formula_id": 199,
+          "name": "Phosphoglycerate Mutase (PGM)",
+          "description": "Glycolysis step: 3PG \u21cc 2PG",
+          "latex": "v_{PGM} = \\frac{V_{max} [3PG]}{K_m + [3PG]}",
+          "formula_type": "rate_equation",
+          "parameters": []
+        },
+        {
+          "formula_id": 200,
+          "name": "Enolase (ENO)",
+          "description": "Glycolysis step: 2PG \u21cc PEP + H2O",
+          "latex": "v_{ENO} = \\frac{V_{max} [2PG]}{K_m + [2PG]}",
+          "formula_type": "rate_equation",
+          "parameters": []
+        },
+        {
+          "formula_id": 201,
+          "name": "Pyruvate Kinase (PK)",
+          "description": "Glycolysis step: PEP + ADP \u2192 Pyruvate + ATP",
+          "latex": "v_{PK} = \\frac{V_{max} [PEP]}{K_m + [PEP]}",
+          "formula_type": "rate_equation",
+          "parameters": []
+        },
+        {
+          "formula_id": 202,
+          "name": "PFK1 Allosteric Regulation",
+          "description": "PFK1 with ATP inhibition, AMP activation, F6P cooperativity",
+          "latex": "v_{PFK1} = V_{max} \\frac{[F6P]^n [ATP]}{(K_{F6P}^n + [F6P]^n)(K_{ATP} + [ATP])} \\cdot \\frac{K_i^m}{K_i^m + [ATP]^m} \\cdot \\frac{[AMP]^p + K_a^p}{K_a^p}",
+          "formula_type": "rate_equation",
+          "parameters": []
+        },
+        {
+          "formula_id": 203,
+          "name": "Pyruvate Kinase Allosteric",
+          "description": "PK with F1,6BP feedforward activation",
+          "latex": "v_{PK} = V_{max} \\frac{[PEP]^n [ADP]}{(K_{PEP}^n + [PEP]^n)(K_{ADP} + [ADP])} \\cdot \\frac{[F1,6BP]}{K_a + [F1,6BP]}",
+          "formula_type": "rate_equation",
+          "parameters": []
+        }
+      ]
+    },
+    "TCA-cycle": {
+      "count": 9,
+      "formulas": [
+        {
+          "formula_id": 204,
+          "name": "Citrate Synthase (CS)",
+          "description": "TCA cycle: Acetyl-CoA + OAA \u2192 Citrate + CoA",
+          "latex": "v_{CS} = \\frac{V_{max} [S]}{K_m + [S]}",
+          "formula_type": "rate_equation",
+          "parameters": []
+        },
+        {
+          "formula_id": 205,
+          "name": "Aconitase (ACO)",
+          "description": "TCA cycle: Citrate \u21cc Isocitrate",
+          "latex": "v_{ACO} = \\frac{V_{max} [S]}{K_m + [S]}",
+          "formula_type": "rate_equation",
+          "parameters": []
+        },
+        {
+          "formula_id": 206,
+          "name": "Isocitrate Dehydrogenase (IDH)",
+          "description": "TCA cycle: Isocitrate + NAD+ \u2192 \u03b1-KG + CO2 + NADH",
+          "latex": "v_{IDH} = \\frac{V_{max} [S]}{K_m + [S]}",
+          "formula_type": "rate_equation",
+          "parameters": []
+        },
+        {
+          "formula_id": 207,
+          "name": "\u03b1-Ketoglutarate Dehydrogenase (OGDH)",
+          "description": "TCA cycle: \u03b1-KG + NAD+ + CoA \u2192 Succinyl-CoA + CO2 + NADH",
+          "latex": "v_{OGDH} = \\frac{V_{max} [S]}{K_m + [S]}",
+          "formula_type": "rate_equation",
+          "parameters": []
+        },
+        {
+          "formula_id": 208,
+          "name": "Succinyl-CoA Synthetase (SCS)",
+          "description": "TCA cycle: Succinyl-CoA + GDP + Pi \u21cc Succinate + GTP + CoA",
+          "latex": "v_{SCS} = \\frac{V_{max} [S]}{K_m + [S]}",
+          "formula_type": "rate_equation",
+          "parameters": []
+        },
+        {
+          "formula_id": 209,
+          "name": "Succinate Dehydrogenase (SDH)",
+          "description": "TCA cycle: Succinate + FAD \u2192 Fumarate + FADH2",
+          "latex": "v_{SDH} = \\frac{V_{max} [S]}{K_m + [S]}",
+          "formula_type": "rate_equation",
+          "parameters": []
+        },
+        {
+          "formula_id": 210,
+          "name": "Fumarase (FUM)",
+          "description": "TCA cycle: Fumarate + H2O \u21cc Malate",
+          "latex": "v_{FUM} = \\frac{V_{max} [S]}{K_m + [S]}",
+          "formula_type": "rate_equation",
+          "parameters": []
+        },
+        {
+          "formula_id": 211,
+          "name": "Malate Dehydrogenase (MDH)",
+          "description": "TCA cycle: Malate + NAD+ \u21cc OAA + NADH",
+          "latex": "v_{MDH} = \\frac{V_{max} [S]}{K_m + [S]}",
+          "formula_type": "rate_equation",
+          "parameters": []
+        },
+        {
+          "formula_id": 212,
+          "name": "IDH NAD-dependent Regulation",
+          "description": "IDH with NADH product inhibition and ADP activation",
+          "latex": "v_{IDH} = V_{max} \\frac{[Isocitrate]^n [NAD^+]}{(K_m^n + [Isocitrate]^n)(K_{NAD} + [NAD^+])} \\cdot \\frac{K_i}{K_i + [NADH]} \\cdot \\frac{[ADP] + K_a}{K_a}",
+          "formula_type": "rate_equation",
+          "parameters": []
+        }
+      ]
+    },
+    "OXPHOS": {
+      "count": 7,
+      "formulas": [
+        {
+          "formula_id": 213,
+          "name": "Complex I (NADH Dehydrogenase)",
+          "description": "NADH:ubiquinone oxidoreductase, proton pumping",
+          "latex": "v_{CI} = k_{CI} [NADH] [Q] \\exp\\left(\\frac{n_H F \\Delta\\Psi}{RT}\\right)",
+          "formula_type": "rate_equation",
+          "parameters": []
+        },
+        {
+          "formula_id": 214,
+          "name": "Complex II (Succinate Dehydrogenase)",
+          "description": "Succinate:ubiquinone oxidoreductase (no proton pumping)",
+          "latex": "v_{CII} = \\frac{V_{max} [Succinate] [Q]}{(K_{Succ} + [Succinate])(K_Q + [Q])}",
+          "formula_type": "rate_equation",
+          "parameters": []
+        },
+        {
+          "formula_id": 215,
+          "name": "Complex III (Cytochrome bc1)",
+          "description": "Ubiquinol:cytochrome c oxidoreductase, Q cycle",
+          "latex": "v_{CIII} = k_{CIII} [QH_2] [cytc_{ox}] \\exp\\left(\\frac{2 F \\Delta\\Psi}{RT}\\right)",
+          "formula_type": "rate_equation",
+          "parameters": []
+        },
+        {
+          "formula_id": 216,
+          "name": "Complex IV (Cytochrome c Oxidase)",
+          "description": "Cytochrome c oxidase, final electron acceptor",
+          "latex": "v_{CIV} = k_{CIV} [cytc_{red}]^4 [O_2] \\exp\\left(\\frac{4 F \\Delta\\Psi}{RT}\\right)",
+          "formula_type": "rate_equation",
+          "parameters": []
+        },
+        {
+          "formula_id": 217,
+          "name": "ATP Synthase (Complex V)",
+          "description": "F1F0 ATP synthase, chemiosmotic coupling",
+          "latex": "v_{CV} = k_f [ADP][P_i] \\exp\\left(\\frac{n F \\Delta\\Psi}{RT}\\right) - k_r [ATP]",
+          "formula_type": "rate_equation",
+          "parameters": []
+        },
+        {
+          "formula_id": 218,
+          "name": "Proton Motive Force",
+          "description": "Electrochemical proton gradient",
+          "latex": "\\Delta p = \\Delta\\Psi - \\frac{2.303 RT}{F} \\Delta pH",
+          "formula_type": "algebraic",
+          "parameters": []
+        },
+        {
+          "formula_id": 219,
+          "name": "Adenine Nucleotide Translocator",
+          "description": "ATP/ADP exchange across inner mitochondrial membrane",
+          "latex": "v_{ANT} = V_{max} \\frac{[ADP]_c [ATP]_m - [ADP]_m [ATP]_c / K_{eq}}{(K_{ADP} + [ADP]_c)(K_{ATP} + [ATP]_m)}",
+          "formula_type": "rate_equation",
+          "parameters": []
+        }
+      ]
+    },
+    "PPP": {
+      "count": 8,
+      "formulas": [
+        {
+          "formula_id": 220,
+          "name": "G6P Dehydrogenase (G6PD)",
+          "description": "PPP: G6P + NADP+ \u2192 6PGL + NADPH",
+          "latex": "v_{G6PD} = \\frac{V_{max} [S]}{K_m + [S]}",
+          "formula_type": "rate_equation",
+          "parameters": []
+        },
+        {
+          "formula_id": 221,
+          "name": "6-Phosphogluconolactonase (6PGL)",
+          "description": "PPP: 6PGL + H2O \u2192 6PG",
+          "latex": "v_{6PGL} = \\frac{V_{max} [S]}{K_m + [S]}",
+          "formula_type": "rate_equation",
+          "parameters": []
+        },
+        {
+          "formula_id": 222,
+          "name": "6PG Dehydrogenase (6PGD)",
+          "description": "PPP: 6PG + NADP+ \u2192 Ru5P + CO2 + NADPH",
+          "latex": "v_{6PGD} = \\frac{V_{max} [S]}{K_m + [S]}",
+          "formula_type": "rate_equation",
+          "parameters": []
+        },
+        {
+          "formula_id": 223,
+          "name": "Ribose-5-P Isomerase (RPI)",
+          "description": "PPP: Ru5P \u21cc R5P",
+          "latex": "v_{RPI} = \\frac{V_{max} [S]}{K_m + [S]}",
+          "formula_type": "rate_equation",
+          "parameters": []
+        },
+        {
+          "formula_id": 224,
+          "name": "Ribulose-5-P Epimerase (RPE)",
+          "description": "PPP: Ru5P \u21cc Xu5P",
+          "latex": "v_{RPE} = \\frac{V_{max} [S]}{K_m + [S]}",
+          "formula_type": "rate_equation",
+          "parameters": []
+        },
+        {
+          "formula_id": 225,
+          "name": "Transketolase 1 (TK1)",
+          "description": "PPP: R5P + Xu5P \u21cc S7P + G3P",
+          "latex": "v_{TK1} = \\frac{V_{max} [S]}{K_m + [S]}",
+          "formula_type": "rate_equation",
+          "parameters": []
+        },
+        {
+          "formula_id": 226,
+          "name": "Transaldolase (TA)",
+          "description": "PPP: S7P + G3P \u21cc E4P + F6P",
+          "latex": "v_{TA} = \\frac{V_{max} [S]}{K_m + [S]}",
+          "formula_type": "rate_equation",
+          "parameters": []
+        },
+        {
+          "formula_id": 227,
+          "name": "Transketolase 2 (TK2)",
+          "description": "PPP: Xu5P + E4P \u21cc F6P + G3P",
+          "latex": "v_{TK2} = \\frac{V_{max} [S]}{K_m + [S]}",
+          "formula_type": "rate_equation",
+          "parameters": []
+        }
+      ]
+    },
+    "MAPK": {
+      "count": 10,
+      "formulas": [
+        {
+          "formula_id": 382,
+          "name": "MAPKKK Activation (Raf)",
+          "description": "Ras-GTP activates Raf (MAPKKK)",
+          "latex": "\\frac{d[Raf^*]}{dt} = \\frac{k_1 [RasGTP][Raf]}{K_{m1} + [Raf]} - \\frac{k_2 [Raf^*]}{K_{m2} + [Raf^*]}",
+          "formula_type": "ODE",
+          "parameters": []
+        },
+        {
+          "formula_id": 383,
+          "name": "MAPKK Activation (MEK)",
+          "description": "Raf activates MEK (MAPKK) - dual phosphorylation",
+          "latex": "\\frac{d[MEK^*]}{dt} = \\frac{k_3 [Raf^*][MEK]}{K_{m3} + [MEK]} - \\frac{k_4 [MEK^*]}{K_{m4} + [MEK^*]}",
+          "formula_type": "ODE",
+          "parameters": []
+        },
+        {
+          "formula_id": 384,
+          "name": "MAPKK Double Phosphorylation",
+          "description": "Second phosphorylation of MEK",
+          "latex": "\\frac{d[MEK_{pp}]}{dt} = \\frac{k_3' [Raf^*][MEK_p]}{K_{m3'} + [MEK_p]} - \\frac{k_4' [MEK_{pp}]}{K_{m4'} + [MEK_{pp}]}",
+          "formula_type": "ODE",
+          "parameters": []
+        },
+        {
+          "formula_id": 385,
+          "name": "MAPK Activation (ERK)",
+          "description": "MEK activates ERK (MAPK)",
+          "latex": "\\frac{d[ERK^*]}{dt} = \\frac{k_5 [MEK^*][ERK]}{K_{m5} + [ERK]} - \\frac{k_6 [ERK^*]}{K_{m6} + [ERK^*]}",
+          "formula_type": "ODE",
+          "parameters": []
+        },
+        {
+          "formula_id": 386,
+          "name": "ERK Double Phosphorylation",
+          "description": "Second phosphorylation of ERK",
+          "latex": "\\frac{d[ERK_{pp}]}{dt} = \\frac{k_5' [MEK^*][ERK_p]}{K_{m5'} + [ERK_p]} - \\frac{k_6' [ERK_{pp}]}{K_{m6'} + [ERK_{pp}]}",
+          "formula_type": "ODE",
+          "parameters": []
+        },
+        {
+          "formula_id": 387,
+          "name": "ERK Negative Feedback to Raf",
+          "description": "ERK phosphorylates Raf reducing its activation",
+          "latex": "k_1^{eff} = \\frac{k_1}{1 + [ERK^*]/K_i}",
+          "formula_type": "algebraic",
+          "parameters": []
+        },
+        {
+          "formula_id": 388,
+          "name": "ERK Negative Feedback to SOS",
+          "description": "ERK phosphorylates SOS reducing Ras activation",
+          "latex": "\\frac{d[SOS]}{dt} = -k_{phos} [ERK^*][SOS] + k_{dephos} [SOS_p]",
+          "formula_type": "ODE",
+          "parameters": []
+        },
+        {
+          "formula_id": 389,
+          "name": "JNK Activation",
+          "description": "JNK MAPK pathway: stress, apoptosis. Activates c-Jun",
+          "latex": "\\frac{d[JNK^*]}{dt} = \\frac{k_{act} [MKK4/7^*][JNK]}{K_m + [JNK]} - \\frac{k_{deact} [JNK^*]}{K_m' + [JNK^*]}",
+          "formula_type": "ODE",
+          "parameters": []
+        },
+        {
+          "formula_id": 390,
+          "name": "p38 Activation",
+          "description": "p38 MAPK pathway: stress, inflammation. Activates ATF2",
+          "latex": "\\frac{d[p38^*]}{dt} = \\frac{k_{act} [MKK3/6^*][p38]}{K_m + [p38]} - \\frac{k_{deact} [p38^*]}{K_m' + [p38^*]}",
+          "formula_type": "ODE",
+          "parameters": []
+        },
+        {
+          "formula_id": 391,
+          "name": "ERK5 Activation",
+          "description": "ERK5 MAPK pathway: growth, survival. Activates MEF2",
+          "latex": "\\frac{d[ERK5^*]}{dt} = \\frac{k_{act} [MEK5^*][ERK5]}{K_m + [ERK5]} - \\frac{k_{deact} [ERK5^*]}{K_m' + [ERK5^*]}",
+          "formula_type": "ODE",
+          "parameters": []
+        }
+      ]
+    },
+    "PI3K-AKT": {
+      "count": 10,
+      "formulas": [
+        {
+          "formula_id": 392,
+          "name": "PI3K Activation",
+          "description": "PI3K produces PIP3, PTEN degrades it",
+          "latex": "\\frac{d[PIP_3]}{dt} = k_{PI3K} [RTK^*][PIP_2] - k_{PTEN} [PIP_3]",
+          "formula_type": "ODE",
+          "parameters": []
+        },
+        {
+          "formula_id": 393,
+          "name": "AKT Membrane Recruitment",
+          "description": "AKT recruitment to membrane via PH domain",
+          "latex": "[AKT_{mem}] = \\frac{[AKT][PIP_3]}{K_d + [PIP_3]}",
+          "formula_type": "algebraic",
+          "parameters": []
+        },
+        {
+          "formula_id": 394,
+          "name": "AKT Phosphorylation (PDK1)",
+          "description": "PDK1 phosphorylates AKT at T308",
+          "latex": "\\frac{d[AKT_{T308}]}{dt} = k_{PDK1} [PDK1][AKT_{mem}] - k_{PP2A} [AKT_{T308}]",
+          "formula_type": "ODE",
+          "parameters": []
+        },
+        {
+          "formula_id": 395,
+          "name": "AKT Phosphorylation (mTORC2)",
+          "description": "mTORC2 phosphorylates AKT at S473 for full activation",
+          "latex": "\\frac{d[AKT_{S473}]}{dt} = k_{mTORC2} [mTORC2][AKT_{T308}] - k_{PHLPP} [AKT_{S473}]",
+          "formula_type": "ODE",
+          "parameters": []
+        },
+        {
+          "formula_id": 396,
+          "name": "AKT \u2192 GSK3\u03b2 (inhibition)",
+          "description": "AKT inhibition of GSK3\u03b2: glycogen synthesis, Wnt",
+          "latex": "\\frac{d[GSK3\u03b2_{phos}]}{dt} = k_{AKT} [AKT^*][GSK3\u03b2] - k_{PP} [GSK3\u03b2_{phos}]",
+          "formula_type": "ODE",
+          "parameters": []
+        },
+        {
+          "formula_id": 397,
+          "name": "AKT \u2192 FOXO (inhibition)",
+          "description": "AKT inhibition of FOXO: apoptosis genes",
+          "latex": "\\frac{d[FOXO_{phos}]}{dt} = k_{AKT} [AKT^*][FOXO] - k_{PP} [FOXO_{phos}]",
+          "formula_type": "ODE",
+          "parameters": []
+        },
+        {
+          "formula_id": 398,
+          "name": "AKT \u2192 BAD (inhibition)",
+          "description": "AKT inhibition of BAD: pro-apoptotic",
+          "latex": "\\frac{d[BAD_{phos}]}{dt} = k_{AKT} [AKT^*][BAD] - k_{PP} [BAD_{phos}]",
+          "formula_type": "ODE",
+          "parameters": []
+        },
+        {
+          "formula_id": 399,
+          "name": "AKT \u2192 TSC2 (inhibition)",
+          "description": "AKT inhibition of TSC2: mTORC1 activation",
+          "latex": "\\frac{d[TSC2_{phos}]}{dt} = k_{AKT} [AKT^*][TSC2] - k_{PP} [TSC2_{phos}]",
+          "formula_type": "ODE",
+          "parameters": []
+        },
+        {
+          "formula_id": 400,
+          "name": "AKT \u2192 MDM2 (activation)",
+          "description": "AKT activation of MDM2: p53 degradation",
+          "latex": "\\frac{d[MDM2_{phos}]}{dt} = k_{AKT} [AKT^*][MDM2] - k_{PP} [MDM2_{phos}]",
+          "formula_type": "ODE",
+          "parameters": []
+        },
+        {
+          "formula_id": 401,
+          "name": "AKT \u2192 AS160 (activation)",
+          "description": "AKT activation of AS160: GLUT4 translocation",
+          "latex": "\\frac{d[AS160_{phos}]}{dt} = k_{AKT} [AKT^*][AS160] - k_{PP} [AS160_{phos}]",
+          "formula_type": "ODE",
+          "parameters": []
+        }
+      ]
+    },
+    "JAK-STAT": {
+      "count": 5,
+      "formulas": [
+        {
+          "formula_id": 440,
+          "name": "Cytokine Receptor Activation",
+          "description": "Cytokine binding activates receptor dimerization",
+          "latex": "\\frac{d[R^*]}{dt} = k_{bind} [Cytokine][R] - k_{off} [R^*]",
+          "formula_type": "ODE",
+          "parameters": []
+        },
+        {
+          "formula_id": 441,
+          "name": "JAK Activation",
+          "description": "JAK trans-phosphorylation and SOCS inhibition",
+          "latex": "\\frac{d[JAK^*]}{dt} = k_{act} [R^*][JAK] - k_{SOCS} [SOCS][JAK^*]",
+          "formula_type": "ODE",
+          "parameters": []
+        },
+        {
+          "formula_id": 442,
+          "name": "STAT Phosphorylation",
+          "description": "JAK phosphorylates STAT",
+          "latex": "\\frac{d[STAT_p]}{dt} = k_{JAK} [JAK^*][STAT] - k_{PTP} [STAT_p]",
+          "formula_type": "ODE",
+          "parameters": []
+        },
+        {
+          "formula_id": 443,
+          "name": "STAT Dimerization",
+          "description": "Phospho-STAT dimerizes via SH2 domains",
+          "latex": "\\frac{d[STAT_p \\cdot STAT_p]}{dt} = k_{dim} [STAT_p]^2 - k_{undim} [STAT_p \\cdot STAT_p]",
+          "formula_type": "ODE",
+          "parameters": []
+        },
+        {
+          "formula_id": 444,
+          "name": "SOCS Transcription (Negative Feedback)",
+          "description": "STAT induces SOCS expression",
+          "latex": "\\frac{d[SOCS_{mRNA}]}{dt} = k_{tx} [STAT_{nuc}] - k_{deg} [SOCS_{mRNA}]",
+          "formula_type": "ODE",
+          "parameters": []
+        }
+      ]
+    },
+    "Wnt": {
+      "count": 5,
+      "formulas": [
+        {
+          "formula_id": 427,
+          "name": "\u03b2-catenin Destruction Complex",
+          "description": "APC/Axin/GSK3 complex targets \u03b2-catenin for degradation",
+          "latex": "\\frac{d[\\beta cat]}{dt} = k_{syn} - k_{dest} [APC \\cdot Axin \\cdot GSK3] [\\beta cat] - k_{deg} [\\beta cat]",
+          "formula_type": "ODE",
+          "parameters": []
+        },
+        {
+          "formula_id": 428,
+          "name": "Wnt-Frizzled Binding",
+          "description": "Wnt ligand binds Frizzled receptor",
+          "latex": "\\frac{d[Wnt \\cdot Fz]}{dt} = k_{on} [Wnt][Fz] - k_{off} [Wnt \\cdot Fz]",
+          "formula_type": "ODE",
+          "parameters": []
+        },
+        {
+          "formula_id": 429,
+          "name": "Dishevelled Activation",
+          "description": "Dishevelled activation inhibits destruction complex",
+          "latex": "\\frac{d[Dvl^*]}{dt} = k_{act} [Wnt \\cdot Fz][Dvl] - k_{deact} [Dvl^*]",
+          "formula_type": "ODE",
+          "parameters": []
+        },
+        {
+          "formula_id": 430,
+          "name": "\u03b2-catenin Nuclear Accumulation",
+          "description": "\u03b2-catenin nuclear import",
+          "latex": "\\frac{d[\\beta cat_{nuc}]}{dt} = k_{in} [\\beta cat] - k_{out} [\\beta cat_{nuc}]",
+          "formula_type": "ODE",
+          "parameters": []
+        },
+        {
+          "formula_id": 431,
+          "name": "TCF/LEF Target Gene Activation",
+          "description": "\u03b2-catenin/TCF activates Wnt target genes",
+          "latex": "Rate_{tx} = k_{basal} + k_{max} \\frac{[\\beta cat_{nuc}]^n}{K_d^n + [\\beta cat_{nuc}]^n}",
+          "formula_type": "algebraic",
+          "parameters": []
+        }
+      ]
+    },
+    "Notch": {
+      "count": 4,
+      "formulas": [
+        {
+          "formula_id": 432,
+          "name": "Notch-Delta Binding",
+          "description": "Notch receptor binds Delta ligand on neighboring cell",
+          "latex": "\\frac{d[N \\cdot D]}{dt} = k_{on} [N][D_{trans}] - k_{off} [N \\cdot D]",
+          "formula_type": "ODE",
+          "parameters": []
+        },
+        {
+          "formula_id": 433,
+          "name": "Notch Cleavage (\u03b3-secretase)",
+          "description": "\u03b3-secretase releases Notch intracellular domain",
+          "latex": "\\frac{d[NICD]}{dt} = k_{cleave} [N \\cdot D] - k_{deg} [NICD]",
+          "formula_type": "ODE",
+          "parameters": []
+        },
+        {
+          "formula_id": 434,
+          "name": "Hes/Hey Transcription",
+          "description": "NICD/CSL complex activates Hes/Hey genes",
+          "latex": "\\frac{d[Hes]}{dt} = k_{tx} [NICD \\cdot CSL] - k_{deg} [Hes]",
+          "formula_type": "ODE",
+          "parameters": []
+        },
+        {
+          "formula_id": 435,
+          "name": "Lateral Inhibition",
+          "description": "Hes represses Delta, creating lateral inhibition",
+          "latex": "\\frac{d[D]}{dt} = k_{syn} \\frac{K_i^n}{K_i^n + [Hes]^n} - k_{deg} [D]",
+          "formula_type": "ODE",
+          "parameters": []
+        }
+      ]
+    },
+    "cAMP": {
+      "count": 5,
+      "formulas": [
+        {
+          "formula_id": 417,
+          "name": "Adenylyl Cyclase (Gs-stimulated)",
+          "description": "cAMP production by AC and degradation by PDE",
+          "latex": "\\frac{d[cAMP]}{dt} = V_{AC} \\frac{[G_s^*]}{K_m + [G_s^*]} \\frac{[ATP]}{K_{ATP} + [ATP]} - V_{PDE} \\frac{[cAMP]}{K_m + [cAMP]}",
+          "formula_type": "ODE",
+          "parameters": []
+        },
+        {
+          "formula_id": 418,
+          "name": "PKA Activation",
+          "description": "PKA activation by cAMP (4 binding sites)",
+          "latex": "[PKA_{active}] = [PKA]_T \\frac{[cAMP]^4}{K_d^4 + [cAMP]^4}",
+          "formula_type": "algebraic",
+          "parameters": []
+        },
+        {
+          "formula_id": 419,
+          "name": "PKA Regulatory Subunit Dissociation",
+          "description": "PKA holoenzyme dissociation model",
+          "latex": "R_2C_2 + 4cAMP \\rightleftharpoons R_2(cAMP)_4 + 2C",
+          "formula_type": "algebraic",
+          "parameters": []
+        },
+        {
+          "formula_id": 420,
+          "name": "CREB Phosphorylation",
+          "description": "PKA phosphorylates CREB at Ser133",
+          "latex": "\\frac{d[CREB_p]}{dt} = k_{PKA} [PKA^*][CREB] - k_{PP1} [CREB_p]",
+          "formula_type": "ODE",
+          "parameters": []
+        },
+        {
+          "formula_id": 421,
+          "name": "PDE4 Feedback",
+          "description": "PKA activates PDE4 (negative feedback)",
+          "latex": "\\frac{d[PDE4^*]}{dt} = k_{PKA} [PKA^*][PDE4] - k_{PP} [PDE4^*]",
+          "formula_type": "ODE",
+          "parameters": []
+        }
+      ]
+    },
+    "calcium-signaling": {
+      "count": 2,
+      "formulas": [
+        {
+          "formula_id": 53,
+          "name": "Calcium Release from ER (IP3R)",
+          "description": "IP3 receptor-mediated calcium release",
+          "latex": "\\frac{d[Ca^{2+}]_{cyt}}{dt} = v_{IP3R} m_\\infty^3 h^3 ([Ca^{2+}]_{ER} - [Ca^{2+}]_{cyt})",
+          "formula_type": "ODE",
+          "parameters": []
+        },
+        {
+          "formula_id": 54,
+          "name": "SERCA Pump",
+          "description": "SERCA calcium pump flux into ER",
+          "latex": "J_{SERCA} = V_{SERCA} \\frac{[Ca^{2+}]_{cyt}^2}{K_{SERCA}^2 + [Ca^{2+}]_{cyt}^2}",
+          "formula_type": "algebraic",
+          "parameters": []
+        }
+      ]
+    }
+  },
+  "coupled_systems": {
+    "BIOMD0000000006": {
+      "num_equations": 8,
+      "domain": "systems-biology",
+      "formulas": [
+        {
+          "formula_id": 1314,
+          "name": "BIOMD0000000006: du/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000006",
+          "latex": "\\frac{d[u]}{dt} = k_{4} \\left(\\alpha + u^{2}\\right) \\left(- u + v\\right) - k_{6} u",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 1315,
+          "name": "BIOMD0000000006: dv/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000006",
+          "latex": "\\frac{d[v]}{dt} = - k_{6} u + \\kappa",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 1778,
+          "name": "BIOMD0000000006: du/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000006",
+          "latex": "\\frac{d[u]}{dt} = k_{4} \\left(\\alpha + u^{2}\\right) \\left(- u + v\\right) - k_{6} u",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 1779,
+          "name": "BIOMD0000000006: dv/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000006",
+          "latex": "\\frac{d[v]}{dt} = - k_{6} u + \\kappa",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 5395,
+          "name": "BIOMD0000000006: du/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000006",
+          "latex": "\\frac{d[u]}{dt} = k_{4} \\left(\\alpha + u^{2}\\right) \\left(- u + v\\right) - k_{6} u",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 5396,
+          "name": "BIOMD0000000006: dv/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000006",
+          "latex": "\\frac{d[v]}{dt} = - k_{6} u + \\kappa",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 8127,
+          "name": "BIOMD0000000006: du/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000006",
+          "latex": "\\frac{d[u]}{dt} = k_{4} \\left(\\alpha + u^{2}\\right) \\left(- u + v\\right) - k_{6} u",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 8128,
+          "name": "BIOMD0000000006: dv/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000006",
+          "latex": "\\frac{d[v]}{dt} = - k_{6} u + \\kappa",
+          "domain": "systems-biology"
+        }
+      ]
+    },
+    "BIOMD0000000020": {
+      "num_equations": 4,
+      "domain": "systems-biology",
+      "formulas": [
+        {
+          "formula_id": 8240,
+          "name": "BIOMD0000000020: dV/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000020",
+          "latex": "\\frac{d[V]}{dt} = \\frac{- i_{K} - i_{L} - i_{Na} + i}{Cm}",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 8241,
+          "name": "BIOMD0000000020: dm/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000020",
+          "latex": "\\frac{d[m]}{dt} = \\alpha_{m} \\left(1 - m\\right) - \\beta_{m} m",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 8242,
+          "name": "BIOMD0000000020: dh/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000020",
+          "latex": "\\frac{d[h]}{dt} = \\alpha_{h} \\left(1 - h\\right) - \\beta_{h} h",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 8243,
+          "name": "BIOMD0000000020: dn/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000020",
+          "latex": "\\frac{d[n]}{dt} = \\alpha_{n} \\left(1 - n\\right) - \\beta_{n} n",
+          "domain": "systems-biology"
+        }
+      ]
+    },
+    "BIOMD0000000034": {
+      "num_equations": 6,
+      "domain": "systems-biology",
+      "formulas": [
+        {
+          "formula_id": 8899,
+          "name": "BIOMD0000000034: dparameter_0000001/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000034",
+          "latex": "\\frac{d[parameter_0000001]}{dt} = - parameter_{0000001} parameter_{0000014} + \\frac{parameter_{0000005} parameter_{0000017} species_{0000008} \\left(1 - parameter_{0000001}\\right)}{\\left(parameter_{0000011} + species_{0000008}\\right) \\left(parameter_{0000005} + species_{0000001} + species_{0000002} + species_{0000003}\\right)}",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 8900,
+          "name": "BIOMD0000000034: dparameter_0000002/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000034",
+          "latex": "\\frac{d[parameter_0000002]}{dt} = - parameter_{0000002} parameter_{0000015} + \\frac{parameter_{0000006} parameter_{0000018} species_{0000008} \\left(1 - parameter_{0000002}\\right)}{\\left(parameter_{0000012} + species_{0000008}\\right) \\left(parameter_{0000006} + species_{0000001} + species_{0000002} + species_{0000003}\\right)}",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 8901,
+          "name": "BIOMD0000000034: dparameter_0000003/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000034",
+          "latex": "\\frac{d[parameter_0000003]}{dt} = - parameter_{0000003} parameter_{0000016} + \\frac{parameter_{0000007} parameter_{0000019} species_{0000008} \\left(1 - parameter_{0000003}\\right)}{\\left(parameter_{0000013} + species_{0000008}\\right) \\left(parameter_{0000007} + species_{0000001} + species_{0000002} + species_{0000003}\\right)}",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 8902,
+          "name": "BIOMD0000000034: dparameter_0000020/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000034",
+          "latex": "\\frac{d[parameter_0000020]}{dt} = \\frac{parameter_{0000001}^{parameter_{0000026}} - parameter_{0000020}}{parameter_{0000023}}",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 8903,
+          "name": "BIOMD0000000034: dparameter_0000021/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000034",
+          "latex": "\\frac{d[parameter_0000021]}{dt} = \\frac{parameter_{0000002}^{parameter_{0000026}} - parameter_{0000021}}{parameter_{0000024}}",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 8904,
+          "name": "BIOMD0000000034: dparameter_0000022/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000034",
+          "latex": "\\frac{d[parameter_0000022]}{dt} = \\frac{parameter_{0000003}^{parameter_{0000026}} - parameter_{0000022}}{parameter_{0000025}}",
+          "domain": "systems-biology"
+        }
+      ]
+    },
+    "BIOMD0000000059": {
+      "num_equations": 2,
+      "domain": "systems-biology",
+      "formulas": [
+        {
+          "formula_id": 9078,
+          "name": "BIOMD0000000059: dn/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000059",
+          "latex": "\\frac{d[n]}{dt} = \\frac{- n + n_{infinity}}{\\tau_{n}}",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 9079,
+          "name": "BIOMD0000000059: dV/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000059",
+          "latex": "\\frac{d[V]}{dt} = \\frac{- I_{CRAN} - I_{CaPump} - I_{KATP} - I_{KCa} - I_{KDr} - I_{Na} - I_{NaCa} - I_{NaK} - I_{Vca}}{Cm}",
+          "domain": "systems-biology"
+        }
+      ]
+    },
+    "BIOMD0000000118": {
+      "num_equations": 5,
+      "domain": "systems-biology",
+      "formulas": [
+        {
+          "formula_id": 10562,
+          "name": "BIOMD0000000118: dzzs/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000118",
+          "latex": "\\frac{d[zzs]}{dt} = \\frac{- zzs + \\operatorname{GAMMAF}{\\left(V,thetaz,sigmaz \\right)}}{tauZs}",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 10563,
+          "name": "BIOMD0000000118: dbbs/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000118",
+          "latex": "\\frac{d[bbs]}{dt} = \\frac{- bbs + \\operatorname{GAMMAF}{\\left(V,thetab,sigmab \\right)}}{tauBs}",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 10564,
+          "name": "BIOMD0000000118: dhhs/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000118",
+          "latex": "\\frac{d[hhs]}{dt} = \\frac{\\phi \\left(- hhs + \\operatorname{GAMMAF}{\\left(V,thetah,sigmah \\right)}\\right)}{7.5 \\operatorname{GAMMAF}{\\left(V,t_{tauh},-6 \\right)} + 1}",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 10565,
+          "name": "BIOMD0000000118: dV/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000118",
+          "latex": "\\frac{d[V]}{dt} = \\frac{- IA - IKdr - INa - INaP + Iapp - Iz - gL \\left(V - VL\\right)}{Cm}",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 10566,
+          "name": "BIOMD0000000118: dnns/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000118",
+          "latex": "\\frac{d[nns]}{dt} = \\frac{\\phi \\left(- nns + \\operatorname{GAMMAF}{\\left(V,thetan,sigman \\right)}\\right)}{5 \\operatorname{GAMMAF}{\\left(V,t_{taun},-15 \\right)} + 1}",
+          "domain": "systems-biology"
+        }
+      ]
+    },
+    "BIOMD0000000119": {
+      "num_equations": 8,
+      "domain": "systems-biology",
+      "formulas": [
+        {
+          "formula_id": 10773,
+          "name": "BIOMD0000000119: dzzs/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000119",
+          "latex": "\\frac{d[zzs]}{dt} = \\frac{- zzs + \\operatorname{GAMMAF}{\\left(V,thetaz,sigmaz \\right)}}{tauZs}",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 10774,
+          "name": "BIOMD0000000119: dbbs/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000119",
+          "latex": "\\frac{d[bbs]}{dt} = \\frac{- bbs + \\operatorname{GAMMAF}{\\left(V,thetab,sigmab \\right)}}{tauBs}",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 10775,
+          "name": "BIOMD0000000119: dhhs/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000119",
+          "latex": "\\frac{d[hhs]}{dt} = \\frac{\\phi \\left(- hhs + \\operatorname{GAMMAF}{\\left(V,thetah,sigmah \\right)}\\right)}{7.5 \\operatorname{GAMMAF}{\\left(V,t_{tauh},-6 \\right)} + 1}",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 10776,
+          "name": "BIOMD0000000119: dnns/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000119",
+          "latex": "\\frac{d[nns]}{dt} = \\frac{\\phi \\left(- nns + \\operatorname{GAMMAF}{\\left(V,thetan,sigman \\right)}\\right)}{5 \\operatorname{GAMMAF}{\\left(V,t_{taun},-15 \\right)} + 1}",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 10777,
+          "name": "BIOMD0000000119: drrs/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000119",
+          "latex": "\\frac{d[rrs]}{dt} = \\frac{- rrs + \\operatorname{GAMMAF}{\\left(V,thetar,sigmar \\right)}}{tauRs}",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 10778,
+          "name": "BIOMD0000000119: dccs/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000119",
+          "latex": "\\frac{d[ccs]}{dt} = \\frac{- ccs + \\operatorname{GAMMAF}{\\left(V,thetac,sigmac \\right)}}{tauKc}",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 10779,
+          "name": "BIOMD0000000119: dqqs/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000119",
+          "latex": "\\frac{d[qqs]}{dt} = \\frac{- qqs + \\operatorname{ZFUNC}{\\left(aq,Ca,pwrq \\right)}}{tauq}",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 10780,
+          "name": "BIOMD0000000119: dV/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000119",
+          "latex": "\\frac{d[V]}{dt} = \\frac{- IA - IAHP - ICa - IKC - IKdr - INa - INaP + Iapp - Iz - gL \\left(V - VL\\right)}{Cm}",
+          "domain": "systems-biology"
+        }
+      ]
+    },
+    "BIOMD0000000124": {
+      "num_equations": 5,
+      "domain": "systems-biology",
+      "formulas": [
+        {
+          "formula_id": 10805,
+          "name": "BIOMD0000000124: dnIR/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000124",
+          "latex": "\\frac{d[nIR]}{dt} = \\frac{- nIR + nIRinf}{tauIRn}",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 10806,
+          "name": "BIOMD0000000124: drIR/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000124",
+          "latex": "\\frac{d[rIR]}{dt} = \\frac{- rIR + rIRinf}{tauIRr}",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 10807,
+          "name": "BIOMD0000000124: dn/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000124",
+          "latex": "\\frac{d[n]}{dt} = \\frac{- n + ninf}{taun}",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 10808,
+          "name": "BIOMD0000000124: da/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000124",
+          "latex": "\\frac{d[a]}{dt} = \\frac{- a + ainf}{taua}",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 10809,
+          "name": "BIOMD0000000124: dV/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000124",
+          "latex": "\\frac{d[V]}{dt} = \\frac{- ica - iir - ik - ikatp - ikca}{cm}",
+          "domain": "systems-biology"
+        }
+      ]
+    },
+    "BIOMD0000000127": {
+      "num_equations": 2,
+      "domain": "systems-biology",
+      "formulas": [
+        {
+          "formula_id": 10820,
+          "name": "BIOMD0000000127: dv/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000127",
+          "latex": "\\frac{d[v]}{dt} = - U + i + 0.04 v^{2} + 5 v + 140",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 10821,
+          "name": "BIOMD0000000127: dU/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000127",
+          "latex": "\\frac{d[U]}{dt} = a \\left(- U + b v\\right)",
+          "domain": "systems-biology"
+        }
+      ]
+    },
+    "BIOMD0000000128": {
+      "num_equations": 4,
+      "domain": "systems-biology",
+      "formulas": [
+        {
+          "formula_id": 10844,
+          "name": "BIOMD0000000128: dh/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000128",
+          "latex": "\\frac{d[h]}{dt} = \\frac{- h + hinf}{tauh}",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 10845,
+          "name": "BIOMD0000000128: dinh/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000128",
+          "latex": "\\frac{d[inh]}{dt} = \\frac{ETswitch \\left(0.2 - inh\\right)}{taudir}",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 10846,
+          "name": "BIOMD0000000128: dV/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000128",
+          "latex": "\\frac{d[V]}{dt} = \\frac{- ica - igirk - ik}{cm}",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 10847,
+          "name": "BIOMD0000000128: dn/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000128",
+          "latex": "\\frac{d[n]}{dt} = lambda * (ninf - n) / taun",
+          "domain": "systems-biology"
+        }
+      ]
+    },
+    "BIOMD0000000129": {
+      "num_equations": 2,
+      "domain": "systems-biology",
+      "formulas": [
+        {
+          "formula_id": 10848,
+          "name": "BIOMD0000000129: dv/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000129",
+          "latex": "\\frac{d[v]}{dt} = i - u + 0.04 v^{2} + 5 v + 140",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 10849,
+          "name": "BIOMD0000000129: du/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000129",
+          "latex": "\\frac{d[u]}{dt} = a \\left(b v - u\\right)",
+          "domain": "systems-biology"
+        }
+      ]
+    },
+    "BIOMD0000000130": {
+      "num_equations": 2,
+      "domain": "systems-biology",
+      "formulas": [
+        {
+          "formula_id": 10875,
+          "name": "BIOMD0000000130: dv/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000130",
+          "latex": "\\frac{d[v]}{dt} = i - u + 0.04 v^{2} + 4.1 v + 108",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 10876,
+          "name": "BIOMD0000000130: du/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000130",
+          "latex": "\\frac{d[u]}{dt} = a \\left(b v - u\\right)",
+          "domain": "systems-biology"
+        }
+      ]
+    },
+    "BIOMD0000000131": {
+      "num_equations": 2,
+      "domain": "systems-biology",
+      "formulas": [
+        {
+          "formula_id": 10822,
+          "name": "BIOMD0000000131: dv/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000131",
+          "latex": "\\frac{d[v]}{dt} = i - u + 0.04 v^{2} + 5 v + 140",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 10823,
+          "name": "BIOMD0000000131: du/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000131",
+          "latex": "\\frac{d[u]}{dt} = a \\left(b v - u\\right)",
+          "domain": "systems-biology"
+        }
+      ]
+    },
+    "BIOMD0000000132": {
+      "num_equations": 2,
+      "domain": "systems-biology",
+      "formulas": [
+        {
+          "formula_id": 10873,
+          "name": "BIOMD0000000132: dv/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000132",
+          "latex": "\\frac{d[v]}{dt} = i - u + 0.04 v^{2} + 5 v + 140",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 10874,
+          "name": "BIOMD0000000132: du/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000132",
+          "latex": "\\frac{d[u]}{dt} = a \\left(b v - u\\right)",
+          "domain": "systems-biology"
+        }
+      ]
+    },
+    "BIOMD0000000133": {
+      "num_equations": 2,
+      "domain": "systems-biology",
+      "formulas": [
+        {
+          "formula_id": 10871,
+          "name": "BIOMD0000000133: du/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000133",
+          "latex": "\\frac{d[u]}{dt} = a \\left(b v - u\\right)",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 10872,
+          "name": "BIOMD0000000133: dv/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000133",
+          "latex": "\\frac{d[v]}{dt} = i - u + 0.04 v^{2} + 5 v + 140",
+          "domain": "systems-biology"
+        }
+      ]
+    },
+    "BIOMD0000000134": {
+      "num_equations": 2,
+      "domain": "systems-biology",
+      "formulas": [
+        {
+          "formula_id": 10869,
+          "name": "BIOMD0000000134: dv/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000134",
+          "latex": "\\frac{d[v]}{dt} = i - u + 0.04 v^{2} + 5 v + 140",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 10870,
+          "name": "BIOMD0000000134: du/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000134",
+          "latex": "\\frac{d[u]}{dt} = a \\left(b v - u\\right)",
+          "domain": "systems-biology"
+        }
+      ]
+    },
+    "BIOMD0000000135": {
+      "num_equations": 2,
+      "domain": "systems-biology",
+      "formulas": [
+        {
+          "formula_id": 11009,
+          "name": "BIOMD0000000135: du/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000135",
+          "latex": "\\frac{d[u]}{dt} = a \\left(b v - u\\right)",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 11010,
+          "name": "BIOMD0000000135: dv/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000135",
+          "latex": "\\frac{d[v]}{dt} = i - u + 0.04 v^{2} + 5 v + 140",
+          "domain": "systems-biology"
+        }
+      ]
+    },
+    "BIOMD0000000136": {
+      "num_equations": 2,
+      "domain": "systems-biology",
+      "formulas": [
+        {
+          "formula_id": 10909,
+          "name": "BIOMD0000000136: dv/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000136",
+          "latex": "\\frac{d[v]}{dt} = i - u + 0.04 v^{2} + 5 v + 140",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 10910,
+          "name": "BIOMD0000000136: du/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000136",
+          "latex": "\\frac{d[u]}{dt} = a \\left(b v - u\\right)",
+          "domain": "systems-biology"
+        }
+      ]
+    },
+    "BIOMD0000000138": {
+      "num_equations": 3,
+      "domain": "systems-biology",
+      "formulas": [
+        {
+          "formula_id": 10878,
+          "name": "BIOMD0000000138: dV/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000138",
+          "latex": "\\frac{d[V]}{dt} = \\frac{- ica - ik}{Cm}",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 10879,
+          "name": "BIOMD0000000138: dn/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000138",
+          "latex": "\\frac{d[n]}{dt} = lambda * (phik - n) / taun",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 10880,
+          "name": "BIOMD0000000138: dh/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000138",
+          "latex": "\\frac{d[h]}{dt} = \\frac{- h + phih}{tauh}",
+          "domain": "systems-biology"
+        }
+      ]
+    },
+    "BIOMD0000000141": {
+      "num_equations": 2,
+      "domain": "systems-biology",
+      "formulas": [
+        {
+          "formula_id": 10913,
+          "name": "BIOMD0000000141: dv/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000141",
+          "latex": "\\frac{d[v]}{dt} = i - u + 0.04 v^{2} + 4.1 v + 108",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 10914,
+          "name": "BIOMD0000000141: du/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000141",
+          "latex": "\\frac{d[u]}{dt} = a \\left(b v - u\\right)",
+          "domain": "systems-biology"
+        }
+      ]
+    },
+    "BIOMD0000000142": {
+      "num_equations": 2,
+      "domain": "systems-biology",
+      "formulas": [
+        {
+          "formula_id": 10911,
+          "name": "BIOMD0000000142: dv/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000142",
+          "latex": "\\frac{d[v]}{dt} = i - u + 0.04 v^{2} + 5 v + 140",
+          "domain": "systems-biology"
+        },
+        {
+          "formula_id": 10912,
+          "name": "BIOMD0000000142: du/dt",
+          "description": "ODE rate rule from BioModels BIOMD0000000142",
+          "latex": "\\frac{d[u]}{dt} = a \\left(b v - u\\right)",
+          "domain": "systems-biology"
+        }
+      ]
+    }
+  },
+  "allosteric_regulation": [
+    {
+      "formula_id": 21,
+      "name": "GABA-A Synaptic Current",
+      "description": "GABA-A receptor-mediated inhibitory synaptic current",
+      "latex": "I_{GABA_A} = g_{GABA_A} s (V - E_{Cl})",
+      "domain": "synaptic-transmission",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 32,
+      "name": "Wilson-Cowan Inhibitory",
+      "description": "Wilson-Cowan inhibitory population rate equation",
+      "latex": "\\tau_I \\frac{dI}{dt} = -I + S_I(w_{IE}E - w_{II}I)",
+      "domain": "neural-networks",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 38,
+      "name": "Competitive Inhibition",
+      "description": "Enzyme kinetics with competitive inhibitor",
+      "latex": "v = \\frac{V_{max} [S]}{K_m \\left(1 + \\frac{[I]}{K_i}\\right) + [S]}",
+      "domain": "enzyme-kinetics",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 39,
+      "name": "Non-competitive Inhibition",
+      "description": "Enzyme kinetics with non-competitive inhibitor",
+      "latex": "v = \\frac{V_{max} [S]}{(K_m + [S])\\left(1 + \\frac{[I]}{K_i}\\right)}",
+      "domain": "enzyme-kinetics",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 40,
+      "name": "Uncompetitive Inhibition",
+      "description": "Enzyme kinetics with uncompetitive inhibitor",
+      "latex": "v = \\frac{V_{max} [S]}{K_m + [S]\\left(1 + \\frac{[I]}{K_i}\\right)}",
+      "domain": "enzyme-kinetics",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 49,
+      "name": "Monod-Wyman-Changeux (MWC) Model",
+      "description": "Concerted allosteric transition model",
+      "latex": "Y = \\frac{\\alpha(1+\\alpha)^{n-1} + Lc\\alpha(1+c\\alpha)^{n-1}}{(1+\\alpha)^n + L(1+c\\alpha)^n}",
+      "domain": "enzyme-kinetics",
+      "regulation_types": [
+        "allosteric"
+      ]
+    },
+    {
+      "formula_id": 77,
+      "name": "Turing Activator",
+      "description": "Activator in Turing pattern formation",
+      "latex": "\\frac{\\partial a}{\\partial t} = D_a \\nabla^2 a + \\rho_a \\frac{a^2}{h} - \\mu_a a + \\rho_0",
+      "domain": "pattern-formation",
+      "regulation_types": [
+        "activation"
+      ]
+    },
+    {
+      "formula_id": 202,
+      "name": "PFK1 Allosteric Regulation",
+      "description": "PFK1 with ATP inhibition, AMP activation, F6P cooperativity",
+      "latex": "v_{PFK1} = V_{max} \\frac{[F6P]^n [ATP]}{(K_{F6P}^n + [F6P]^n)(K_{ATP} + [ATP])} \\cdot \\frac{K_i^m}{K_i^m + [ATP]^m} \\cdot \\frac{[AMP]^p + K_a^p}{K_a^p}",
+      "domain": "glycolysis",
+      "regulation_types": [
+        "activation",
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 203,
+      "name": "Pyruvate Kinase Allosteric",
+      "description": "PK with F1,6BP feedforward activation",
+      "latex": "v_{PK} = V_{max} \\frac{[PEP]^n [ADP]}{(K_{PEP}^n + [PEP]^n)(K_{ADP} + [ADP])} \\cdot \\frac{[F1,6BP]}{K_a + [F1,6BP]}",
+      "domain": "glycolysis",
+      "regulation_types": [
+        "activation"
+      ]
+    },
+    {
+      "formula_id": 253,
+      "name": "Competitive Binding",
+      "description": "Ligand binding with competitive inhibitor",
+      "latex": "[RL] = \\frac{[R]_T [L]}{K_d (1 + [I]/K_i) + [L]}",
+      "domain": "receptor-binding",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 254,
+      "name": "Allosteric Binding (MWC)",
+      "description": "Monod-Wyman-Changeux allosteric binding model",
+      "latex": "Y = \\frac{[L]/K_R (1 + [L]/K_R)^{n-1} + L c [L]/K_R (1 + c[L]/K_R)^{n-1}}{(1 + [L]/K_R)^n + L(1 + c[L]/K_R)^n}",
+      "domain": "receptor-binding",
+      "regulation_types": [
+        "allosteric"
+      ]
+    },
+    {
+      "formula_id": 299,
+      "name": "GABA-A-\u03b11\u03b22\u03b32 Current",
+      "description": "GABA-A-\u03b11\u03b22\u03b32: main inhibitory. Permeable to Cl",
+      "latex": "I_{GABA-A-\u03b11\u03b22\u03b32} = g_{GABA-A-\u03b11\u03b22\u03b32} \\cdot P_{open}([GABA]) \\cdot (V - E_{rev})",
+      "domain": "LGIC",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 422,
+      "name": "IKK Activation",
+      "description": "IKK activation by upstream signals, inhibition by A20",
+      "latex": "\\frac{d[IKK^*]}{dt} = k_{act} [Signal][IKK] - k_{deact} [A20][IKK^*]",
+      "domain": "NF-kB",
+      "regulation_types": [
+        "activation",
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 597,
+      "name": "BRENDA: Competitive Inhibition",
+      "description": "Enzyme kinetics with competitive inhibitor",
+      "latex": "v = \\frac{V_{max} [S]}{K_m(1 + [I]/K_i) + [S]}",
+      "domain": "enzyme-kinetics",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 598,
+      "name": "BRENDA: Non-Competitive Inhibition",
+      "description": "Enzyme kinetics with non-competitive inhibitor",
+      "latex": "v = \\frac{V_{max} [S]}{(K_m + [S])(1 + [I]/K_i)}",
+      "domain": "enzyme-kinetics",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 599,
+      "name": "BRENDA: Uncompetitive Inhibition",
+      "description": "Enzyme kinetics with uncompetitive inhibitor",
+      "latex": "v = \\frac{V_{max} [S]}{K_m + [S](1 + [I]/K_i)}",
+      "domain": "enzyme-kinetics",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 605,
+      "name": "BRENDA: Allosteric Activation",
+      "description": "Enzyme with allosteric activator",
+      "latex": "v = \\frac{V_{max} [S]}{K_m + [S]} \\cdot \\frac{1 + ([A]/K_a)^n}{1 + ([A]/K_a)^n + (K_m/[S])}",
+      "domain": "enzyme-kinetics",
+      "regulation_types": [
+        "activation",
+        "allosteric"
+      ]
+    },
+    {
+      "formula_id": 1352,
+      "name": "BIOMD0000000009: binding of MAPKKK activator",
+      "description": "Reaction rate law from BioModels BIOMD0000000009: binding of MAPKKK activator",
+      "latex": "v = compartment * (a1 * E1 * KKK - d1 * E1_KKK)",
+      "domain": "biochemistry",
+      "regulation_types": [
+        "activation"
+      ]
+    },
+    {
+      "formula_id": 1354,
+      "name": "BIOMD0000000009: binding of MAPKKK inactivator",
+      "description": "Reaction rate law from BioModels BIOMD0000000009: binding of MAPKKK inactivator",
+      "latex": "v = compartment \\left(E_{2} P_{KKK} a_{2} - E_{2 P KKK} d_{2}\\right)",
+      "domain": "biochemistry",
+      "regulation_types": [
+        "activation"
+      ]
+    },
+    {
+      "formula_id": 1473,
+      "name": "BIOMD0000000008: creation of cyclin inhibitor",
+      "description": "Reaction rate law from BioModels BIOMD0000000008: creation of cyclin inhibitor",
+      "latex": "v = vs",
+      "domain": "biochemistry",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 1474,
+      "name": "BIOMD0000000008: degradation of cyclin inhibitor",
+      "description": "Reaction rate law from BioModels BIOMD0000000008: degradation of cyclin inhibitor",
+      "latex": "v = Y d_{1}",
+      "domain": "biochemistry",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 1753,
+      "name": "BIOMD0000000008: creation of cyclin inhibitor",
+      "description": "Reaction rate law from BioModels BIOMD0000000008: creation of cyclin inhibitor",
+      "latex": "v = vs",
+      "domain": "biochemistry",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 1754,
+      "name": "BIOMD0000000008: degradation of cyclin inhibitor",
+      "description": "Reaction rate law from BioModels BIOMD0000000008: degradation of cyclin inhibitor",
+      "latex": "v = Y d_{1}",
+      "domain": "biochemistry",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 1755,
+      "name": "BIOMD0000000009: binding of MAPKKK activator",
+      "description": "Reaction rate law from BioModels BIOMD0000000009: binding of MAPKKK activator",
+      "latex": "v = compartment * (a1 * E1 * KKK - d1 * E1_KKK)",
+      "domain": "biochemistry",
+      "regulation_types": [
+        "activation"
+      ]
+    },
+    {
+      "formula_id": 1757,
+      "name": "BIOMD0000000009: binding of MAPKKK inactivator",
+      "description": "Reaction rate law from BioModels BIOMD0000000009: binding of MAPKKK inactivator",
+      "latex": "v = compartment \\left(E_{2} P_{KKK} a_{2} - E_{2 P KKK} d_{2}\\right)",
+      "domain": "biochemistry",
+      "regulation_types": [
+        "activation"
+      ]
+    },
+    {
+      "formula_id": 5017,
+      "name": "BIOMD0000000008: creation of cyclin inhibitor",
+      "description": "Reaction rate law from BioModels BIOMD0000000008: creation of cyclin inhibitor",
+      "latex": "v = vs",
+      "domain": "biochemistry",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 5018,
+      "name": "BIOMD0000000008: degradation of cyclin inhibitor",
+      "description": "Reaction rate law from BioModels BIOMD0000000008: degradation of cyclin inhibitor",
+      "latex": "v = Y d_{1}",
+      "domain": "biochemistry",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 5511,
+      "name": "BIOMD0000000009: binding of MAPKKK activator",
+      "description": "Reaction rate law from BioModels BIOMD0000000009: binding of MAPKKK activator",
+      "latex": "v = compartment * (a1 * E1 * KKK - d1 * E1_KKK)",
+      "domain": "biochemistry",
+      "regulation_types": [
+        "activation"
+      ]
+    },
+    {
+      "formula_id": 5513,
+      "name": "BIOMD0000000009: binding of MAPKKK inactivator",
+      "description": "Reaction rate law from BioModels BIOMD0000000009: binding of MAPKKK inactivator",
+      "latex": "v = compartment \\left(E_{2} P_{KKK} a_{2} - E_{2 P KKK} d_{2}\\right)",
+      "domain": "biochemistry",
+      "regulation_types": [
+        "activation"
+      ]
+    },
+    {
+      "formula_id": 8122,
+      "name": "BIOMD0000000008: creation of cyclin inhibitor",
+      "description": "Reaction rate law from BioModels BIOMD0000000008: creation of cyclin inhibitor",
+      "latex": "v = vs",
+      "domain": "biochemistry",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 8123,
+      "name": "BIOMD0000000008: degradation of cyclin inhibitor",
+      "description": "Reaction rate law from BioModels BIOMD0000000008: degradation of cyclin inhibitor",
+      "latex": "v = Y d_{1}",
+      "domain": "biochemistry",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 8148,
+      "name": "BIOMD0000000009: binding of MAPKKK activator",
+      "description": "Reaction rate law from BioModels BIOMD0000000009: binding of MAPKKK activator",
+      "latex": "v = compartment * (a1 * E1 * KKK - d1 * E1_KKK)",
+      "domain": "biochemistry",
+      "regulation_types": [
+        "activation"
+      ]
+    },
+    {
+      "formula_id": 8150,
+      "name": "BIOMD0000000009: binding of MAPKKK inactivator",
+      "description": "Reaction rate law from BioModels BIOMD0000000009: binding of MAPKKK inactivator",
+      "latex": "v = compartment \\left(E_{2} P_{KKK} a_{2} - E_{2 P KKK} d_{2}\\right)",
+      "domain": "biochemistry",
+      "regulation_types": [
+        "activation"
+      ]
+    },
+    {
+      "formula_id": 30690,
+      "name": "BIOMD0000000629: Ligand-Receptor-CoActivator complex formation",
+      "description": "Reaction rate law from BioModels BIOMD0000000629: Ligand-Receptor-CoActivator complex formation",
+      "latex": "v = RAR_{retinoids} \\left(CA LR k_{1} - LRCA k_{2}\\right)",
+      "domain": "biochemistry",
+      "regulation_types": [
+        "activation"
+      ]
+    },
+    {
+      "formula_id": 30946,
+      "name": "BIOMD0000000630: activation of urokinase-type plasminogen activator",
+      "description": "Reaction rate law from BioModels BIOMD0000000630: activation of urokinase-type plasminogen activator",
+      "latex": "v = compartment_{1} \\operatorname{Function}_{for reaction 2 0}{\\left(parameter_{13},parameter_{8},species_{2},species_{3} \\right)}",
+      "domain": "biochemistry",
+      "regulation_types": [
+        "activation"
+      ]
+    },
+    {
+      "formula_id": 30948,
+      "name": "BIOMD0000000630: degradation of single intact chain urokinase-type plasminogen activator",
+      "description": "Reaction rate law from BioModels BIOMD0000000630: degradation of single intact chain urokinase-type plasminogen activator",
+      "latex": "v = compartment_{1} parameter_{1} species_{3}",
+      "domain": "biochemistry",
+      "regulation_types": [
+        "activation"
+      ]
+    },
+    {
+      "formula_id": 30951,
+      "name": "BIOMD0000000630: degradation of two-chain urokinase type plasminogen activator",
+      "description": "Reaction rate law from BioModels BIOMD0000000630: degradation of two-chain urokinase type plasminogen activator",
+      "latex": "v = compartment_{1} parameter_{1} species_{4}",
+      "domain": "biochemistry",
+      "regulation_types": [
+        "activation"
+      ]
+    },
+    {
+      "formula_id": 30956,
+      "name": "BIOMD0000000630: synthesis of single intact chain urokinase-type plasminogen activator",
+      "description": "Reaction rate law from BioModels BIOMD0000000630: synthesis of single intact chain urokinase-type plasminogen activator",
+      "latex": "v = compartment_{1} \\operatorname{Constant}^{irreversible}_{flux 0}{\\left(v \\right)}",
+      "domain": "biochemistry",
+      "regulation_types": [
+        "activation"
+      ]
+    },
+    {
+      "formula_id": 38205,
+      "name": "Reactome R-HSA-141422: MAD2 converted  to an inhibitory state via interaction with Mad1",
+      "description": "Reaction rate (transition): MAD2 converted  to an inhibitory state via interaction with Mad1",
+      "latex": "v = k [Kinetochore:Mad1:MAD2 Complex [cytosol]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 38589,
+      "name": "Reactome R-HSA-9754129: CDK6 inhibitors bind CDK6",
+      "description": "Reaction rate (transition): CDK6 inhibitors bind CDK6",
+      "latex": "v = k [p-T177-CDK6:CCND [nucleoplasm]] [CDK6 inhibitors [nucleoplasm]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 38590,
+      "name": "Reactome R-HSA-9754129: Production of p-T177-CDK6:CCND:CDK6 inhibitors [nucleoplasm]",
+      "description": "Production of p-T177-CDK6:CCND:CDK6 inhibitors [nucleoplasm] via transition",
+      "latex": "\\frac{d[p_T177_CDK6:CCND:CDK6_inhibitors_nucleoplasm]}{dt} = k [p-T177-CDK6:CCND [nucleoplasm]] [CDK6 inhibitors [nucleoplasm]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 38591,
+      "name": "Reactome R-HSA-9754130: CDK4 inhibitors bind CDK4",
+      "description": "Reaction rate (transition): CDK4 inhibitors bind CDK4",
+      "latex": "v = k [CDK4 inhibitors [nucleoplasm]] [p-T172-CDK4:CCND [nucleoplasm]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 38592,
+      "name": "Reactome R-HSA-9754130: Production of p-T172-CDK4:CCND:CDK4 inhibitors [nucleoplasm]",
+      "description": "Production of p-T172-CDK4:CCND:CDK4 inhibitors [nucleoplasm] via transition",
+      "latex": "\\frac{d[p_T172_CDK4:CCND:CDK4_inhibitors_nucleoplasm]}{dt} = k [CDK4 inhibitors [nucleoplasm]] [p-T172-CDK4:CCND [nucleoplasm]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 38593,
+      "name": "Reactome R-HSA-8941915: Cip/Kip CDK inhibitors bind CDK4/6:CCND complexes",
+      "description": "Reaction rate (binding): Cip/Kip CDK inhibitors bind CDK4/6:CCND complexes",
+      "latex": "v = k [CDKN1A,CDKN1B,(CDKN1C) [cytosol]] [CDK4,CDK6:CCND [cytosol]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 38641,
+      "name": "Reactome R-HSA-8942607: Tyrosine kinases phosphorylate Cip/Kip inhibitors bound to CDK4/6:CCND complexes",
+      "description": "Reaction rate (transition): Tyrosine kinases phosphorylate Cip/Kip inhibitors bound to CDK4/6:CCND complexes",
+      "latex": "v = k [ATP [cytosol]] [CDK4,CDK6:CCND:CDKN1A,CDKN1B,(CDKN1C) [cytosol]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 48512,
+      "name": "Reactome R-HSA-9679787: HDAC1:2-containing complex binds HDAC2 Inhibitors",
+      "description": "Reaction rate (binding): HDAC1:2-containing complex binds HDAC2 Inhibitors",
+      "latex": "v = k [HDAC1:2-containing complex [nucleoplasm]] [HDAC2 inhibitors [nucleoplasm]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 48513,
+      "name": "Reactome R-HSA-9679787: Production of HDAC1:2-containing complex:HDAC2 inhibitors [nucleoplasm]",
+      "description": "Production of HDAC1:2-containing complex:HDAC2 inhibitors [nucleoplasm] via binding",
+      "latex": "\\frac{d[HDAC1:2_containing_complex:HDAC2_inhibitors_nucleoplasm]}{dt} = k [HDAC1:2-containing complex [nucleoplasm]] [HDAC2 inhibitors [nucleoplasm]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 60528,
+      "name": "Reactome R-HSA-5340560: PORCN-inhibitor LGK974 prevents WNT ligand palmitoyltation and secretion",
+      "description": "Reaction rate (binding): PORCN-inhibitor LGK974 prevents WNT ligand palmitoyltation and secretion",
+      "latex": "v = k [LGK974 [endoplasmic reticulum lumen]] [PORCN [endoplasmic reticulum membrane]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 60690,
+      "name": "Reactome R-HSA-2400010: AKT inhibitors block AKT membrane recruitment",
+      "description": "Reaction rate (binding): AKT inhibitors block AKT membrane recruitment",
+      "latex": "v = k [AKT/AKT1 E17K mutant [cytosol]] [AKT inhibitors [cytosol]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 60691,
+      "name": "Reactome R-HSA-2400010: Production of AKT inhibitors:AKT [cytosol]",
+      "description": "Production of AKT inhibitors:AKT [cytosol] via binding",
+      "latex": "\\frac{d[AKT_inhibitors:AKT_cytosol]}{dt} = k [AKT/AKT1 E17K mutant [cytosol]] [AKT inhibitors [cytosol]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 60710,
+      "name": "Reactome R-HSA-2400009: PI3K inhibitors block PI3K catalytic activity",
+      "description": "Reaction rate (binding): PI3K inhibitors block PI3K catalytic activity",
+      "latex": "v = k [PI3K mutants,Activator:PI3K [plasma membrane]] [PI3K/mutant PI3K inhibitors [cytosol]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 60711,
+      "name": "Reactome R-HSA-2400009: Production of PI3K Inhibitors:PI3K [cytosol]",
+      "description": "Production of PI3K Inhibitors:PI3K [cytosol] via binding",
+      "latex": "\\frac{d[PI3K_Inhibitors:PI3K_cytosol]}{dt} = k [PI3K mutants,Activator:PI3K [plasma membrane]] [PI3K/mutant PI3K inhibitors [cytosol]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 60721,
+      "name": "Reactome R-HSA-6802938: Inhibitors bind and inhibit highly active BRAF mutants",
+      "description": "Reaction rate (binding): Inhibitors bind and inhibit highly active BRAF mutants",
+      "latex": "v = k [BRAF inhibitors [cytosol]] [high kinase activity BRAF mutants [cytosol]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 60722,
+      "name": "Reactome R-HSA-6802938: Production of BRAF inhibitors:high kinase activity BRAF mutants [cytosol]",
+      "description": "Production of BRAF inhibitors:high kinase activity BRAF mutants [cytosol] via binding",
+      "latex": "\\frac{d[BRAF_inhibitors:high_kinase_activity_BRAF_mutants_cytosol]}{dt} = k [BRAF inhibitors [cytosol]] [high kinase activity BRAF mutants [cytosol]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 60909,
+      "name": "Reactome R-HSA-2220964: Production of NOTCH1 PEST Domain Mutants Coactivator Complex [nucleoplasm]",
+      "description": "Production of NOTCH1 PEST Domain Mutants Coactivator Complex [nucleoplasm] via binding",
+      "latex": "\\frac{d[NOTCH1_PEST_Domain_Mutants_Coactivator_Complex_nucleoplasm]}{dt} = k [CREBBP [nucleoplasm]] [PCAF [nucleoplasm]] [NICD1 PEST domain mutants:RBPJ:SNW1 [nucleoplasm]] [EP300 [nucleoplasm]] [MAML [nucleoplasm]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "activation"
+      ]
+    },
+    {
+      "formula_id": 60911,
+      "name": "Reactome R-HSA-4396401: Production of NOTCH1 PEST Domain Mutants Coactivator Complex:HES5 Gene [nucleoplasm]",
+      "description": "Production of NOTCH1 PEST Domain Mutants Coactivator Complex:HES5 Gene [nucleoplasm] via binding",
+      "latex": "\\frac{d[NOTCH1_PEST_Domain_Mutants_Coactivator_Complex:HES5_Gene_nucleoplasm]}{dt} = k [NOTCH1 PEST Domain Mutants Coactivator Complex [nucleoplasm]] [HES5 gene [nucleoplasm]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "activation"
+      ]
+    },
+    {
+      "formula_id": 60915,
+      "name": "Reactome R-HSA-2220957: NOTCH1 PEST domain mutants coactivator complex binds CDK8:CCNC",
+      "description": "Reaction rate (binding): NOTCH1 PEST domain mutants coactivator complex binds CDK8:CCNC",
+      "latex": "v = k [NOTCH1 PEST Domain Mutants Coactivator Complex [nucleoplasm]] [CDK8:CCNC [nucleoplasm]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "activation"
+      ]
+    },
+    {
+      "formula_id": 60916,
+      "name": "Reactome R-HSA-2220957: Production of NOTCH1 PEST Domain Mutants Coactivator Complex:CDK8:CCNC [nucleoplasm]",
+      "description": "Production of NOTCH1 PEST Domain Mutants Coactivator Complex:CDK8:CCNC [nucleoplasm] via binding",
+      "latex": "\\frac{d[NOTCH1_PEST_Domain_Mutants_Coactivator_Complex:CDK8:CCNC_nucleoplasm]}{dt} = k [NOTCH1 PEST Domain Mutants Coactivator Complex [nucleoplasm]] [CDK8:CCNC [nucleoplasm]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "activation"
+      ]
+    },
+    {
+      "formula_id": 61295,
+      "name": "Reactome R-HSA-9683546: FURIN binds furin inhibitors",
+      "description": "Reaction rate (binding): FURIN binds furin inhibitors",
+      "latex": "v = k [FURIN inhibitors [extracellular region]] [FURIN [plasma membrane]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61296,
+      "name": "Reactome R-HSA-9683546: Production of FURIN:FURIN inhibitors [plasma membrane]",
+      "description": "Production of FURIN:FURIN inhibitors [plasma membrane] via binding",
+      "latex": "\\frac{d[FURIN:FURIN_inhibitors_plasma_membrane]}{dt} = k [FURIN inhibitors [extracellular region]] [FURIN [plasma membrane]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61482,
+      "name": "Reactome R-HSA-9679787: HDAC1:2-containing complex binds HDAC2 Inhibitors",
+      "description": "Reaction rate (binding): HDAC1:2-containing complex binds HDAC2 Inhibitors",
+      "latex": "v = k [HDAC1:2-containing complex [nucleoplasm]] [HDAC2 inhibitors [nucleoplasm]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61483,
+      "name": "Reactome R-HSA-9679787: Production of HDAC1:2-containing complex:HDAC2 inhibitors [nucleoplasm]",
+      "description": "Production of HDAC1:2-containing complex:HDAC2 inhibitors [nucleoplasm] via binding",
+      "latex": "\\frac{d[HDAC1:2_containing_complex:HDAC2_inhibitors_nucleoplasm]}{dt} = k [HDAC1:2-containing complex [nucleoplasm]] [HDAC2 inhibitors [nucleoplasm]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61488,
+      "name": "Reactome R-HSA-9678561: IFNGR1:JAK1:INFGR2:JAK2 binds JAK1,2 inhibitors",
+      "description": "Reaction rate (binding): IFNGR1:JAK1:INFGR2:JAK2 binds JAK1,2 inhibitors",
+      "latex": "v = k [IFNGR1:JAK1:INFGR2:JAK2 [plasma membrane]] [JAK1,2 inhibitors [cytosol]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61489,
+      "name": "Reactome R-HSA-9678561: Production of IFNGR1:JAK1:INFGR2:JAK2:JAK1,2 inhibitors [plasma membrane]",
+      "description": "Production of IFNGR1:JAK1:INFGR2:JAK2:JAK1,2 inhibitors [plasma membrane] via binding",
+      "latex": "\\frac{d[IFNGR1:JAK1:INFGR2:JAK2:JAK1,2_inhibitors_plasma_membrane]}{dt} = k [IFNGR1:JAK1:INFGR2:JAK2 [plasma membrane]] [JAK1,2 inhibitors [cytosol]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61490,
+      "name": "Reactome R-HSA-9681763: IL1R1 binds IL1R1 inhibitors",
+      "description": "Reaction rate (binding): IL1R1 binds IL1R1 inhibitors",
+      "latex": "v = k [IL1R1 inhibitors [extracellular region]] [IL1R1 [plasma membrane]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61491,
+      "name": "Reactome R-HSA-9681763: Production of IL1R1:IL1R1 inhibitors [plasma membrane]",
+      "description": "Production of IL1R1:IL1R1 inhibitors [plasma membrane] via binding",
+      "latex": "\\frac{d[IL1R1:IL1R1_inhibitors_plasma_membrane]}{dt} = k [IL1R1 inhibitors [extracellular region]] [IL1R1 [plasma membrane]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61494,
+      "name": "Reactome R-HSA-9679421: PDCD1 binds PDCD1 inhibitors",
+      "description": "Reaction rate (binding): PDCD1 binds PDCD1 inhibitors",
+      "latex": "v = k [PDCD1 inhibitors [extracellular region]] [PDCD1 [plasma membrane]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61495,
+      "name": "Reactome R-HSA-9679421: Production of PDCD1:PDCD1 inhibitors [plasma membrane]",
+      "description": "Production of PDCD1:PDCD1 inhibitors [plasma membrane] via binding",
+      "latex": "\\frac{d[PDCD1:PDCD1_inhibitors_plasma_membrane]}{dt} = k [PDCD1 inhibitors [extracellular region]] [PDCD1 [plasma membrane]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61498,
+      "name": "Reactome R-HSA-9679028: JAK3 binds JAK3 inhibitors",
+      "description": "Reaction rate (binding): JAK3 binds JAK3 inhibitors",
+      "latex": "v = k [JAK3 inhibitors [cytosol]] [JAK3 [cytosol]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61499,
+      "name": "Reactome R-HSA-9679028: Production of JAK3:JAK3 inhibitors [cytosol]",
+      "description": "Production of JAK3:JAK3 inhibitors [cytosol] via binding",
+      "latex": "\\frac{d[JAK3:JAK3_inhibitors_cytosol]}{dt} = k [JAK3 inhibitors [cytosol]] [JAK3 [cytosol]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61500,
+      "name": "Reactome R-HSA-9679477: VEGFA-165 dimer binds VEGFA inhibitors",
+      "description": "Reaction rate (binding): VEGFA-165 dimer binds VEGFA inhibitors",
+      "latex": "v = k [VEGFA-165 dimer [extracellular region]] [VEGFA inhibitors [extracellular region]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61501,
+      "name": "Reactome R-HSA-9679477: Production of VEGFA-165 dimer:VEGFA inhibitors [extracellular region]",
+      "description": "Production of VEGFA-165 dimer:VEGFA inhibitors [extracellular region] via binding",
+      "latex": "\\frac{d[VEGFA_165_dimer:VEGFA_inhibitors_extracellular_region]}{dt} = k [VEGFA-165 dimer [extracellular region]] [VEGFA inhibitors [extracellular region]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61506,
+      "name": "Reactome R-HSA-9647987: FNTB inhibitors bind FNTA:FNTB",
+      "description": "Reaction rate (binding): FNTB inhibitors bind FNTA:FNTB",
+      "latex": "v = k [FNTA:FNTB [cytosol]] [FNTB inhibitors [cytosol]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61507,
+      "name": "Reactome R-HSA-9647987: Production of FNTA:FNTB:FTase inhibitors [cytosol]",
+      "description": "Production of FNTA:FNTB:FTase inhibitors [cytosol] via binding",
+      "latex": "\\frac{d[FNTA:FNTB:FTase_inhibitors_cytosol]}{dt} = k [FNTA:FNTB [cytosol]] [FNTB inhibitors [cytosol]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61510,
+      "name": "Reactome R-HSA-9681294: IL6R binds IL6R inhibitors",
+      "description": "Reaction rate (binding): IL6R binds IL6R inhibitors",
+      "latex": "v = k [IL6R inhibitors [extracellular region]] [IL6R [plasma membrane]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61511,
+      "name": "Reactome R-HSA-9681294: Production of IL6R:IL6R inhibitors [plasma membrane]",
+      "description": "Production of IL6R:IL6R inhibitors [plasma membrane] via binding",
+      "latex": "\\frac{d[IL6R:IL6R_inhibitors_plasma_membrane]}{dt} = k [IL6R inhibitors [extracellular region]] [IL6R [plasma membrane]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61522,
+      "name": "Reactome R-HSA-9678749: IMPDH tetramers binds IMPDH inhibitors",
+      "description": "Reaction rate (binding): IMPDH tetramers binds IMPDH inhibitors",
+      "latex": "v = k [IMPDH inhibitors [cytosol]] [IMPDH tetramers [cytosol]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61523,
+      "name": "Reactome R-HSA-9678749: Production of IMPDH tetramers:IMPDH inhibitors [cytosol]",
+      "description": "Production of IMPDH tetramers:IMPDH inhibitors [cytosol] via binding",
+      "latex": "\\frac{d[IMPDH_tetramers:IMPDH_inhibitors_cytosol]}{dt} = k [IMPDH inhibitors [cytosol]] [IMPDH tetramers [cytosol]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61526,
+      "name": "Reactome R-HSA-9691421: BTK binds BTK inhibitors",
+      "description": "Reaction rate (binding): BTK binds BTK inhibitors",
+      "latex": "v = k [BTK inhibitors [extracellular region]] [Antigen:p-BCR:p-SYK:p-BLNK:CIN85:GRB2:SOS1:BTK:NCK1:VAV1:PLCG2 [plasma membrane]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61527,
+      "name": "Reactome R-HSA-9691421: Production of BTK:BTK inhibitors [plasma membrane]",
+      "description": "Production of BTK:BTK inhibitors [plasma membrane] via binding",
+      "latex": "\\frac{d[BTK:BTK_inhibitors_plasma_membrane]}{dt} = k [BTK inhibitors [extracellular region]] [Antigen:p-BCR:p-SYK:p-BLNK:CIN85:GRB2:SOS1:BTK:NCK1:VAV1:PLCG2 [plasma membrane]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61530,
+      "name": "Reactome R-HSA-9679775: COMT binds COMT Inhibitors",
+      "description": "Reaction rate (binding): COMT binds COMT Inhibitors",
+      "latex": "v = k [COMT [plasma membrane]] [COMT inhibitors [extracellular region]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61531,
+      "name": "Reactome R-HSA-9679775: Production of COMT:COMT inhibitors [plasma membrane]",
+      "description": "Production of COMT:COMT inhibitors [plasma membrane] via binding",
+      "latex": "\\frac{d[COMT:COMT_inhibitors_plasma_membrane]}{dt} = k [COMT [plasma membrane]] [COMT inhibitors [extracellular region]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61536,
+      "name": "Reactome R-HSA-9678935: IFNAR2:JAK1:STAT2 binds JAK1,2 inhibitors",
+      "description": "Reaction rate (binding): IFNAR2:JAK1:STAT2 binds JAK1,2 inhibitors",
+      "latex": "v = k [IFNAR2:JAK1:STAT2 [plasma membrane]] [JAK1,2 inhibitors [cytosol]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61537,
+      "name": "Reactome R-HSA-9678935: Production of IFNAR2:JAK1:STAT2:JAK1,2 inhibitors [plasma membrane]",
+      "description": "Production of IFNAR2:JAK1:STAT2:JAK1,2 inhibitors [plasma membrane] via binding",
+      "latex": "\\frac{d[IFNAR2:JAK1:STAT2:JAK1,2_inhibitors_plasma_membrane]}{dt} = k [IFNAR2:JAK1:STAT2 [plasma membrane]] [JAK1,2 inhibitors [cytosol]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61540,
+      "name": "Reactome R-HSA-9678737: IFNAR1:TYK2 binds TYK2 inhibitors",
+      "description": "Reaction rate (binding): IFNAR1:TYK2 binds TYK2 inhibitors",
+      "latex": "v = k [TYK2 inhibitors [cytosol]] [IFNAR1:TYK2 [plasma membrane]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61541,
+      "name": "Reactome R-HSA-9678737: Production of IFNAR1:TYK2:TYK2 inhibitors [plasma membrane]",
+      "description": "Production of IFNAR1:TYK2:TYK2 inhibitors [plasma membrane] via binding",
+      "latex": "\\frac{d[IFNAR1:TYK2:TYK2_inhibitors_plasma_membrane]}{dt} = k [TYK2 inhibitors [cytosol]] [IFNAR1:TYK2 [plasma membrane]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61715,
+      "name": "Reactome R-HSA-9766608: PRMT1 binds type I PRMT inhibitors",
+      "description": "Reaction rate (binding): PRMT1 binds type I PRMT inhibitors",
+      "latex": "v = k [PRMT1 [cytosol]] [Type I PRMT inhibitors [cytosol]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61716,
+      "name": "Reactome R-HSA-9766608: Production of PRMT1:type I PRMT inhibitors [cytosol]",
+      "description": "Production of PRMT1:type I PRMT inhibitors [cytosol] via binding",
+      "latex": "\\frac{d[PRMT1:type_I_PRMT_inhibitors_cytosol]}{dt} = k [PRMT1 [cytosol]] [Type I PRMT inhibitors [cytosol]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61728,
+      "name": "Reactome R-HSA-9686790: ER-alpha glucosidases bind ER-alpha glucosidase inhibitors",
+      "description": "Reaction rate (binding): ER-alpha glucosidases bind ER-alpha glucosidase inhibitors",
+      "latex": "v = k [ER-alpha-glucosidase inhibitors [endoplasmic reticulum lumen]] [ER alpha-glucosidases [endoplasmic reticulum lumen]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61729,
+      "name": "Reactome R-HSA-9686790: Production of ER-alpha glucosidases:ER-alpha glucosidase inhibitors [endoplasmic reticulum lumen]",
+      "description": "Production of ER-alpha glucosidases:ER-alpha glucosidase inhibitors [endoplasmic reticulum lumen] via binding",
+      "latex": "\\frac{d[ER_alpha_glucosidases:ER_alpha_glucosidase_inhibitors_endoplasmic_reticulum_lumen]}{dt} = k [ER-alpha-glucosidase inhibitors [endoplasmic reticulum lumen]] [ER alpha-glucosidases [endoplasmic reticulum lumen]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61748,
+      "name": "Reactome R-HSA-9685655: CTSL bind CTSL inhibitors",
+      "description": "Reaction rate (binding): CTSL bind CTSL inhibitors",
+      "latex": "v = k [Cathepsin L1 [endocytic vesicle lumen]] [CTSL inhibitors [endocytic vesicle lumen]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61749,
+      "name": "Reactome R-HSA-9685655: Production of CTSL:CTSL inhibitors [endocytic vesicle lumen]",
+      "description": "Production of CTSL:CTSL inhibitors [endocytic vesicle lumen] via binding",
+      "latex": "\\frac{d[CTSL:CTSL_inhibitors_endocytic_vesicle_lumen]}{dt} = k [Cathepsin L1 [endocytic vesicle lumen]] [CTSL inhibitors [endocytic vesicle lumen]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61754,
+      "name": "Reactome R-HSA-9707827: Spike binds Spike inhibitors",
+      "description": "Reaction rate (binding): Spike binds Spike inhibitors",
+      "latex": "v = k [S3:M:E:encapsidated SARS-CoV-2 genomic RNA: 7a:O-glycosyl 3a tetramer [extracellular region]] [Spike inhibitors [extracellular region]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61755,
+      "name": "Reactome R-HSA-9707827: Production of Spike:Spike inhibitors [extracellular region]",
+      "description": "Production of Spike:Spike inhibitors [extracellular region] via binding",
+      "latex": "\\frac{d[Spike:Spike_inhibitors_extracellular_region]}{dt} = k [S3:M:E:encapsidated SARS-CoV-2 genomic RNA: 7a:O-glycosyl 3a tetramer [extracellular region]] [Spike inhibitors [extracellular region]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61756,
+      "name": "Reactome R-HSA-9681514: TMPRSS2 binds TMPRSS2 inhibitors",
+      "description": "Reaction rate (binding): TMPRSS2 binds TMPRSS2 inhibitors",
+      "latex": "v = k [TMPRSS2 [plasma membrane]] [TMPRSS2 inhibitors [extracellular region]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61757,
+      "name": "Reactome R-HSA-9681514: Production of TMPRSS2:TMPRSS2 inhibitors [plasma membrane]",
+      "description": "Production of TMPRSS2:TMPRSS2 inhibitors [plasma membrane] via binding",
+      "latex": "\\frac{d[TMPRSS2:TMPRSS2_inhibitors_plasma_membrane]}{dt} = k [TMPRSS2 [plasma membrane]] [TMPRSS2 inhibitors [extracellular region]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61777,
+      "name": "Reactome R-HSA-9731708: nsp10:nsp14 binds to ExoN inhibitors",
+      "description": "Reaction rate (binding): nsp10:nsp14 binds to ExoN inhibitors",
+      "latex": "v = k [ExoN inhibitors [cytosol]] [nsp10:nsp14 [cytosol]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61778,
+      "name": "Reactome R-HSA-9731708: Production of ExoN inhibitors:nsp10:nsp14 [cytosol]",
+      "description": "Production of ExoN inhibitors:nsp10:nsp14 [cytosol] via binding",
+      "latex": "\\frac{d[ExoN_inhibitors:nsp10:nsp14_cytosol]}{dt} = k [ExoN inhibitors [cytosol]] [nsp10:nsp14 [cytosol]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61783,
+      "name": "Reactome R-HSA-9732822: nsp3 binds to PLpro inhibitors",
+      "description": "Reaction rate (binding): nsp3 binds to PLpro inhibitors",
+      "latex": "v = k [nsp3 [cytosol]] [PLpro inhibitors [cytosol]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    },
+    {
+      "formula_id": 61784,
+      "name": "Reactome R-HSA-9732822: Production of nsp3:PLpro inhibitors [cytosol]",
+      "description": "Production of nsp3:PLpro inhibitors [cytosol] via binding",
+      "latex": "\\frac{d[nsp3:PLpro_inhibitors_cytosol]}{dt} = k [nsp3 [cytosol]] [PLpro inhibitors [cytosol]]",
+      "domain": "cell-signaling",
+      "regulation_types": [
+        "inhibition"
+      ]
+    }
+  ],
+  "ultrasensitive_responses": [
+    {
+      "formula_id": 1,
+      "name": "Hodgkin-Huxley Membrane Equation",
+      "description": "Main membrane potential equation from the Hodgkin-Huxley model describing action potential generation",
+      "latex": "C_m \\frac{dV}{dt} = -g_{Na} m^3 h (V - E_{Na}) - g_K n^4 (V - E_K) - g_L (V - E_L) + I_{ext}",
+      "domain": "electrophysiology",
+      "formula_type": "ODE",
+      "max_power": 4
+    },
+    {
+      "formula_id": 9,
+      "name": "Leaky Integrate-and-Fire",
+      "description": "Simple neuron model with passive leak current and threshold-based spiking",
+      "latex": "\\tau_m \\frac{dV}{dt} = -(V - V_{rest}) + R_m I_{ext}",
+      "domain": "computational-neuroscience",
+      "formula_type": "ODE",
+      "max_power": 0
+    },
+    {
+      "formula_id": 14,
+      "name": "FitzHugh-Nagumo Voltage",
+      "description": "FitzHugh-Nagumo model - simplified HH capturing excitability",
+      "latex": "\\frac{dv}{dt} = v - \\frac{v^3}{3} - w + I_{ext}",
+      "domain": "computational-neuroscience",
+      "formula_type": "ODE",
+      "max_power": 3
+    },
+    {
+      "formula_id": 27,
+      "name": "BCM Plasticity Rule",
+      "description": "Bienenstock-Cooper-Munro rule with sliding threshold",
+      "latex": "\\frac{dw}{dt} = \\eta \\phi(c) c_{pre}",
+      "domain": "synaptic-plasticity",
+      "formula_type": "ODE",
+      "max_power": 0
+    },
+    {
+      "formula_id": 33,
+      "name": "Neural Sigmoid Activation",
+      "description": "Sigmoidal firing rate function",
+      "latex": "S(x) = \\frac{1}{1 + \\exp(-\\beta(x - \\theta))}",
+      "domain": "neural-networks",
+      "formula_type": "activation_function",
+      "max_power": 0
+    },
+    {
+      "formula_id": 50,
+      "name": "KNF Sequential Model",
+      "description": "Koshland-N\u00e9methy-Filmer sequential binding model",
+      "latex": "Y = \\frac{[S](K_1 + 2K_1K_2[S] + 3K_1K_2K_3[S]^2 + 4K_1K_2K_3K_4[S]^3)}{4(1 + K_1[S] + K_1K_2[S]^2 + K_1K_2K_3[S]^3 + K_1K_2K_3K_4[S]^4)}",
+      "domain": "enzyme-kinetics",
+      "formula_type": "algebraic",
+      "max_power": 4
+    },
+    {
+      "formula_id": 53,
+      "name": "Calcium Release from ER (IP3R)",
+      "description": "IP3 receptor-mediated calcium release",
+      "latex": "\\frac{d[Ca^{2+}]_{cyt}}{dt} = v_{IP3R} m_\\infty^3 h^3 ([Ca^{2+}]_{ER} - [Ca^{2+}]_{cyt})",
+      "domain": "calcium-signaling",
+      "formula_type": "ODE",
+      "max_power": 3
+    },
+    {
+      "formula_id": 60,
+      "name": "Toggle Switch Gene 1",
+      "description": "Genetic toggle switch - gene u dynamics",
+      "latex": "\\frac{du}{dt} = \\frac{\\alpha_1}{1 + v^\\beta} - u",
+      "domain": "synthetic-biology",
+      "formula_type": "ODE",
+      "max_power": 0
+    },
+    {
+      "formula_id": 61,
+      "name": "Toggle Switch Gene 2",
+      "description": "Genetic toggle switch - gene v dynamics",
+      "latex": "\\frac{dv}{dt} = \\frac{\\alpha_2}{1 + u^\\gamma} - v",
+      "domain": "synthetic-biology",
+      "formula_type": "ODE",
+      "max_power": 0
+    },
+    {
+      "formula_id": 78,
+      "name": "Nav1.1 Sodium Current (SCN1A)",
+      "description": "Nav1.1 sodium channel current in cortical interneurons",
+      "latex": "I_{Nav1.1} = g_{Nav1.1} m^3 h (V - E_{Na})",
+      "domain": "ion-channels",
+      "formula_type": "current_equation",
+      "max_power": 3
+    },
+    {
+      "formula_id": 81,
+      "name": "Nav1.2 Sodium Current (SCN2A)",
+      "description": "Nav1.2 sodium channel current in pyramidal neurons",
+      "latex": "I_{Nav1.2} = g_{Nav1.2} m^3 h (V - E_{Na})",
+      "domain": "ion-channels",
+      "formula_type": "current_equation",
+      "max_power": 3
+    },
+    {
+      "formula_id": 84,
+      "name": "Nav1.3 Sodium Current (SCN3A)",
+      "description": "Nav1.3 sodium channel current in embryonic/neonatal",
+      "latex": "I_{Nav1.3} = g_{Nav1.3} m^3 h (V - E_{Na})",
+      "domain": "ion-channels",
+      "formula_type": "current_equation",
+      "max_power": 3
+    },
+    {
+      "formula_id": 87,
+      "name": "Nav1.4 Sodium Current (SCN4A)",
+      "description": "Nav1.4 sodium channel current in skeletal muscle",
+      "latex": "I_{Nav1.4} = g_{Nav1.4} m^3 h (V - E_{Na})",
+      "domain": "ion-channels",
+      "formula_type": "current_equation",
+      "max_power": 3
+    },
+    {
+      "formula_id": 90,
+      "name": "Nav1.5 Sodium Current (SCN5A)",
+      "description": "Nav1.5 sodium channel current in cardiac muscle",
+      "latex": "I_{Nav1.5} = g_{Nav1.5} m^3 h (V - E_{Na})",
+      "domain": "ion-channels",
+      "formula_type": "current_equation",
+      "max_power": 3
+    },
+    {
+      "formula_id": 93,
+      "name": "Nav1.6 Sodium Current (SCN8A)",
+      "description": "Nav1.6 sodium channel current in nodes of Ranvier",
+      "latex": "I_{Nav1.6} = g_{Nav1.6} m^3 h (V - E_{Na})",
+      "domain": "ion-channels",
+      "formula_type": "current_equation",
+      "max_power": 3
+    },
+    {
+      "formula_id": 96,
+      "name": "Nav1.7 Sodium Current (SCN9A)",
+      "description": "Nav1.7 sodium channel current in DRG pain neurons",
+      "latex": "I_{Nav1.7} = g_{Nav1.7} m^3 h (V - E_{Na})",
+      "domain": "ion-channels",
+      "formula_type": "current_equation",
+      "max_power": 3
+    },
+    {
+      "formula_id": 99,
+      "name": "Nav1.8 Sodium Current (SCN10A)",
+      "description": "Nav1.8 sodium channel current in DRG slow TTX-R",
+      "latex": "I_{Nav1.8} = g_{Nav1.8} m^3 h (V - E_{Na})",
+      "domain": "ion-channels",
+      "formula_type": "current_equation",
+      "max_power": 3
+    },
+    {
+      "formula_id": 102,
+      "name": "Nav1.9 Sodium Current (SCN11A)",
+      "description": "Nav1.9 sodium channel current in DRG persistent",
+      "latex": "I_{Nav1.9} = g_{Nav1.9} m^3 h (V - E_{Na})",
+      "domain": "ion-channels",
+      "formula_type": "current_equation",
+      "max_power": 3
+    },
+    {
+      "formula_id": 105,
+      "name": "Kv1.1 Potassium Current (KCNA1)",
+      "description": "Kv1.1 potassium channel in axons, dendrites",
+      "latex": "I_{Kv1.1} = g_{Kv1.1} n^4 (V - E_K)",
+      "domain": "ion-channels",
+      "formula_type": "current_equation",
+      "max_power": 4
+    },
+    {
+      "formula_id": 106,
+      "name": "Kv1.2 Potassium Current (KCNA2)",
+      "description": "Kv1.2 potassium channel in axons, juxtaparanodal",
+      "latex": "I_{Kv1.2} = g_{Kv1.2} n^4 (V - E_K)",
+      "domain": "ion-channels",
+      "formula_type": "current_equation",
+      "max_power": 4
+    },
+    {
+      "formula_id": 107,
+      "name": "Kv1.3 Potassium Current (KCNA3)",
+      "description": "Kv1.3 potassium channel in T lymphocytes",
+      "latex": "I_{Kv1.3} = g_{Kv1.3} n^4 (V - E_K)",
+      "domain": "ion-channels",
+      "formula_type": "current_equation",
+      "max_power": 4
+    },
+    {
+      "formula_id": 108,
+      "name": "Kv1.4 Potassium Current (KCNA4)",
+      "description": "Kv1.4 potassium channel in A-type, inactivating",
+      "latex": "I_{Kv1.4} = g_{Kv1.4} n^4 (V - E_K)",
+      "domain": "ion-channels",
+      "formula_type": "current_equation",
+      "max_power": 4
+    },
+    {
+      "formula_id": 109,
+      "name": "Kv2.1 Potassium Current (KCNB1)",
+      "description": "Kv2.1 potassium channel in somatic delayed rectifier",
+      "latex": "I_{Kv2.1} = g_{Kv2.1} n^4 (V - E_K)",
+      "domain": "ion-channels",
+      "formula_type": "current_equation",
+      "max_power": 4
+    },
+    {
+      "formula_id": 110,
+      "name": "Kv3.1 Potassium Current (KCNC1)",
+      "description": "Kv3.1 potassium channel in fast-spiking interneurons",
+      "latex": "I_{Kv3.1} = g_{Kv3.1} n^4 (V - E_K)",
+      "domain": "ion-channels",
+      "formula_type": "current_equation",
+      "max_power": 4
+    },
+    {
+      "formula_id": 111,
+      "name": "Kv3.2 Potassium Current (KCNC2)",
+      "description": "Kv3.2 potassium channel in fast repolarization",
+      "latex": "I_{Kv3.2} = g_{Kv3.2} n^4 (V - E_K)",
+      "domain": "ion-channels",
+      "formula_type": "current_equation",
+      "max_power": 4
+    },
+    {
+      "formula_id": 112,
+      "name": "Kv4.2 Potassium Current (KCND2)",
+      "description": "Kv4.2 potassium channel in A-type, somatodendritic",
+      "latex": "I_{Kv4.2} = g_{Kv4.2} n^4 (V - E_K)",
+      "domain": "ion-channels",
+      "formula_type": "current_equation",
+      "max_power": 4
+    },
+    {
+      "formula_id": 113,
+      "name": "Kv4.3 Potassium Current (KCND3)",
+      "description": "Kv4.3 potassium channel in A-type, cardiac",
+      "latex": "I_{Kv4.3} = g_{Kv4.3} n^4 (V - E_K)",
+      "domain": "ion-channels",
+      "formula_type": "current_equation",
+      "max_power": 4
+    },
+    {
+      "formula_id": 114,
+      "name": "Kv7.1 Potassium Current (KCNQ1)",
+      "description": "Kv7.1 potassium channel in cardiac IKs",
+      "latex": "I_{Kv7.1} = g_{Kv7.1} n^4 (V - E_K)",
+      "domain": "ion-channels",
+      "formula_type": "current_equation",
+      "max_power": 4
+    },
+    {
+      "formula_id": 115,
+      "name": "Kv7.2 Potassium Current (KCNQ2)",
+      "description": "Kv7.2 potassium channel in M-current",
+      "latex": "I_{Kv7.2} = g_{Kv7.2} n^4 (V - E_K)",
+      "domain": "ion-channels",
+      "formula_type": "current_equation",
+      "max_power": 4
+    },
+    {
+      "formula_id": 116,
+      "name": "Kv7.3 Potassium Current (KCNQ3)",
+      "description": "Kv7.3 potassium channel in M-current",
+      "latex": "I_{Kv7.3} = g_{Kv7.3} n^4 (V - E_K)",
+      "domain": "ion-channels",
+      "formula_type": "current_equation",
+      "max_power": 4
+    },
+    {
+      "formula_id": 167,
+      "name": "TRPV2 TRP Channel",
+      "description": "TRPV2: high threshold heat, nonselective cation",
+      "latex": "I_{TRPV2} = g_{TRPV2} \\cdot f(stimulus) \\cdot (V - E_{rev})",
+      "domain": "ion-channels",
+      "formula_type": "current_equation",
+      "max_power": 0
+    },
+    {
+      "formula_id": 216,
+      "name": "Complex IV (Cytochrome c Oxidase)",
+      "description": "Cytochrome c oxidase, final electron acceptor",
+      "latex": "v_{CIV} = k_{CIV} [cytc_{red}]^4 [O_2] \\exp\\left(\\frac{4 F \\Delta\\Psi}{RT}\\right)",
+      "domain": "OXPHOS",
+      "formula_type": "rate_equation",
+      "max_power": 4
+    },
+    {
+      "formula_id": 405,
+      "name": "IP3 Receptor (De Young-Bhalla)",
+      "description": "IP3R calcium release with Ca and IP3 dependence",
+      "latex": "J_{IP3R} = v_{IP3R} m_\\infty^3 h^3 ([Ca^{2+}]_{ER} - [Ca^{2+}]_{cyt})",
+      "domain": "calcium",
+      "formula_type": "algebraic",
+      "max_power": 3
+    },
+    {
+      "formula_id": 411,
+      "name": "NCX (Na/Ca Exchanger)",
+      "description": "Sodium-calcium exchanger",
+      "latex": "J_{NCX} = k_{NCX} \\left( [Na^+]_i^3 [Ca^{2+}]_o e^{\\eta FV/RT} - [Na^+]_o^3 [Ca^{2+}]_i e^{(\\eta-1)FV/RT} \\right)",
+      "domain": "calcium",
+      "formula_type": "algebraic",
+      "max_power": 3
+    },
+    {
+      "formula_id": 413,
+      "name": "Calmodulin Binding",
+      "description": "Four Ca2+ ions bind calmodulin cooperatively",
+      "latex": "[CaM_{Ca4}] = [CaM]_T \\frac{[Ca^{2+}]^4}{K_d^4 + [Ca^{2+}]^4}",
+      "domain": "calcium",
+      "formula_type": "algebraic",
+      "max_power": 4
+    },
+    {
+      "formula_id": 418,
+      "name": "PKA Activation",
+      "description": "PKA activation by cAMP (4 binding sites)",
+      "latex": "[PKA_{active}] = [PKA]_T \\frac{[cAMP]^4}{K_d^4 + [cAMP]^4}",
+      "domain": "cAMP",
+      "formula_type": "algebraic",
+      "max_power": 4
+    },
+    {
+      "formula_id": 447,
+      "name": "Resonate-and-Fire",
+      "description": "Subthreshold oscillations with spike threshold",
+      "latex": "\\frac{dV}{dt} = bV - \\omega W + I, \\quad \\frac{dW}{dt} = \\omega V + bW",
+      "domain": "computational-neuroscience",
+      "formula_type": "ODE",
+      "max_power": 0
+    },
+    {
+      "formula_id": 451,
+      "name": "MAT Model",
+      "description": "Adaptive threshold model",
+      "latex": "\\frac{d\\theta}{dt} = -\\frac{\\theta - \\theta_0}{\\tau_\\theta} + \\alpha \\delta(t - t_{spike})",
+      "domain": "computational-neuroscience",
+      "formula_type": "ODE",
+      "max_power": 0
+    },
+    {
+      "formula_id": 453,
+      "name": "Wang-Buzsaki Fast-Spiking Interneuron",
+      "description": "Fast-spiking interneuron model with instantaneous Na activation",
+      "latex": "C\\frac{dV}{dt} = -g_{Na}m_\\infty^3 h(V-E_{Na}) - g_K n^4(V-E_K) - g_L(V-E_L) + I",
+      "domain": "interneuron",
+      "formula_type": "ODE",
+      "max_power": 4
+    },
+    {
+      "formula_id": 457,
+      "name": "Pospischil Low-Threshold Spiking (LTS)",
+      "description": "Low-Threshold Spiking (LTS) neuron model (somatostatin interneuron)",
+      "latex": "C\\frac{dV}{dt} = -I_Na - I_Kd - I_M - I_T - I_L + I_{syn}",
+      "domain": "detailed-models",
+      "formula_type": "ODE",
+      "max_power": 0
+    },
+    {
+      "formula_id": 494,
+      "name": "Omega Function (LTP/LTD)",
+      "description": "Direction of plasticity based on Ca thresholds",
+      "latex": "\\Omega([Ca]) = \\text{sig}([Ca] - \\theta_{LTP}) - 0.5 \\cdot \\text{sig}([Ca] - \\theta_{LTD})",
+      "domain": "LTP-LTD",
+      "formula_type": "algebraic",
+      "max_power": 0
+    },
+    {
+      "formula_id": 506,
+      "name": "BCM Sliding Threshold",
+      "description": "Activity-dependent sliding threshold",
+      "latex": "\\frac{d\\theta}{dt} = \\frac{\\bar{c}^2 - \\theta}{\\tau_\\theta}",
+      "domain": "metaplasticity",
+      "formula_type": "ODE",
+      "max_power": 2
+    },
+    {
+      "formula_id": 507,
+      "name": "Metaplastic Threshold",
+      "description": "Threshold proportional to recent activity",
+      "latex": "\\theta_m = \\langle c^2 \\rangle / \\theta_0",
+      "domain": "metaplasticity",
+      "formula_type": "algebraic",
+      "max_power": 2
+    },
+    {
+      "formula_id": 512,
+      "name": "Sliding Threshold (Turrigiano)",
+      "description": "LTP threshold depends on average Ca level",
+      "latex": "\\theta_{LTP} = f(\\langle [Ca^{2+}] \\rangle)",
+      "domain": "homeostatic",
+      "formula_type": "algebraic",
+      "max_power": 0
+    },
+    {
+      "formula_id": 526,
+      "name": "I_Na (cardiac)",
+      "description": "Fast sodium with slow inactivation j",
+      "latex": "I_{Na} = g_{Na} m^3 h j (V - E_{Na})",
+      "domain": "cardiac",
+      "formula_type": "current_equation",
+      "max_power": 3
+    },
+    {
+      "formula_id": 536,
+      "name": "I_NaCa",
+      "description": "Na/Ca exchanger",
+      "latex": "I_{NaCa} = k_{NaCa} \\frac{[Na]_i^3 [Ca]_o e^{V/V_T} - [Na]_o^3 [Ca]_i e^{-(V/V_T)}}{(K_m^3 + [Na]_o^3)(K_{Ca} + [Ca]_o)}",
+      "domain": "cardiac",
+      "formula_type": "current_equation",
+      "max_power": 3
+    },
+    {
+      "formula_id": 584,
+      "name": "BCM Network",
+      "description": "BCM rule with sliding threshold",
+      "latex": "\\frac{dw_{ij}}{dt} = \\eta x_i y_j (y_j - \\theta_j)",
+      "domain": "learning",
+      "formula_type": "ODE",
+      "max_power": 0
+    },
+    {
+      "formula_id": 8432,
+      "name": "BIOMD0000000037: V_formation",
+      "description": "Reaction rate law from BioModels BIOMD0000000037: V_formation",
+      "latex": "v = compartment * (alpha2 / (1 + S^3))",
+      "domain": "biochemistry",
+      "formula_type": "rate_equation",
+      "max_power": 3
+    },
+    {
+      "formula_id": 8590,
+      "name": "BIOMD0000000043: v3",
+      "description": "Reaction rate law from BioModels BIOMD0000000043: v3",
+      "latex": "v = cytosol * (beta * (Rho * (a / d) * Z^4 / (1 + (a / d) * Z^4)) * Vm3 * Y^2 / (Ky^2 + Y^2))",
+      "domain": "biochemistry",
+      "formula_type": "rate_equation",
+      "max_power": 4
+    },
+    {
+      "formula_id": 10217,
+      "name": "BIOMD0000000100: Phosphorylase kinase activity",
+      "description": "Reaction rate law from BioModels BIOMD0000000100: Phosphorylase kinase activity",
+      "latex": "v = cytosol * (Vpm1 * (1 + gamma * Z^4 / (Ka5^4 + Z^4)) * (1 - GP) / (K1 / (1 + Z^4 / Ka6^4) + 1 - GP))",
+      "domain": "biochemistry",
+      "formula_type": "rate_equation",
+      "max_power": 4
+    }
+  ]
+}

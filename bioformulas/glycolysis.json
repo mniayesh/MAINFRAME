@@ -1,0 +1,110 @@
+[
+  {
+    "id": 192,
+    "name": "Hexokinase (HK)",
+    "description": "Glycolysis step: Glucose + ATP \u2192 G6P + ADP",
+    "latex": "v_{HK} = \\frac{V_{max} [glucose]}{K_m + [glucose]}",
+    "symbolic": null,
+    "python": "v = Vmax * glucose / (Km + glucose)",
+    "domain": "glycolysis"
+  },
+  {
+    "id": 193,
+    "name": "Phosphoglucose Isomerase (PGI)",
+    "description": "Glycolysis step: G6P \u21cc F6P",
+    "latex": "v_{PGI} = \\frac{V_{max} [G6P]}{K_m + [G6P]}",
+    "symbolic": null,
+    "python": "v = Vmax * G6P / (Km + G6P)",
+    "domain": "glycolysis"
+  },
+  {
+    "id": 194,
+    "name": "Phosphofructokinase-1 (PFK1)",
+    "description": "Glycolysis step: F6P + ATP \u2192 F1,6BP + ADP",
+    "latex": "v_{PFK1} = \\frac{V_{max} [F6P]}{K_m + [F6P]}",
+    "symbolic": null,
+    "python": "v = Vmax * F6P / (Km + F6P)",
+    "domain": "glycolysis"
+  },
+  {
+    "id": 195,
+    "name": "Aldolase (ALDO)",
+    "description": "Glycolysis step: F1,6BP \u21cc DHAP + G3P",
+    "latex": "v_{ALDO} = \\frac{V_{max} [F1,6BP]}{K_m + [F1,6BP]}",
+    "symbolic": null,
+    "python": "v = Vmax * F1,6BP / (Km + F1,6BP)",
+    "domain": "glycolysis"
+  },
+  {
+    "id": 196,
+    "name": "Triose Phosphate Isomerase (TPI)",
+    "description": "Glycolysis step: DHAP \u21cc G3P",
+    "latex": "v_{TPI} = \\frac{V_{max} [DHAP]}{K_m + [DHAP]}",
+    "symbolic": null,
+    "python": "v = Vmax * DHAP / (Km + DHAP)",
+    "domain": "glycolysis"
+  },
+  {
+    "id": 197,
+    "name": "G3P Dehydrogenase (GAPDH)",
+    "description": "Glycolysis step: G3P + NAD+ + Pi \u21cc 1,3BPG + NADH",
+    "latex": "v_{GAPDH} = \\frac{V_{max} [G3P]}{K_m + [G3P]}",
+    "symbolic": null,
+    "python": "v = Vmax * G3P / (Km + G3P)",
+    "domain": "glycolysis"
+  },
+  {
+    "id": 198,
+    "name": "Phosphoglycerate Kinase (PGK)",
+    "description": "Glycolysis step: 1,3BPG + ADP \u21cc 3PG + ATP",
+    "latex": "v_{PGK} = \\frac{V_{max} [1,3BPG]}{K_m + [1,3BPG]}",
+    "symbolic": null,
+    "python": "v = Vmax * 1,3BPG / (Km + 1,3BPG)",
+    "domain": "glycolysis"
+  },
+  {
+    "id": 199,
+    "name": "Phosphoglycerate Mutase (PGM)",
+    "description": "Glycolysis step: 3PG \u21cc 2PG",
+    "latex": "v_{PGM} = \\frac{V_{max} [3PG]}{K_m + [3PG]}",
+    "symbolic": null,
+    "python": "v = Vmax * 3PG / (Km + 3PG)",
+    "domain": "glycolysis"
+  },
+  {
+    "id": 200,
+    "name": "Enolase (ENO)",
+    "description": "Glycolysis step: 2PG \u21cc PEP + H2O",
+    "latex": "v_{ENO} = \\frac{V_{max} [2PG]}{K_m + [2PG]}",
+    "symbolic": null,
+    "python": "v = Vmax * 2PG / (Km + 2PG)",
+    "domain": "glycolysis"
+  },
+  {
+    "id": 201,
+    "name": "Pyruvate Kinase (PK)",
+    "description": "Glycolysis step: PEP + ADP \u2192 Pyruvate + ATP",
+    "latex": "v_{PK} = \\frac{V_{max} [PEP]}{K_m + [PEP]}",
+    "symbolic": null,
+    "python": "v = Vmax * PEP / (Km + PEP)",
+    "domain": "glycolysis"
+  },
+  {
+    "id": 202,
+    "name": "PFK1 Allosteric Regulation",
+    "description": "PFK1 with ATP inhibition, AMP activation, F6P cooperativity",
+    "latex": "v_{PFK1} = V_{max} \\frac{[F6P]^n [ATP]}{(K_{F6P}^n + [F6P]^n)(K_{ATP} + [ATP])} \\cdot \\frac{K_i^m}{K_i^m + [ATP]^m} \\cdot \\frac{[AMP]^p + K_a^p}{K_a^p}",
+    "symbolic": null,
+    "python": null,
+    "domain": "glycolysis"
+  },
+  {
+    "id": 203,
+    "name": "Pyruvate Kinase Allosteric",
+    "description": "PK with F1,6BP feedforward activation",
+    "latex": "v_{PK} = V_{max} \\frac{[PEP]^n [ADP]}{(K_{PEP}^n + [PEP]^n)(K_{ADP} + [ADP])} \\cdot \\frac{[F1,6BP]}{K_a + [F1,6BP]}",
+    "symbolic": null,
+    "python": null,
+    "domain": "glycolysis"
+  }
+]
