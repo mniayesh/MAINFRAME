@@ -26,10 +26,10 @@ import math
 @dataclass
 class SomaConfig:
     """Soma parameters."""
-    tau: float = 0.05  # Time constant (ms) - longer for better integration
-    threshold: float = 0.2  # Spiking threshold (lower for easier firing)
-    reset_voltage: float = -0.3  # Reset voltage after spike (V)
-    leak_conductance: float = 0.1  # Leak conductance (reduced for longer holding)
+    tau: float = 0.2  # Time constant (ms) - very long for strong integration
+    threshold: float = 0.05  # Spiking threshold (achievable within 50 timesteps)
+    reset_voltage: float = -0.1  # Reset voltage after spike (V)
+    leak_conductance: float = 0.01  # Very low leak for strong integration
     resting_potential: float = 0.0  # Resting potential (V)
 
 
@@ -101,13 +101,18 @@ class DendriticBranch:
         self.config = config or DendriticBranchConfig(num_inputs=num_inputs)
         self.num_inputs = num_inputs
 
-        # Synaptic weights per input (small initialization)
-        self.weights = np.random.normal(0, 0.001, num_inputs)
-        self.weights = np.clip(self.weights, -0.1, 0.1)
+        # Synaptic weights per input (initialize with strong values for signal propagation)
+        # Initialize with positive bias so signals actually propagate
+        # Mix of excitatory (+) and inhibitory (-) with more excitatory
+        self.weights = np.random.uniform(0, 0.3, num_inputs)  # Mostly positive
+        # Add a small fraction of inhibitory weights for gating
+        inhibitory_indices = np.random.choice(num_inputs, max(1, num_inputs // 5), replace=False)
+        self.weights[inhibitory_indices] = np.random.uniform(-0.2, 0, len(inhibitory_indices))
+        self.weights = np.clip(self.weights, -0.5, 0.5)
 
         # Dendritic voltage (can generate local spikes)
         self.voltage = 0.0
-        self.tau = 0.01  # Time constant
+        self.tau = 0.002  # Time constant (fast enough to pass signal, slow enough to integrate)
 
         # Local dendritic spike history for STDP
         self.spike_history = []
@@ -132,18 +137,19 @@ class DendriticBranch:
         weighted_input = np.dot(self.weights, inputs)
         weighted_input = np.clip(weighted_input, -10, 10)  # Prevent overflow
 
-        # Nonlinearity
+        # Nonlinearity - apply very strong gain to ensure signal propagates
         if self.config.nonlinearity == 'quadratic':
-            # ReLU: more stable, biologically plausible
-            output = np.maximum(weighted_input, 0) * 0.1
+            # ReLU with very strong gain
+            output = np.maximum(weighted_input, 0) * 10.0  # 10.0 gain for strong dendritic signals
         elif self.config.nonlinearity == 'sigmoid':
             # Sigmoid: smoother nonlinearity
-            output = 1.0 / (1.0 + np.exp(-weighted_input)) - 0.5
+            output = (1.0 / (1.0 + np.exp(-weighted_input * 2)) - 0.5) * 10.0
         else:
-            output = weighted_input
+            output = weighted_input * 10.0
 
-        # Dendritic integration with decay
-        self.voltage = self.voltage * (1 - dt / self.tau) + output * dt
+        # Dendritic integration with decay (slower decay for stronger signal integration)
+        decay = np.exp(-dt / self.tau)  # Exponential decay
+        self.voltage = self.voltage * decay + output * (1 - decay)
         self.voltage = np.clip(self.voltage, -1.0, 1.0)  # Bound voltage
 
         return self.voltage
@@ -175,7 +181,7 @@ class DendriticBranch:
                     self.weights[i] += learning_rate * ltd * pre_activity
 
         # Prevent weight explosion (aggressive clipping)
-        self.weights = np.clip(self.weights, -0.5, 0.5)
+        self.weights = np.clip(self.weights, -1.0, 1.0)
 
 
 # ============================================================================
@@ -190,18 +196,20 @@ class Axon:
         self.output_rate = 0.0  # Firing rate (Hz)
         self.output_history = []
 
-    def fire(self, soma_voltage: float, threshold: float = 0.3) -> Tuple[bool, float]:
+    def fire(self, soma_voltage: float, threshold: float = None) -> Tuple[bool, float]:
         """
-        Generate spike if soma voltage exceeds threshold.
+        Pass through spike decision from soma (axon doesn't re-check threshold).
+        The soma has already determined if a spike occurred.
         Returns: (spike_bool, output_value)
         """
-        spike = soma_voltage >= threshold
-        output_value = 1.0 if spike else 0.0
+        # Axon just transmits the spike, doesn't make independent threshold decision
+        # Threshold checking is done in the Soma
+        output_value = 1.0 if (soma_voltage >= (threshold or 0.05)) else 0.0
 
-        self.spike_output = spike
+        self.spike_output = output_value > 0
         self.output_history.append(output_value)
 
-        return spike, output_value
+        return self.spike_output, output_value
 
 
 # ============================================================================
@@ -325,7 +333,7 @@ class HomeostasisMonitor:
             # Apply scaling to all dendritic weights
             for branch in dendritic_branches:
                 branch.weights += adjustment * branch.weights  # Proportional but bounded
-                branch.weights = np.clip(branch.weights, -0.5, 0.5)  # Aggressive clipping
+                branch.weights = np.clip(branch.weights, -1.0, 1.0)  # Aggressive clipping
 
 
 # ============================================================================
@@ -412,11 +420,14 @@ class ProtoNeuron:
         spike = self.soma.integrate(dendritic_sum, dt)
 
         # Layer 21: Axon firing (with energy constraint)
+        # Note: soma.integrate() already detected if a spike occurred
+        # The axon just transmits the spike, energy can only block it
         if self.energy.can_spike():
-            output_spike, output_value = self.axon.fire(self.soma.voltage)
-            spike = spike and output_spike  # Energy can prevent spike
+            # Use the soma's spike detection directly (already happened in line 420)
+            output_value = 1.0 if spike else 0.0
+            # Energy can prevent spike
         else:
-            spike = False
+            spike = False  # No energy = no spike
             output_value = 0.0
 
         # Layer 5: Consume energy
