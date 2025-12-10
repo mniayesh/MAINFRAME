@@ -368,14 +368,14 @@ class ProtoNeuron:
         ]
         self.axon = Axon()
 
-        # Learning rules
-        self.stdp_rule = STDPRule(learning_rate=0.01, window=0.05)
-        self.hebbian_rule = HebbianRule(learning_rate=0.001)
-        self.neuromodulated_rule = NeuromodulatedRule(learning_rate=0.01)
+        # Learning rules (increased rates for faster discrimination)
+        self.stdp_rule = STDPRule(learning_rate=0.1, window=0.05)  # 10x stronger STDP
+        self.hebbian_rule = HebbianRule(learning_rate=0.01)  # 10x stronger Hebbian
+        self.neuromodulated_rule = NeuromodulatedRule(learning_rate=0.1)
 
-        # Regulation
+        # Regulation (relaxed homeostasis to allow weight growth)
         self.energy = EnergyBudget(initial_atp=100.0)
-        self.homeostasis = HomeostasisMonitor(target_firing_rate=0.1)
+        self.homeostasis = HomeostasisMonitor(target_firing_rate=0.2)  # More relaxed firing rate target
 
         # State
         self.spike_history = []
