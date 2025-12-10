@@ -1,0 +1,656 @@
+ID,Name,Description,Use_In_Nature,Architecture_Code,Source,Created_Date
+1,Metabolic Loss Function,Multi-objective loss function that balances 65 competing objectives simultaneously using logarithmic thermodynamic potentials,"E.coli growth optimization: Balances glucose uptake, ATP production, metabolite concentrations, stress resistance, and 61 other objectives to maximize fitness","class MetabolicLoss(nn.Module):
+    def __init__(self, num_objectives=65):
+        super().__init__()
+        self.weights = nn.Parameter(torch.ones(num_objectives))
+        self.baselines = nn.Parameter(torch.ones(num_objectives))
+    
+    def forward(self, outputs, targets, model_state):
+        objectives = []
+        objectives.append(cross_entropy(outputs, targets))  # Accuracy
+        objectives.append(compute_cost(model_state))  # Energy
+        objectives.append(L1_norm(activations))  # Sparsity
+        objectives.append(adversarial_loss(outputs))  # Robustness
+        # ... 61 more objectives ...
+        
+        # E.coli-style thermodynamic integration
+        total = sum(w * log(obj / baseline) for w, obj, baseline in zip(self.weights, objectives, self.baselines))
+        return max(0.0, 1.0 + total)  # Constraint: non-negative fitness","BIOMD0000000470: E.coli growth rate equation (3,894 characters, 65 metabolites)",2025-12-10 06:41:08
+2,Metabolic Attention Mechanism,"Attention mechanism modulated by 65-objective fitness function, optimizing not just accuracy but energy, sparsity, robustness","E.coli resource allocation: Directs metabolic flux to pathways that maximize overall growth, not just single objectives","class MetabolicAttention(nn.Module):
+    def forward(self, Q, K, V, metabolic_state):
+        scores = Q @ K.T / sqrt(d_k)
+        
+        # Compute 65-objective fitness for each attention pattern
+        growth_rate = ecoli_growth_formula(
+            accuracy=scores.max(),
+            energy=scores.sum(),
+            sparsity=1.0 - scores.count_nonzero()/scores.numel(),
+            # ... 62 more objectives
+        )
+        
+        modulated = scores * growth_rate
+        return softmax(modulated) @ V",BIOMD0000000470: E.coli holistic fitness,2025-12-10 06:41:08
+3,Metabolic Neural Architecture Search,NAS using E.coli growth formula as fitness - automatically finds Pareto-optimal architectures across 65 metrics,Evolutionary optimization of metabolic networks over 3.5 billion years,"def metabolic_nas(search_space):
+    for arch in search_space:
+        metrics = {
+            'accuracy': test(arch),
+            'latency': time(arch),
+            'energy': flops(arch),
+            'robustness': adv_test(arch),
+            # ... 61 more
+        }
+        fitness = ecoli_growth(**metrics)
+        if fitness > best:
+            best_arch = arch
+    return best_arch  # Pareto-optimal across 65 objectives!",BIOMD0000000470: Multi-objective fitness landscape,2025-12-10 06:41:08
+4,Hill Activation (Adaptive Cooperativity),Activation function with learnable steepness (Hill coefficient n) - sharp or smooth switching based on data,Hemoglobin oxygen binding (n=2.8): Cooperative binding creates ultrasensitive response to oxygen,"class HillActivation(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.n = nn.Parameter(torch.tensor(2.0))  # Learnable!
+        self.K = nn.Parameter(torch.tensor(1.0))
+    
+    def forward(self, x):
+        n = F.softplus(self.n) + 0.1
+        K = F.softplus(self.K) + 0.1
+        return x**n / (K**n + x**n)",Formula ID 41: Hill equation v = Vmax*[S]^n / (K^n + [S]^n). Found in 114 formulas across database.,2025-12-10 06:41:08
+5,Michaelis-Menten Activation,"Saturation-based activation: linear at low inputs, saturates at high inputs - prevents explosive activations",Enzyme kinetics: All enzymes saturate at high substrate concentrations (V_max ceiling),"class MichaelisMentenActivation(nn.Module):
+    def __init__(self, v_max=1.0, k_m=1.0):
+        super().__init__()
+        self.v_max = nn.Parameter(torch.tensor(v_max))
+        self.k_m = nn.Parameter(torch.tensor(k_m))
+    
+    def forward(self, x):
+        return self.v_max * x / (self.k_m + x)",Formula ID 35: v = (Vmax * S) / (Km + S). Most common enzyme kinetics equation.,2025-12-10 06:41:08
+6,Substrate Inhibition Activation,Too much input REDUCES output - models overconfidence prevention,"Enzyme substrate inhibition: Excess substrate binds non-productively, reducing efficiency","class SubstrateInhibition(nn.Module):
+    def forward(self, x):
+        return v_max * x / (k_m + x + x**2 / k_si)
+# At high x: x^2 term dominates, output decreases",Formula ID 42: Substrate inhibition kinetics. Prevents overactivation.,2025-12-10 06:41:08
+7,Energy-Aware Neurons (ATP Budgeting),Neurons track ATP pools - can only fire if energy available. Automatic sparsity + metabolic realism.,"Brain energy management: Neurons consume ATP to fire action potentials, ATP depletion prevents firing","class EnergyAwareNeuron(nn.Module):
+    def __init__(self, features, atp_capacity=10.0):
+        super().__init__()
+        self.weight = nn.Parameter(torch.randn(features))
+        self.atp_pool = torch.full((features,), atp_capacity)
+        
+    def forward(self, x):
+        z = F.linear(x, self.weight)
+        # ATP depletion raises threshold
+        threshold = 1.0 / (self.atp_pool / 10.0 + 0.1)
+        firing = relu(z - threshold)
+        
+        # Update ATP
+        self.atp_pool -= 0.5 * firing.abs()  # Consume
+        self.atp_pool += 0.1 * (10 - self.atp_pool)  # Regenerate",Formula IDs 9004-9979: ATP production/consumption formulas from glycolysis and OXPHOS pathways,2025-12-10 06:41:08
+8,Metabolic Compute Budget,Global compute budget that layers consume and regenerate based on confidence,Cellular ATP pool: Shared energy budget for all cellular processes,"class MetabolicComputeBudget:
+    def __init__(self, budget=1.0):
+        self.available = budget
+    
+    def consume(self, amount):
+        self.available -= amount
+    
+    def regenerate(self, confidence):
+        if confidence > 0.8:
+            self.available += 0.1  # High confidence = efficient",ATP production/consumption balance from metabolic pathways,2025-12-10 06:41:08
+9,Dual-Channel Neurons (Fast + Slow),Neurons with fast electrical signal + slow modulatory channel (like Ca2+). Fast pathway modulated by slow state.,"Calcium signaling: Fast Na+/K+ electrical spikes + slow Ca2+ modulation. Found in 9,633 formulas.","class DualChannelNeuron(nn.Module):
+    def __init__(self, features):
+        super().__init__()
+        self.fast_weight = nn.Parameter(torch.randn(features))
+        self.slow_weight = nn.Parameter(torch.randn(features) * 0.1)
+        self.slow_state = torch.zeros(features)
+        
+    def forward(self, x):
+        fast = F.linear(x, self.fast_weight)
+        slow_input = F.linear(x, self.slow_weight)
+        self.slow_state = 0.9 * self.slow_state + 0.1 * slow_input
+        modulation = torch.sigmoid(self.slow_state)
+        return fast * modulation","9,633 Ca2+ formulas - universal second messenger system",2025-12-10 06:41:08
+10,Multi-Timescale RNN,"RNN with heterogeneous time constants - some neurons fast (τ=0.1), some slow (τ=10)","Neural diversity: Interneurons (fast, τ~5ms) vs pyramidal cells (slow, τ~50ms)","class MultiTimescaleRNN(nn.Module):
+    def __init__(self, hidden_size):
+        super().__init__()
+        self.tau = nn.Parameter(torch.rand(hidden_size) * 10 + 0.1)
+        
+    def forward(self, x, h):
+        dh = F.tanh(W @ x + U @ h)
+        h_new = h + (1.0 / self.tau) * dh  # Fast neurons update quickly",Neural time constants from computational neuroscience models,2025-12-10 06:41:08
+11,MAPK Amplifying Cascade,3-tier phosphorylation cascade: 1 → 10 → 100 → 1000x amplification,MAPK signaling: Raf → MEK → ERK cascade amplifies growth signals 1000x,"class MAPKCascade(nn.Module):
+    def __init__(self, stages=3, gain=10):
+        super().__init__()
+        self.stages = nn.ModuleList([
+            nn.Linear(d, d) for _ in range(stages)
+        ])
+        self.gain = gain
+    
+    def forward(self, x):
+        for stage in self.stages:
+            x = stage(x) * self.gain  # 10x per stage = 1000x total
+        return x",MAPK cascade formulas: 10 formulas showing 3-tier amplification,2025-12-10 06:41:08
+12,Amplifying Attention,Attention mechanism with MAPK-style cascade for rare event detection,Rare signal detection: Single growth factor molecule triggers cascade → 1000 activated proteins,"class AmplifyingAttention(nn.Module):
+    def forward(self, Q, K, V):
+        scores = Q @ K.T / sqrt(d_k)
+        
+        # MAPK cascade on attention scores
+        for i in range(3):
+            scores = F.relu(self.cascade_layers[i](scores)) * 10
+        
+        return softmax(scores) @ V  # Rare tokens get 1000x amplification",MAPK signaling cascade: 1000x amplification for rare events,2025-12-10 06:41:08
+13,Allosteric Regulation Layer,Layer with inhibitor and activator signals (like PFK1 enzyme regulated by ATP/AMP),"Phosphofructokinase-1: ATP inhibits (high energy → slow down), AMP activates (low energy → speed up)","class AllostericLayer(nn.Module):
+    def forward(self, x, inhibitor_signal, activator_signal):
+        y = self.main_transform(x)
+        
+        if inhibitor_signal > 0:  # Like ATP inhibiting PFK1
+            y = y * (1 - inhibitor_signal * sigmoid(self.inhibitor_gate(x)))
+        
+        if activator_signal > 0:  # Like AMP activating PFK1
+            y = y * (1 + activator_signal * sigmoid(self.activator_gate(x)))
+        
+        return y","Formula ID 202: PFK1 allosteric regulation integrating ATP, AMP, F6P signals",2025-12-10 06:41:08
+14,Homeostatic Plasticity Layer,Self-stabilizing layer that adjusts thresholds to maintain target firing rate,BCM rule in neurons: Synaptic threshold slides to maintain stable activity levels,"class HomeostaticLayer(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.threshold = nn.Parameter(torch.tensor(1.0))
+        self.target_rate = 0.1
+        
+    def forward(self, x):
+        output = relu(x - self.threshold)
+        
+        # Adjust threshold to maintain target rate
+        actual_rate = (output > 0).float().mean()
+        self.threshold += 0.01 * (actual_rate - self.target_rate)
+        
+        return output",BCM learning rule: Sliding threshold homeostasis,2025-12-10 06:41:08
+15,Bistable Switch (Toggle Circuit),Two mutually inhibitory units create binary decision with hysteresis - memory without storage,Genetic toggle switch: Two repressor genes create stable ON/OFF states (bistability),"class BistableSwitch(nn.Module):
+    def forward(self, x):
+        # Two state variables
+        u_new = alpha / (1 + v**beta) - u
+        v_new = alpha / (1 + u**gamma) - v
+        # System has 2 stable fixed points = binary memory","7 bistable switch formulas: Toggle circuits, flip-flops",2025-12-10 06:41:08
+16,Kuramoto Synchronization Layer,Features represented as phase oscillators that synchronize if related - binding by synchrony,Neural binding: Brain synchronizes gamma oscillations to bind features into coherent percepts,"class KuramotoLayer(nn.Module):
+    def forward(self, x):
+        # Represent features as phases θ
+        theta = self.encoder(x)  # [batch, features]
+        
+        # Kuramoto coupling
+        d_theta = self.omega + (K/N) * sum(sin(theta_j - theta_i))
+        
+        # Features with similar content phase-lock
+        return self.decoder(theta)","Kuramoto model: dθᵢ/dt = ωᵢ + (K/N) Σⱼ sin(θⱼ - θᵢ). Found in 5,124+ oscillatory formulas.",2025-12-10 06:41:08
+17,FitzHugh-Nagumo Oscillatory Attention,Attention that oscillates with limit cycle - periodic scanning of inputs,"Neural oscillations: Brain rhythms (alpha, beta, gamma) gate information flow","class FHN_Attention(nn.Module):
+    def forward(self, Q, K, V):
+        # FitzHugh-Nagumo dynamics for attention
+        dv = v - v**3/3 - w + scores
+        dw = epsilon * (v + a - b*w)
+        
+        # Oscillating attention scans through sequence
+        oscillating_scores = v  # Limit cycle
+        return softmax(oscillating_scores) @ V",FitzHugh-Nagumo oscillator: 2D excitable system with limit cycles,2025-12-10 06:41:08
+18,Van der Pol Routing,Oscillatory gating between expert networks - periodic routing,"Relaxation oscillations: Heartbeat, breathing, neural bursting","class VanDerPolRouter(nn.Module):
+    def forward(self, x):
+        # Van der Pol oscillator
+        d2x_dt2 = mu * (1 - x**2) * dx_dt - x
+        
+        # Route based on oscillation phase
+        if x > 0:
+            return expert_A(x)
+        else:
+            return expert_B(x)",Van der Pol equation: Self-sustaining oscillator,2025-12-10 06:41:08
+19,STDP Learning (Spike-Timing Dependent),"Weight updates based on temporal causality: pre-before-post → strengthen, opposite → weaken","Synaptic plasticity: ""Neurons that fire together wire together"" - temporal Hebbian learning","class STDP_Learning:
+    def update(self, pre_spike_time, post_spike_time):
+        dt = post_spike_time - pre_spike_time
+        if dt > 0:  # Pre before post (causal)
+            dw = A_plus * exp(-dt / tau_plus)  # LTP
+        else:  # Post before pre (anti-causal)
+            dw = -A_minus * exp(dt / tau_minus)  # LTD
+        return dw","STDP formulas: Δw = A₊ exp(-Δt/τ₊) for Δt>0, found in synaptic plasticity analysis",2025-12-10 06:41:08
+20,BCM Learning Rule (Homeostatic),Sliding threshold that adapts to average activity - self-stabilizing unsupervised learning,Visual cortex development: Neurons self-organize to extract features while maintaining stable activity,"class BCM_Learning:
+    def update(self, pre, post, threshold):
+        dw = eta * post * (post - threshold) * pre
+        
+        # Threshold slides with average activity
+        threshold = average(post**2)
+        
+        return dw",BCM rule: dw/dt = η φ(post - θ) pre with sliding θ,2025-12-10 06:41:08
+21,Oja's Rule (Automatic PCA),Unsupervised learning that automatically performs PCA - weight normalization built in,Hebbian learning with weight decay - extracts principal components,"class OjaLearning:
+    def update(self, x, y, w):
+        # Hebbian + weight normalization
+        dw = eta * y * (x - y * w)
+        # Automatically converges to principal eigenvector
+        return dw",Oja's rule: Δw = η y (x - y w) - performs PCA,2025-12-10 06:41:08
+22,Enzyme Router (MoE with Michaelis-Menten),Routes to experts based on substrate-enzyme affinity (Km values),Enzyme specificity: Different enzyme isoforms have different Km for substrates,"class EnzymeRouter(nn.Module):
+    def forward(self, x):
+        routing_probs = softmax(self.router(x))
+        top_k_probs, top_k_idx = routing_probs.topk(k=2)
+        
+        output = 0
+        for prob, idx in zip(top_k_probs, top_k_idx):
+            km = self.km_values[idx]
+            activity = prob / (km + prob)  # Michaelis-Menten
+            output += activity * self.experts[idx](x)
+        return output",Enzyme kinetics with variable Km: Substrate affinity determines routing,2025-12-10 06:41:08
+23,Adaptive Precision Layer,Dynamically adjusts precision (FP32/FP16/INT8) based on activation magnitude,Substrate inhibition: High substrate reduces enzyme efficiency,"class AdaptivePrecision(nn.Module):
+    def forward(self, x):
+        mag = abs(x).mean()
+        
+        if mag < 0.1:
+            return self.fp32_layer(x)  # High precision
+        elif mag < 1.0:
+            return self.fp16_layer(x)  # Medium
+        else:
+            return self.int8_layer(x)  # Low (substrate inhibition)",Substrate inhibition: v = Vmax*S / (Km + S + S²/Ksi),2025-12-10 06:41:08
+24,Metabolic Cascade Network,Complete network organized as Glycolysis → TCA Cycle → OXPHOS pathway,Cellular respiration: 3-stage metabolic pathway (fast glycolysis → iterative TCA → high-yield OXPHOS),"class MetabolicCascade(nn.Module):
+    def forward(self, x, energy_demand):
+        # Stage 1: Glycolysis (always runs, 2 ATP)
+        x = self.glycolysis(x)
+        
+        # Stage 2: TCA Cycle (optional, medium yield)
+        if energy_demand >= 'medium':
+            for cycle in self.tca_cycles:
+                x = cycle(x) + x  # Residual
+        
+        # Stage 3: OXPHOS (optional, 30 ATP)
+        if energy_demand == 'high':
+            x = self.oxidative_phos(x)
+        else:
+            x = self.fast_output(x)
+        
+        return x",Complete metabolic pathway: Glycolysis (6% efficient) + TCA + OXPHOS (38% efficient),2025-12-10 06:41:08
+25,PII Protein Multi-Head Attention,Multi-head attention with extreme cooperativity (Hill n=4) and 3-signal allosteric modulation,"PII protein: Master nitrogen sensor in bacteria. Integrates α-ketoglutarate (KG^4 cooperativity), glutamine, and ATP/AMP signals. 8 dissociation constants = 8 binding sites.","class PIIAttention(nn.Module):
+    """"""Multi-head attention with allosteric modulation (PII protein)""""""
+    
+    def __init__(self, num_heads=8):
+        super().__init__()
+        # Each head has different affinity (Kd value)
+        self.kd_kg = nn.Parameter(torch.rand(num_heads))
+        self.kd_gln = nn.Parameter(torch.rand(num_heads))
+        self.kd_amp = nn.Parameter(torch.rand(num_heads))
+        self.heads = nn.ModuleList([AttentionHead(d_model) for _ in range(num_heads)])
+        
+    def forward(self, Q, K, V, kg_signal, gln_signal, amp_signal):
+        outputs = []
+        
+        for i, head in enumerate(self.heads):
+            scores = Q @ K.T / sqrt(d_k)
+            
+            # KG^4 cooperativity (extreme ultrasensitivity, Hill n=4)
+            kg_mod = (kg_signal ** 4) / (self.kd_kg[i]**4 + kg_signal**4)
+            
+            # GLN inhibition (competitive)
+            gln_inhib = 1.0 / (1 + gln_signal / self.kd_gln[i])
+            
+            # AMP activation (allosteric)
+            amp_activ = 1 + amp_signal / (self.kd_amp[i] + amp_signal)
+            
+            # Integrate all 3 allosteric signals
+            modulated_scores = scores * kg_mod * gln_inhib * amp_activ
+            
+            outputs.append(softmax(modulated_scores) @ V)
+        
+        return torch.cat(outputs, dim=-1)","BIOMD0000000217: PII protein regulation (2,937 chars, KG^4 cooperativity, 8 Kd constants)",2025-12-10 07:46:50
+26,PFK Adaptive Learning Rate Controller,"Learning rate controller integrating loss (ATP), gradients (AMP), and momentum (F-2,6-BP) via allosteric equation","Phosphofructokinase (PFK): Rate-limiting enzyme in glycolysis. ATP inhibits (high energy → slow down), AMP activates (low energy → speed up), F-2,6-BP overrides (emergency). Allosteric L factor with squared cooperativity.","class PFKLearningRate:
+    """"""Adaptive learning rate like PFK enzyme regulation""""""
+    
+    def __init__(self, base_lr=0.001, L0=1000):
+        self.base_lr = base_lr
+        self.L0 = L0  # Allosteric L factor
+        self.K_atp = 0.1
+        self.K_amp = 0.5
+        self.K_f26bp = 0.3
+        
+    def get_lr(self, loss, grad_norm, momentum):
+        # ATP level = loss (high loss → high ATP → inhibit)
+        ATP = loss
+        
+        # AMP level = inverse gradient norm (low gradient → low energy → activate)
+        AMP = 1.0 / (grad_norm + 1e-8)
+        
+        # F-2,6-BP = momentum (override signal)
+        F26BP = momentum
+        
+        # PFK allosteric equation
+        ATP_inhibition = 1 + (ATP / self.K_atp)**2  # Squared for cooperativity
+        AMP_activation = 1 + (AMP / self.K_amp)**2
+        F26BP_override = 1 + (F26BP / self.K_f26bp)**2
+        
+        # Allosteric factor L (T/R state ratio)
+        L = self.L0 * (ATP_inhibition**2) / (AMP_activation**2 * F26BP_override**2)
+        
+        # Enzyme velocity (= learning rate)
+        lr = self.base_lr / (1 + L)
+        
+        return lr","BIOMD0000000247: Phosphofructokinase (2,373 chars, allosteric regulation with L0 factor)",2025-12-10 07:46:50
+27,Pyruvate Kinase Gated Residual,Residual connection with feedforward activation from upstream layers (FDP) and feedback inhibition from output (ATP),Pyruvate kinase: Final glycolysis enzyme (PEP + ADP → Pyruvate + ATP). Feedforward activation by FDP (earlier product) with quadratic cooperativity. Feedback inhibition by ATP (product).,"class PyruvateKinaseResidual(nn.Module):
+    """"""Gated residual with feedforward activation (PK enzyme)""""""
+    
+    def __init__(self, d_model):
+        super().__init__()
+        self.main_path = nn.Linear(d_model, d_model)
+        self.K_fdp = nn.Parameter(torch.tensor(1.0))
+        self.K_atp = nn.Parameter(torch.tensor(1.0))
+        
+    def forward(self, x, fdp_signal):
+        # Main transformation (PEP → Pyruvate)
+        residual = self.main_path(x)
+        
+        # Feedforward activation by FDP (earlier layer output)
+        # Quadratic cooperativity: (1 + FDP/K)^2
+        fdp_gate = (1 + fdp_signal / self.K_fdp)**2
+        
+        # ATP feedback inhibition (estimate from output)
+        atp_level = residual.abs().mean()
+        atp_inhibition = 1.0 / (1 + atp_level / self.K_atp)
+        
+        # Gated residual: upstream activates, output inhibits
+        output = x + residual * fdp_gate * atp_inhibition
+        
+        return output","BIOMD0000000063: Pyruvate kinase (1,376 chars, FDP feedforward activation, ATP feedback inhibition)",2025-12-10 07:46:50
+28,Protein Aggregation Multi-Path Dropout,Dual dropout pathways: reversible (soluble oligomers) and irreversible (insoluble aggregates) with cooperative nucleation,"Protein misfolding: Monomers aggregate via 2 pathways - soluble (A7-A13, reversible) vs insoluble (A14-A53, irreversible). Nucleation term k_n * M^n creates cooperative threshold.","class AggregationDropout(nn.Module):
+    """"""Multi-path dropout like protein aggregation""""""
+    
+    def __init__(self, p_soluble=0.3, p_insoluble=0.05, n_nucleation=4):
+        super().__init__()
+        self.k_sol = p_soluble
+        self.k_insol = p_insoluble
+        self.n_n = n_nucleation
+        self.register_buffer('permanent_dropout_mask', None)
+        
+    def forward(self, x, training=True):
+        if not training:
+            # Apply permanent dropout even at test time
+            if self.permanent_dropout_mask is not None:
+                return x * self.permanent_dropout_mask
+            return x
+        
+        # Nucleation: cooperative activation based on activation magnitude
+        activation_mag = x.abs().mean()
+        nucleation_factor = torch.clamp(activation_mag ** self.n_n, 0, 1)
+        
+        # Soluble path: reversible dropout (standard dropout)
+        soluble_mask = torch.bernoulli(
+            torch.full_like(x, 1 - self.k_sol * nucleation_factor)
+        )
+        
+        # Insoluble path: permanent dropout (accumulates over training)
+        insoluble_prob = self.k_insol * nucleation_factor
+        new_insoluble = torch.bernoulli(torch.full_like(x, insoluble_prob))
+        
+        if self.permanent_dropout_mask is None:
+            self.permanent_dropout_mask = 1 - new_insoluble
+        else:
+            # Accumulate permanent dropout
+            self.permanent_dropout_mask = self.permanent_dropout_mask * (1 - new_insoluble)
+        
+        # Apply both masks
+        return x * soluble_mask * self.permanent_dropout_mask / (1 - self.k_sol * nucleation_factor)","BIOMD0000000618: Protein aggregation dynamics (982 chars, 47 parallel pathways, M^n nucleation)",2025-12-10 07:46:50
+29,GTPase Molecular Switch Layer,Binary switching layer with energy-dependent state transitions (GTP→GDP),Succinyl-CoA synthetase: TCA cycle enzyme using GTP/GDP switching. GTP hydrolysis drives ON→OFF transition. Reversible with energy cost. Keq determines equilibrium balance.,"class GTPaseSwitch(nn.Module):
+    """"""Molecular switch with energy-dependent gating""""""
+    
+    def __init__(self, d_model):
+        super().__init__()
+        self.transform = nn.Linear(d_model, d_model)
+        self.gtp_pool = nn.Parameter(torch.tensor(100.0))  # GTP reservoir
+        self.gdp_pool = nn.Parameter(torch.tensor(0.0))    # GDP accumulator
+        self.Keq = nn.Parameter(torch.tensor(0.1))         # Equilibrium constant
+        
+    def forward(self, x):
+        # GTP-bound state (ON)
+        gtp_fraction = self.gtp_pool / (self.gtp_pool + self.gdp_pool + 1e-8)
+        
+        # Transform only when GTP-bound
+        y = self.transform(x)
+        output = gtp_fraction * y + (1 - gtp_fraction) * x  # Mix based on state
+        
+        # GTP hydrolysis: GTP → GDP (consumes energy)
+        activity = output.abs().mean()
+        hydrolysis = 0.1 * activity  # GTP consumed proportional to activity
+        
+        # Update GTP/GDP pools
+        self.gtp_pool = torch.clamp(self.gtp_pool - hydrolysis, 0, 100)
+        self.gdp_pool = torch.clamp(self.gdp_pool + hydrolysis, 0, 100)
+        
+        # Reverse reaction: GDP → GTP (requires external energy)
+        regeneration = self.Keq * self.gdp_pool  # Equilibrium-driven
+        self.gtp_pool = torch.clamp(self.gtp_pool + regeneration, 0, 100)
+        self.gdp_pool = torch.clamp(self.gdp_pool - regeneration, 0, 100)
+        
+        return output","BIOMD0000000239: Succinyl-CoA synthetase (961 chars, GTP/GDP cycle, TCA cycle)",2025-12-10 08:03:39
+30,Chain Length-Dependent Attention,Attention mechanism with different Km (affinity) for different sequence lengths,"Fatty acid β-oxidation: Different Km values for C4, C6, C8, C10, C12, C14, C16 chains. Longer chains have different enzyme kinetics. Sequential breakdown: C16→C14→C12→...→C4.","class ChainLengthAttention(nn.Module):
+    """"""Attention with length-dependent kinetics (β-oxidation)""""""
+    
+    def __init__(self, max_len=512):
+        super().__init__()
+        # Different Km for different ""chain lengths"" (context sizes)
+        # Longer contexts = higher Km (lower affinity)
+        self.km_values = nn.Parameter(torch.linspace(0.1, 2.0, 7))  # C4, C6, ..., C16
+        self.length_bins = [4, 8, 16, 32, 64, 128, 256]
+        
+    def forward(self, Q, K, V):
+        seq_len = Q.shape[1]
+        
+        # Determine which ""chain length"" bin
+        bin_idx = 0
+        for i, threshold in enumerate(self.length_bins):
+            if seq_len >= threshold:
+                bin_idx = i
+        
+        km = self.km_values[bin_idx]
+        
+        # Standard attention scores
+        scores = Q @ K.T / sqrt(d_k)
+        
+        # Michaelis-Menten modulation by length
+        # Longer sequences = higher Km = lower effective attention
+        length_factor = seq_len / (km * 100 + seq_len)
+        
+        modulated_scores = scores * length_factor
+        
+        return softmax(modulated_scores) @ V","BIOMD0000000505: Fatty acid β-oxidation (768 chars, 7 chain lengths with different Km)",2025-12-10 08:03:39
+31,Multi-Modal Consensus Layer,Requires ALL inputs to be present for activation (product of all modalities),HCMV viral assembly: Requires 31 proteins to bind simultaneously. Rate = k × [protein1] × [protein2] × ... × [protein31]. All-or-nothing assembly.,"class ConsensusLayer(nn.Module):
+    """"""Multi-modal fusion requiring ALL modalities (viral assembly)""""""
+    
+    def __init__(self, num_modalities=4, d_model=512):
+        super().__init__()
+        self.num_modalities = num_modalities
+        self.modality_encoders = nn.ModuleList([
+            nn.Linear(d_model, d_model) for _ in range(num_modalities)
+        ])
+        self.k_assembly = nn.Parameter(torch.tensor(1.0))  # Assembly rate constant
+        
+    def forward(self, *modality_inputs):
+        """"""
+        Args:
+            *modality_inputs: Tuple of tensors, one per modality
+            
+        Returns:
+            Assembled output (only if ALL modalities present)
+        """"""
+        if len(modality_inputs) != self.num_modalities:
+            # Not all modalities present → no assembly
+            return torch.zeros_like(modality_inputs[0])
+        
+        # Encode each modality
+        encoded = []
+        for i, modal_input in enumerate(modality_inputs):
+            encoded.append(self.modality_encoders[i](modal_input))
+        
+        # Assembly rate = product of all concentrations
+        # Product of activation magnitudes
+        assembly_signal = torch.ones_like(encoded[0])
+        for enc in encoded:
+            # Normalize to [0, 1] range (concentration)
+            concentration = torch.sigmoid(enc.mean(dim=-1, keepdim=True))
+            assembly_signal = assembly_signal * concentration
+        
+        # Apply assembly rate constant
+        assembly_strength = self.k_assembly * assembly_signal
+        
+        # Final output: sum of modalities weighted by assembly strength
+        output = torch.zeros_like(encoded[0])
+        for enc in encoded:
+            output = output + enc * assembly_strength
+        
+        return output / len(encoded)","R-HSA-9640368: HCMV viral assembly (963 chars, 31 proteins required simultaneously)",2025-12-10 08:03:39
+32,Holistic Multi-Objective Loss (40+ params),Loss function integrating 40+ objectives via custom holistic function,Biomass production: function_283() integrates 40+ metabolic reactions. All contribute to overall growth rate. System-level optimization.,"class HolisticBiomassLoss(nn.Module):
+    """"""40+ objective loss function (biomass production)""""""
+    
+    def __init__(self, num_objectives=40):
+        super().__init__()
+        self.num_objectives = num_objectives
+        # Learnable weights for each objective
+        self.objective_weights = nn.Parameter(torch.ones(num_objectives))
+        # Learnable interaction terms (some objectives synergize)
+        self.interaction_matrix = nn.Parameter(torch.eye(num_objectives))
+        
+    def forward(self, model_outputs, targets, model_state):
+        """"""
+        Computes holistic fitness from many objectives
+        
+        Args:
+            model_outputs: Model predictions
+            targets: Ground truth
+            model_state: Dict with activations, weights, etc.
+        """"""
+        objectives = []
+        
+        # Objective 1-10: Accuracy objectives
+        objectives.append(F.cross_entropy(model_outputs, targets))
+        objectives.append(F.l1_loss(model_outputs.softmax(-1).max(-1).values, torch.ones_like(targets).float()))
+        # ... 8 more accuracy metrics ...
+        
+        # Objective 11-20: Efficiency objectives  
+        objectives.append(model_state['flops'] / 1e9)  # GFLOPS
+        objectives.append(model_state['params'] / 1e6)  # Million params
+        # ... 8 more efficiency metrics ...
+        
+        # Objective 21-30: Robustness objectives
+        objectives.append(adversarial_loss(model_outputs))
+        # ... 9 more robustness metrics ...
+        
+        # Objective 31-40: Interpretability objectives
+        objectives.append(sparsity_loss(model_state['activations']))
+        # ... 9 more interpretability metrics ...
+        
+        # Stack into tensor
+        obj_tensor = torch.stack(objectives)
+        
+        # Apply objective weights
+        weighted_objectives = obj_tensor * self.objective_weights
+        
+        # Apply interaction terms (some objectives interact)
+        # O_total = sum(w_i * O_i) + sum(I_ij * O_i * O_j)
+        interactions = torch.zeros(1, device=obj_tensor.device)
+        for i in range(self.num_objectives):
+            for j in range(i+1, self.num_objectives):
+                interactions += self.interaction_matrix[i,j] * obj_tensor[i] * obj_tensor[j]
+        
+        # Holistic biomass loss
+        total_loss = weighted_objectives.sum() + 0.01 * interactions
+        
+        return total_loss","BIOMD0000000496: Biomass production (1,642 chars, function_283 with 40+ parameters)",2025-12-10 08:03:39
+33,Environment-Adaptive Multi-Objective Loss,Loss function that adapts objective portfolio based on deployment environment (edge vs cloud vs mobile),Inter-species comparison (BIOMD 469/470/471/472/473): Different bacteria optimize DIFFERENT metabolite sets based on environment. Rich environment (65 metabolites) vs limited (51) vs specialized (49). ZERO overlap - each species evolved unique objective portfolio.,"class EnvironmentAdaptiveLoss(nn.Module):
+    """"""Loss adapts to deployment environment (bacteria adapt to nutrient availability)""""""
+    
+    def __init__(self, environment='cloud'):
+        super().__init__()
+        
+        # Define objective portfolios for each environment
+        self.environments = {
+            'cloud': {
+                'objectives': 65,  # Rich environment (all metrics available)
+                'metrics': [
+                    'accuracy', 'f1_score', 'auc', 'precision', 'recall',  # 5 accuracy
+                    'latency_p50', 'latency_p95', 'latency_p99', 'throughput',  # 4 perf
+                    'robustness_adv', 'robustness_ood', 'robustness_noise',  # 3 robust
+                    'fairness_demographic', 'fairness_equalized_odds',  # 2 fairness
+                    'interpretability', 'feature_importance', 'attention_entropy',  # 3 interp
+                    # ... 48 more cloud-available metrics
+                ],
+                'weights': torch.ones(65)
+            },
+            'edge': {
+                'objectives': 51,  # Limited environment (resource constraints)
+                'metrics': [
+                    'accuracy', 'f1_score',  # 2 accuracy (reduced)
+                    'latency_p50', 'throughput',  # 2 perf (critical on edge)
+                    'power_consumption', 'memory_footprint', 'model_size',  # 3 resource
+                    'quantization_error', 'pruning_ratio',  # 2 compression
+                    # ... 42 more edge-relevant metrics
+                ],
+                'weights': torch.ones(51)
+            },
+            'mobile': {
+                'objectives': 49,  # Specialized environment
+                'metrics': [
+                    'accuracy',  # 1 accuracy (minimal)
+                    'latency_p50',  # 1 perf
+                    'battery_drain', 'thermal_throttling', 'bandwidth_usage',  # 3 mobile
+                    'on_device_privacy', 'local_storage',  # 2 privacy
+                    # ... 42 more mobile-specific metrics
+                ],
+                'weights': torch.ones(49)
+            }
+        }
+        
+        self.set_environment(environment)
+    
+    def set_environment(self, environment):
+        """"""Adapt loss to new deployment environment""""""
+        env_config = self.environments[environment]
+        self.current_env = environment
+        self.objectives = env_config['objectives']
+        self.metrics = env_config['metrics']
+        self.weights = nn.Parameter(env_config['weights'])
+        
+        print(f""Adapted to {environment}: {self.objectives} objectives"")
+    
+    def forward(self, model_outputs, targets, model_state):
+        """"""
+        Compute environment-specific loss
+        
+        Args:
+            model_outputs: Model predictions
+            targets: Ground truth
+            model_state: Dict with metrics specific to current environment
+        """"""
+        objective_values = []
+        
+        for metric_name in self.metrics:
+            if metric_name in model_state:
+                # Metric available in this environment
+                obj_value = model_state[metric_name]
+            else:
+                # Metric not available → skip (like metabolite not in environment)
+                continue
+            
+            # Log-ratio thermodynamic potential (like bacteria)
+            baseline = model_state.get(f'{metric_name}_baseline', 1.0)
+            log_potential = torch.log(obj_value / (baseline + 1e-8))
+            
+            objective_values.append(log_potential)
+        
+        # Stack and weight
+        obj_tensor = torch.stack(objective_values)
+        weighted_loss = (self.weights[:len(objective_values)] * obj_tensor).sum()
+        
+        # Constraint: non-negative fitness
+        return torch.max(torch.tensor(0.0), 1.0 + weighted_loss)
+    
+    def migrate(self, from_env, to_env, model_state):
+        """"""
+        Migrate model between environments (like bacteria adapting to new niche)
+        
+        Returns: Adaptation cost (how many objectives change)
+        """"""
+        old_metrics = set(self.environments[from_env]['metrics'])
+        new_metrics = set(self.environments[to_env]['metrics'])
+        
+        lost_metrics = old_metrics - new_metrics  # No longer optimizable
+        gained_metrics = new_metrics - old_metrics  # New objectives
+        
+        adaptation_cost = len(lost_metrics) + len(gained_metrics)
+        
+        print(f""Migration {from_env} → {to_env}:"")
+        print(f""  Lost {len(lost_metrics)} objectives: {list(lost_metrics)[:5]}..."")
+        print(f""  Gained {len(gained_metrics)} objectives: {list(gained_metrics)[:5]}..."")
+        print(f""  Adaptation cost: {adaptation_cost} objective changes"")
+        
+        self.set_environment(to_env)
+        
+        return adaptation_cost",BIOMD 469/470 (65 met) vs 471/472 (51 met) vs 473 (49 met): Zero overlap in metabolite sets,2025-12-10 08:21:49
