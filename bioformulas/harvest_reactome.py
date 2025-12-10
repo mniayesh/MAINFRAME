@@ -67,7 +67,8 @@ class ReactomeHarvester:
             resp.raise_for_status()
 
             events = resp.json()
-            reactions = [e for e in events if e.get('schemaClass') == 'Reaction']
+            # Filter out integers (IDs) and only keep dictionaries that are Reactions
+            reactions = [e for e in events if isinstance(e, dict) and e.get('schemaClass') == 'Reaction']
             return reactions
 
         except Exception as e:
@@ -82,9 +83,19 @@ class ReactomeHarvester:
             rxn_id = reaction.get('stId', 'unknown')
             name = reaction.get('displayName', rxn_id)
 
-            # Get inputs and outputs
-            inputs = reaction.get('input', [])
-            outputs = reaction.get('output', [])
+            # Fetch full reaction details with inputs/outputs
+            url = f"{REACTOME_API}/data/query/enhanced/{rxn_id}"
+            resp = requests.get(url, timeout=30)
+            resp.raise_for_status()
+            full_reaction = resp.json()
+
+            # Get inputs and outputs, filtering out integer IDs
+            inputs_raw = full_reaction.get('input', [])
+            outputs_raw = full_reaction.get('output', [])
+
+            # Filter to only include dictionaries (skip integer IDs)
+            inputs = [inp for inp in inputs_raw if isinstance(inp, dict)]
+            outputs = [out for out in outputs_raw if isinstance(out, dict)]
 
             if not inputs or not outputs:
                 return formulas
@@ -93,33 +104,37 @@ class ReactomeHarvester:
             input_names = [inp.get('displayName', 'unknown') for inp in inputs]
             output_names = [out.get('displayName', 'unknown') for out in outputs]
 
+            # Clean up names for LaTeX
             input_vars = ' '.join([f"[{n}]" for n in input_names])
-            output_vars = ' + '.join(output_names)
+
+            # Get reaction category for better descriptions
+            category = full_reaction.get('category', 'reaction')
 
             # Rate equation
             formulas.append({
                 'name': f"Reactome {rxn_id}: {name}",
                 'latex': f"v = k {input_vars}",
-                'description': f"Reaction rate from Reactome: {name}",
+                'description': f"Reaction rate ({category}): {name}",
                 'formula_type': 'rate_equation',
                 'domain': 'cell-signaling',
                 'model_origin': rxn_id
             })
 
-            # ODE for first output
-            if output_names:
-                out_var = output_names[0].replace(' ', '_').replace('-', '_')
+            # ODE for each output
+            for output in outputs:
+                out_name = output.get('displayName', 'product')
+                out_var = out_name.replace(' ', '_').replace('-', '_').replace('[', '').replace(']', '')
                 formulas.append({
-                    'name': f"Reactome {rxn_id}: d{out_var}/dt",
+                    'name': f"Reactome {rxn_id}: Production of {out_name}",
                     'latex': f"\\frac{{d[{out_var}]}}{{dt}} = k {input_vars}",
-                    'description': f"Production of {output_names[0]} from Reactome {rxn_id}",
+                    'description': f"Production of {out_name} via {category}",
                     'formula_type': 'ODE',
                     'domain': 'cell-signaling',
                     'model_origin': rxn_id
                 })
 
         except Exception as e:
-            log.warning(f"  Error converting reaction: {e}")
+            log.warning(f"  Error converting reaction {reaction.get('stId', 'unknown')}: {e}")
 
         return formulas
 
@@ -212,7 +227,8 @@ def main():
 
     try:
         harvester = ReactomeHarvester(conn)
-        harvester.harvest(species='Homo sapiens', max_pathways=5, delay=1.5)
+        # Harvest more pathways with delay to be respectful to API
+        harvester.harvest(species='Homo sapiens', max_pathways=20, delay=0.5)
 
     finally:
         conn.close()

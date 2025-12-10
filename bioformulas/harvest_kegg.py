@@ -158,23 +158,37 @@ class KEGGHarvester:
 
         return formulas
 
-    def get_pathway_reactions(self, pathway_id):
-        """Get reactions in a pathway."""
+    def get_all_reactions(self, limit=None):
+        """Get all reactions from KEGG."""
         try:
-            url = f"{KEGG_API}/link/reaction/{pathway_id}"
+            url = f"{KEGG_API}/list/reaction"
             resp = requests.get(url, timeout=30)
             resp.raise_for_status()
 
             reactions = []
             for line in resp.text.strip().split('\n'):
                 if '\t' in line:
-                    _, rxn_id = line.split('\t')
-                    reactions.append(rxn_id)
+                    rxn_id, description = line.split('\t', 1)
+                    # Extract equation from description (after semicolon)
+                    equation = None
+                    if ';' in description:
+                        parts = description.split(';', 1)
+                        if len(parts) > 1:
+                            equation = parts[1].strip()
+
+                    reactions.append({
+                        'id': rxn_id,
+                        'description': description,
+                        'equation': equation
+                    })
+
+                    if limit and len(reactions) >= limit:
+                        break
 
             return reactions
 
         except Exception as e:
-            log.warning(f"  Failed to get reactions for {pathway_id}: {e}")
+            log.error(f"Failed to get reactions: {e}")
             return []
 
     def save_formulas(self, formulas):
@@ -201,14 +215,14 @@ class KEGGHarvester:
             except Exception as e:
                 log.warning(f"  Error saving formula: {e}")
 
-    def harvest(self, organism='hsa', max_pathways=10, delay=1.0):
+    def harvest(self, max_reactions=None, delay=0.3, fetch_details=True):
         """
         Harvest KEGG formulas.
 
         Args:
-            organism: Organism code (hsa=human, eco=E.coli, etc.)
-            max_pathways: Maximum pathways to process
+            max_reactions: Maximum reactions to process (None = all)
             delay: Delay between API calls
+            fetch_details: Whether to fetch full reaction details (slower but more complete)
         """
         log.info("="*60)
         log.info("KEGG Harvester Starting")
@@ -216,43 +230,59 @@ class KEGGHarvester:
 
         start_count = count_formulas(self.conn)
 
-        # Get pathways
-        pathways = self.get_pathway_list(organism)
+        # Get all reactions
+        log.info("Fetching reaction list...")
+        reactions = self.get_all_reactions(limit=max_reactions)
+        log.info(f"Found {len(reactions)} reactions to process")
 
         all_formulas = []
         processed_reactions = set()
 
-        for i, pathway in enumerate(pathways[:max_pathways], 1):
-            path_id = pathway['id']
-            log.info(f"[{i}/{min(len(pathways), max_pathways)}] {path_id}: {pathway['name']}")
+        for i, rxn_info in enumerate(reactions, 1):
+            rxn_id = rxn_info['id']
 
-            # Get reactions
-            reactions = self.get_pathway_reactions(path_id)
-            log.info(f"  Found {len(reactions)} reactions")
+            if rxn_id in processed_reactions:
+                continue
 
-            for rxn_id in reactions:
-                if rxn_id in processed_reactions:
-                    continue
+            if i % 100 == 0:
+                log.info(f"Progress: {i}/{len(reactions)} reactions processed")
 
-                # Get reaction details
+            # Option 1: Use equation from list (faster)
+            if not fetch_details and rxn_info.get('equation'):
+                reaction = {
+                    'id': rxn_id,
+                    'name': rxn_info['description'].split(';')[0].strip(),
+                    'equation': rxn_info['equation'],
+                    'enzyme': None,
+                    'reactants': [],
+                    'products': []
+                }
+
+                # Parse equation
+                if '<=>' in rxn_info['equation']:
+                    left, right = rxn_info['equation'].split('<=>', 1)
+                    reaction['reactants'] = [c.strip() for c in left.split('+')]
+                    reaction['products'] = [c.strip() for c in right.split('+')]
+
+            # Option 2: Fetch full details (slower but complete)
+            else:
                 reaction = self.get_reaction(rxn_id)
-                if reaction:
-                    formulas = self.reaction_to_ode(reaction)
-                    all_formulas.extend(formulas)
-                    processed_reactions.add(rxn_id)
-                    self.stats['reactions'] += 1
 
-                time.sleep(0.5)  # Rate limit
-
-            self.stats['pathways'] += 1
+            if reaction and (reaction.get('equation') or reaction.get('reactants')):
+                formulas = self.reaction_to_ode(reaction)
+                all_formulas.extend(formulas)
+                processed_reactions.add(rxn_id)
+                self.stats['reactions'] += 1
 
             # Save periodically
-            if len(all_formulas) >= 50:
+            if len(all_formulas) >= 100:
                 self.save_formulas(all_formulas)
                 self.stats['formulas'] += len(all_formulas)
+                log.info(f"  Saved {self.stats['formulas']} formulas so far...")
                 all_formulas = []
 
-            time.sleep(delay)
+            if fetch_details and i % 10 == 0:
+                time.sleep(delay)  # Rate limit for API calls
 
         # Save remaining
         if all_formulas:
@@ -261,7 +291,6 @@ class KEGGHarvester:
 
         log.info("="*60)
         log.info(f"KEGG Harvest Complete")
-        log.info(f"  Pathways: {self.stats['pathways']}")
         log.info(f"  Reactions: {self.stats['reactions']}")
         log.info(f"  Formulas: {self.stats['formulas']}")
         log.info("="*60)
@@ -276,8 +305,9 @@ def main():
     try:
         harvester = KEGGHarvester(conn)
 
-        # Harvest human metabolic pathways
-        harvester.harvest(organism='hsa', max_pathways=5, delay=1.5)
+        # Harvest all KEGG reactions (fast mode using list equations)
+        # For full details including enzyme info, set fetch_details=True
+        harvester.harvest(max_reactions=None, delay=0.3, fetch_details=False)
 
     finally:
         conn.close()
