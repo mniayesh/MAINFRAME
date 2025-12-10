@@ -1,0 +1,446 @@
+[04:11:54] Searching for kinetic models...
+[04:12:00] Found 20 unique kinetic models
+[04:12:00] ============================================================
+[04:12:00] PARALLEL BioModels Harvester
+[04:12:00]   Download workers: 10
+[04:12:00]   Parse workers: 4
+[04:12:00]   Models to process: 20
+[04:12:00] ============================================================
+[04:12:00] 
+[STAGE 1] Downloading models in parallel...
+[04:12:05]   Downloaded/cached: 20 files
+[04:12:05] 
+[STAGE 2] Parsing models in parallel...
+[04:12:06] ➕ [rate_equation] BIOMD0000000006: Reaction1
+[04:12:06] ➕ [rate_equation] BIOMD0000000006: Reaction2
+[04:12:06] ➕ [rate_equation] BIOMD0000000006: Reaction3
+[04:12:06] ➕ [ODE] BIOMD0000000006: du/dt
+[04:12:06] ➕ [ODE] BIOMD0000000006: dv/dt
+[04:12:06] ➕ [rate_equation] BIOMD0000000005: cyclin_cdc2k dissociation
+[04:12:06] ➕ [rate_equation] BIOMD0000000005: cdc2k phosphorylation
+[04:12:06] ➕ [rate_equation] BIOMD0000000005: cdc2k dephosphorylation
+[04:12:06] ➕ [rate_equation] BIOMD0000000005: cyclin cdc2k-p association
+[04:12:06] ➕ [rate_equation] BIOMD0000000005: deactivation of cdc2 kinase
+[04:12:06] ➕ [rate_equation] BIOMD0000000005: cyclin biosynthesis
+[04:12:06] ➕ [rate_equation] BIOMD0000000005: default degradation of cyclin
+[04:12:06] ➕ [rate_equation] BIOMD0000000005: cdc2 kinase triggered degration of cyclin
+[04:12:06] ➕ [rate_equation] BIOMD0000000005: activation of cdc2 kinase
+[04:12:06] ➕ [rate_equation] BIOMD0000000027: phosphorylation of MAPK
+[04:12:06] ➕ [rate_equation] BIOMD0000000027: phosphorylation of P-MAPK
+[04:12:06] ➕ [rate_equation] BIOMD0000000027: dephosphorylation of PP-MAPK
+[04:12:06] ➕ [rate_equation] BIOMD0000000027: dephosphorylation of P-MAPK
+[04:12:06] ➕ [rate_equation] BIOMD0000000050: v1
+[04:12:06] ➕ [rate_equation] BIOMD0000000050: v2
+[04:12:06] ➕ [rate_equation] BIOMD0000000050: v3
+[04:12:06] ➕ [rate_equation] BIOMD0000000050: v4
+[04:12:06] ➕ [rate_equation] BIOMD0000000050: v5
+[04:12:06] ➕ [rate_equation] BIOMD0000000050: v6
+[04:12:06] ➕ [rate_equation] BIOMD0000000050: v7
+[04:12:06] ➕ [rate_equation] BIOMD0000000050: v8
+[04:12:06] ➕ [rate_equation] BIOMD0000000050: v9
+[04:12:06] ➕ [rate_equation] BIOMD0000000050: v10
+[04:12:06] ➕ [rate_equation] BIOMD0000000050: v11
+[04:12:06] ➕ [rate_equation] BIOMD0000000050: v12
+[04:12:06] ➕ [rate_equation] BIOMD0000000050: v13
+[04:12:06] ➕ [rate_equation] BIOMD0000000050: v14
+[04:12:06] ➕ [rate_equation] BIOMD0000000050: v15
+[04:12:06] ➕ [rate_equation] BIOMD0000000050: v16
+[04:12:06] ➕ [rate_equation] BIOMD0000000029: phosphorylation of ERK on Tyr
+[04:12:06] ➕ [rate_equation] BIOMD0000000029: phosphorylation of ERK-PY on Thr
+[04:12:06] ➕ [rate_equation] BIOMD0000000029: phosphorylation of ERK on Thr
+[04:12:06] ➕ [rate_equation] BIOMD0000000029: phosphorylation of ERK-PT on Tyr
+[04:12:06] ➕ [rate_equation] BIOMD0000000029: dephosphorylation of ERK-PP on Tyr
+[04:12:06] ➕ [rate_equation] BIOMD0000000029: dephosphorylation of ERK-PT
+[04:12:06] ➕ [rate_equation] BIOMD0000000029: dephosphorylation of ERK-PY
+[04:12:06] ➕ [rate_equation] BIOMD0000000009: binding of MAPKKK activator
+[04:12:06] ➕ [rate_equation] BIOMD0000000009: MAPKKK activation
+[04:12:06] ➕ [rate_equation] BIOMD0000000009: binding of MAPKKK inactivator
+[04:12:06] ➕ [rate_equation] BIOMD0000000009: MAPKKK inactivation
+[04:12:06] ➕ [rate_equation] BIOMD0000000009: binding P-MAPKKK and MAPKK
+[04:12:06] ➕ [rate_equation] BIOMD0000000009: phosphorylation of MAPKK
+[04:12:06] ➕ [rate_equation] BIOMD0000000009: binding MAPKK-Pase and P-MAPKK
+[04:12:06] ➕ [rate_equation] BIOMD0000000009: dephosphorylation of P-MAPKK
+[04:12:06] ➕ [rate_equation] BIOMD0000000009: binding P-MAPKKK and P-MAPKK
+[04:12:06] ➕ [rate_equation] BIOMD0000000009: phosphorylation of P-MAPKK
+[04:12:06] ➕ [rate_equation] BIOMD0000000009: binding MAPKK-Pase and PP-MAPKK
+[04:12:06] ➕ [rate_equation] BIOMD0000000009: dephosphorylation of PP-MAPKK
+[04:12:06] ➕ [rate_equation] BIOMD0000000009: binding MAPK and PP-MAPKK
+[04:12:06] ➕ [rate_equation] BIOMD0000000009: phosphorylation of MAPK
+[04:12:06] ➕ [rate_equation] BIOMD0000000009: binding MAPK-Pase and P-MAPK
+[04:12:06] ➕ [rate_equation] BIOMD0000000009: dephosphorylation of P-MAPK
+[04:12:06] ➕ [rate_equation] BIOMD0000000009: binding PP-MAPKK and P-MAPK
+[04:12:06] ➕ [rate_equation] BIOMD0000000009: phosphorylation of P-MAPK
+[04:12:06] ➕ [rate_equation] BIOMD0000000009: binding MAPK-Pase and PP-MAPK
+[04:12:06] ➕ [rate_equation] BIOMD0000000009: dephosphorylation of PP-MAPK
+[04:12:06] ➕ [rate_equation] BIOMD0000000283: r1
+[04:12:06] ➕ [rate_equation] BIOMD0000000283: r2
+[04:12:06] ➕ [rate_equation] BIOMD0000000031: phosphorylation of MAPK
+[04:12:06] ➕ [rate_equation] BIOMD0000000031: phosphorylation of P-MAPK
+[04:12:06] ➕ [rate_equation] BIOMD0000000031: dephosphorylation of PP-MAPK
+[04:12:06] ➕ [rate_equation] BIOMD0000000031: dephosphorylation of P-MAPK
+[04:12:06] ➕ [rate_equation] BIOMD0000000015: ada
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: ade
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: adna
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: adrnr
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: ampd
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: aprt
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: arna
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: asuc
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: asli
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: dada
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: den
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: dgnuc
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: dnaa
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: dnag
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: gdna
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: gdrnr
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: gmpr
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: gmps
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: gnuc
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: gprt
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: grna
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: gua
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: hprt
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: hx
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: hxd
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: impd
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: inuc
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: mat
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: polyam
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: prpps
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: pyr
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: rnaa
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: rnag
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: trans
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: ua
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: x
+[04:12:07] ➕ [rate_equation] BIOMD0000000015: xd
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: SHMT
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: SHMTr
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: HCHOtoCH2FH4
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: CH2FH4toHCHO
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: MTHFR
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: MTR
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: HCOOHtoCHOFH4
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: GARFT
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: ATIC7
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: MTHFD
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: TYMS
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: DHFReductase
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: FFH2syn
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: ATIC12
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: AICARsyn
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: FPGS12
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: FPGS23
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: FPGS34
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: FPGS45
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: GGH21
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: GGH32
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: GGH43
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: GGH54
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: RFC
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: MTX1export
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: MTX2export
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: MTX3export
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: MTX4export
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: MTX5export
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: MTX1on
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: MTX2on
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: MTX3on
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: MTX4on
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: MTX5on
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: MTX1off
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: MTX2off
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: MTX3off
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: MTX4off
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: MTX5off
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: DHFRfsyn
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: DHFRdeg
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: FH2bdeg
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: MTX1deg
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: MTX2deg
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: MTX3deg
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: MTX4deg
+[04:12:07] ➕ [rate_equation] BIOMD0000000018: MTX5deg
+[04:12:07] ➕ [rate_equation] BIOMD0000000008: creation of cyclin
+[04:12:07] ➕ [rate_equation] BIOMD0000000008: cdc2 kinase triggered degration of cyclin
+[04:12:07] ➕ [rate_equation] BIOMD0000000008: default degradation of cyclin
+[04:12:07] ➕ [rate_equation] BIOMD0000000008: activation of cdc2 kinase
+[04:12:07] ➕ [rate_equation] BIOMD0000000008: deactivation of cdc2 kinase
+[04:12:07] ➕ [rate_equation] BIOMD0000000008: activation of cyclin protease
+[04:12:07] ➕ [rate_equation] BIOMD0000000008: deactivation of cyclin protease
+[04:12:07] ➕ [rate_equation] BIOMD0000000008: reaction8
+[04:12:07] ➕ [rate_equation] BIOMD0000000008: reaction9
+[04:12:07] ➕ [rate_equation] BIOMD0000000008: desinhibition of cyclin
+[04:12:07] ➕ [rate_equation] BIOMD0000000008: degradation of inhibited cyclin
+[04:12:07] ➕ [rate_equation] BIOMD0000000008: creation of cyclin inhibitor
+[04:12:07] ➕ [rate_equation] BIOMD0000000008: degradation of cyclin inhibitor
+[04:12:07] ➕ [rate_equation] BIOMD0000000092: Intramolecular autoactivation
+[04:12:07] ➕ [rate_equation] BIOMD0000000092: Intermolecular autoactivation-Complex formation
+[04:12:07] ➕ [rate_equation] BIOMD0000000092: Intermolecular autoactivation-Enzyme release
+[04:12:07] ➕ [rate_equation] BIOMD0000000265: v1
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v2
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v3
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v4
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v5
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v6
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v7
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v8
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v9
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v10
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v11
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v12
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v13
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v14
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v15
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v16
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v17
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v18
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v19
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v20
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v21
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v22
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v23
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v24
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v25
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v26
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v27
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v28
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v29
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v30
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v31
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v32
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v33
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v34
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v35
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v36
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v37
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v38
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v39
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v40
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v41
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v42
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v43
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v44
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v45
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v46
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v47
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v48
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v49
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v50
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v51
+[04:12:08] ➕ [rate_equation] BIOMD0000000265: v52
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Growth
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Synthesis of CLN2
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Degradation of CLN2
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Synthesis of CLB2
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Degradation of CLB2
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Synthesis of CLB5
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Degradation of CLB5
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Synthesis of SIC1
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Phosphorylation of SIC1
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Dephosphorylation of SIC1
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Fast Degradation of SIC1P
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Assoc. of CLB2 and SIC1
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Dissoc. of CLB2/SIC1 complex
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Assoc. of CLB5 and SIC1
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Dissoc. of CLB5/SIC1
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Phosphorylation of C2
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Dephosphorylation of C2P
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Phosphorylation of C5
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Dephosphorylation of C5P
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Degradation of CLB2 in C2
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Degradation of CLB5 in C5
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Degradation of SIC1 in C2P
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Degradation of SIC1P in C5P
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Degradation of CLB2 in C2P
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Degradation of CLB5 in C5P
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: CDC6 synthesis
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Phosphorylation of CDC6
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Dephosphorylation of CDC6
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Degradation of CDC6P
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: CLB2/CDC6 complex formation
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: CLB2/CDC6 dissociation
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: CLB5/CDC6 complex formation
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: CLB5/CDC6 dissociation
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: F2 phosphorylation
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: F2P dephosphorylation
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: F5 phosphorylation
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: F5P dephosphorylation
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: CLB2 degradation in F2
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: CLB5 degradation in F5
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: CDC6 degradation in F2P
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: CDC6 degradation in F5P
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: CLB2 degradation in F2P
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: CLB5 degradation in F5P
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Synthesis of SWI5
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Degradation of SWI5
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Degradation of SWI5P
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Activation of SWI5
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Inactivation of SWI5
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Activation of IEP
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Inactivation
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Synthesis of inactive CDC20
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Degradation of inactiveCDC20
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Degradation of active CDC20
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Activation of CDC20
+[04:12:08] ➕ [rate_equation] BIOMD0000000056: Inactivation
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: CDH1 synthesis
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: CDH1 degradation
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: CDH1i degradation
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: CDH1i activation
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: Inactivation
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: CDC14 synthesis
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: CDC14 degradation
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: Assoc. with NET1 to form RENT
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: Dissoc. from RENT
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: Assoc with NET1P to form RENTP
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: Dissoc. from RENP
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: Net1 synthesis
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: Net1 degradation
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: Net1P degradation
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: NET1 phosphorylation
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: dephosphorylation
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: RENT phosphorylation
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: dephosphorylation
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: Degradation of NET1 in RENT
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: Degradation of NET1P in RENTP
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: Degradation of CDC14 in RENT
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: Degradation of CDC14 in RENTP
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: TEM1 activation
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: inactivation
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: CDC15 activation
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: inactivation
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: PPX synthesis
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: degradation
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: PDS1 synthesis
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: degradation
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: Degradation of PDS1 in PE
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: Assoc. with ESP1 to form PE
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: Disso. from PE
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: DNA synthesis
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: Negative regulation of DNA synthesis
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: Budding
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: Negative regulation of Cell budding
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: Spindle formation
+[04:12:09] ➕ [rate_equation] BIOMD0000000056: Spindle disassembly
+[04:12:09] ➕ [rate_equation] BIOMD0000000329: R1
+[04:12:09] ➕ [rate_equation] BIOMD0000000329: R2
+[04:12:09] ➕ [rate_equation] BIOMD0000000329: R3
+[04:12:09] ➕ [rate_equation] BIOMD0000000329: R4
+[04:12:09] ➕ [rate_equation] BIOMD0000000329: R5
+[04:12:09] ➕ [rate_equation] BIOMD0000000329: R6
+[04:12:09] ➕ [rate_equation] BIOMD0000000329: R7
+[04:12:09] ➕ [rate_equation] BIOMD0000000329: R8
+[04:12:09] ➕ [rate_equation] BIOMD0000000063: Glucose in
+[04:12:09] ➕ [rate_equation] BIOMD0000000063: Hexokinase
+[04:12:09] ➕ [rate_equation] BIOMD0000000063: Trehalose and Glycogen formation
+[04:12:09] ➕ [rate_equation] BIOMD0000000063: Phosphofructokinase
+[04:12:09] ➕ [rate_equation] BIOMD0000000063: GAPD
+[04:12:09] ➕ [rate_equation] BIOMD0000000063: Pyruvate kinase
+[04:12:09] ➕ [rate_equation] BIOMD0000000063: Glycerol synthesis
+[04:12:09] ➕ [rate_equation] BIOMD0000000063: ATPase
+[04:12:09] ➕ [rate_equation] BIOMD0000000176: HXT
+[04:12:09] ➕ [rate_equation] BIOMD0000000176: HXK
+[04:12:09] ➕ [rate_equation] BIOMD0000000176: PGI
+[04:12:09] ➕ [rate_equation] BIOMD0000000176: PFK
+[04:12:09] ➕ [rate_equation] BIOMD0000000176: FBA
+[04:12:09] ➕ [rate_equation] BIOMD0000000176: TPI
+[04:12:09] ➕ [rate_equation] BIOMD0000000176: TDH
+[04:12:09] ➕ [rate_equation] BIOMD0000000176: PGK
+[04:12:09] ➕ [rate_equation] BIOMD0000000176: GPM
+[04:12:09] ➕ [rate_equation] BIOMD0000000176: ENO
+[04:12:09] ➕ [rate_equation] BIOMD0000000176: PYK
+[04:12:09] ➕ [rate_equation] BIOMD0000000176: PDC
+[04:12:09] ➕ [rate_equation] BIOMD0000000176: ADH
+[04:12:09] ➕ [rate_equation] BIOMD0000000176: ATPase
+[04:12:09] ➕ [rate_equation] BIOMD0000000176: adenylate kinase
+[04:12:09] ➕ [rate_equation] BIOMD0000000176: G3PDH
+[04:12:09] ➕ [rate_equation] BIOMD0000000176: glycogenbranch
+[04:12:09] ➕ [rate_equation] BIOMD0000000176: trehalose_synthesis
+[04:12:09] ➕ [rate_equation] BIOMD0000000176: succinate_synthesis
+[04:12:09] ➕ [rate_equation] BIOMD0000000177: HXT
+[04:12:09] ➕ [rate_equation] BIOMD0000000177: HXK
+[04:12:09] ➕ [rate_equation] BIOMD0000000177: PGI
+[04:12:09] ➕ [rate_equation] BIOMD0000000177: PFK
+[04:12:09] ➕ [rate_equation] BIOMD0000000177: FBA
+[04:12:09] ➕ [rate_equation] BIOMD0000000177: TPI
+[04:12:09] ➕ [rate_equation] BIOMD0000000177: TDH
+[04:12:09] ➕ [rate_equation] BIOMD0000000177: PGK
+[04:12:09] ➕ [rate_equation] BIOMD0000000177: PGM
+[04:12:09] ➕ [rate_equation] BIOMD0000000177: ENO
+[04:12:09] ➕ [rate_equation] BIOMD0000000177: PYK
+[04:12:09] ➕ [rate_equation] BIOMD0000000177: PDC
+[04:12:09] ➕ [rate_equation] BIOMD0000000177: ADH
+[04:12:09] ➕ [rate_equation] BIOMD0000000177: ATPase
+[04:12:09] ➕ [rate_equation] BIOMD0000000177: adenylate_kinase
+[04:12:09] ➕ [rate_equation] BIOMD0000000177: glycerol-3-phosphate_dehydrogenase
+[04:12:09] ➕ [rate_equation] BIOMD0000000177: glycogenbranch
+[04:12:09] ➕ [rate_equation] BIOMD0000000177: trehalose_synthesis
+[04:12:09] ➕ [rate_equation] BIOMD0000000177: succinate_synthesis
+[04:12:09] ➕ [rate_equation] BIOMD0000000177: pyruvate_shuttling
+[04:12:09] ➕ [rate_equation] BIOMD0000000177: pyruvate dehydrogenase
+[04:12:09] ➕ [rate_equation] BIOMD0000000258: v1
+[04:12:09] ➕ [rate_equation] BIOMD0000000258: v2
+[04:12:09] ➕ [rate_equation] BIOMD0000000258: v3
+[04:12:09] ➕ [rate_equation] BIOMD0000000258: v4
+[04:12:09] ➕ [rate_equation] BIOMD0000000162: CD28k_highDbinding
+[04:12:09] ➕ [rate_equation] BIOMD0000000162: PA_Dbinding
+[04:12:09] ➕ [rate_equation] BIOMD0000000162: CG_deg
+[04:12:09] ➕ [rate_equation] BIOMD0000000162: IP3deg
+[04:12:09] ➕ [rate_equation] BIOMD0000000162: D28kB_deg
+[04:12:09] ➕ [rate_equation] BIOMD0000000162: D28k_deg
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: PA_MgD
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: PA_Ca
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: PABMg_deg
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: D28k_high_deg
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: Ca_d
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: D28kB_high_deg
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: CG_d
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: D28kB_d
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: reaction1
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: CGbinding
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: CaD28k_med
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: PABCa_deg
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: IP3_d
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: D28k_high_d
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: reaction0
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: PABMg_d
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: CD28k_high
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: D28kBDbinding
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: PABCa_d
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: PA_d
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: CGB_deg
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: PA_Mg
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: PA_deg
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: IP3_degr
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: D28kB_high_d
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: D28k_d
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: CGB_d
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: CG_Dbinding
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: IP3_degr1
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: Ca_deg
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: pulses
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: ER_leak_flux
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: SERCA_fluxD
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: IP3R_fluxD
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: SERCA_flux
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: flux0
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: IP3R_flux
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: flux1
+[04:12:10] ➕ [rate_equation] BIOMD0000000162: ER_leak_fluxD
+[04:12:10] 
+============================================================
+[04:12:10] PARALLEL HARVEST COMPLETE
+[04:12:10]   Time: 9.6s
+[04:12:10]   Models processed: 0
+[04:12:10]   Cache hits: 1
+[04:12:10]   Reactions found: 416
+[04:12:10]   Formulas extracted: 418
+[04:12:10]   Errors: 0
+[04:12:10]   Speed: 0.0 models/sec
+[04:12:10]   Speed: 43.3 formulas/sec
+[04:12:10] ============================================================
+[04:12:10] ==================================================
+[04:12:10] BioModels Parallel: Added 418 formulas (Total: 1728)
+[04:12:10] ==================================================
