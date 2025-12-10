@@ -57,7 +57,7 @@ class ParallelBioModelsHarvester:
                 expr = sympy.sympify(formula_clean)
                 latex = sympy.latex(expr)
                 return latex
-            except:
+            except Exception:
                 return formula
         except Exception as e:
             return None

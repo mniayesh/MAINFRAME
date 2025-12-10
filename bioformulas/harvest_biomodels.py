@@ -85,7 +85,7 @@ class BioModelsHarvester:
             # Extract text content
             text = ''.join(math_element.itertext())
             return text.strip() if text.strip() else None
-        except:
+        except Exception:
             return None
 
     def extract_reactions(self, root, model_id):

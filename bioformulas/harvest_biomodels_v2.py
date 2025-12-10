@@ -55,7 +55,7 @@ class BioModelsHarvesterV2:
                 latex = sympy.latex(expr)
 
                 return latex
-            except:
+            except Exception:
                 # Fallback: return the formula string as-is
                 return formula
 
