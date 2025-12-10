@@ -5,9 +5,25 @@ requests>=2.31.0
 beautifulsoup4>=4.12.0
 lxml>=4.9.0
 
-# Optional but recommended
-numpy>=1.24.0
+# CRITICAL: SBML parsing (unlocks millions of formulas)
+python-libsbml>=5.20.0
+
+# Symbolic mathematics
 sympy>=1.12
+numpy>=1.24.0
+scipy>=1.10.0
+
+# Data analysis
+pandas>=2.0.0
+
+# Advanced web scraping
+selenium>=4.10.0
+
+# XML processing
+xmltodict>=0.13.0
+
+# Scientific computing
+matplotlib>=3.7.0
 
 # For development/testing
 pytest>=7.4.0
