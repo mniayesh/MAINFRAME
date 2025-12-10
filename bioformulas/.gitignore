@@ -1,0 +1,33 @@
+# Harvest logs (can be regenerated)
+*.log
+large_harvest*.log
+complete_harvest*.log
+
+# Downloaded data files (can be re-downloaded)
+data/biomodels/*.xml
+data/kegg/
+data/reactome/
+data/modeldb/
+data/neuroml/
+
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environments
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db

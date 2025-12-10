@@ -16,15 +16,34 @@ biology_data/**/*.swc
 !biology_data/**/
 !biology_data/download_manifest.json
 
-# Python cache
+# Python
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
+*.py[cod]
+*$py.class
+*.so
 .Python
 *.egg-info/
 dist/
 build/
+*.pyc
+*.pyo
+*.pyd
+venv/
+ENV/
+env/
+
+# Cache
+.cache/
+*.cache
+*.sqlite
+bio_extractors/bio_extractors_cache/
+bio_extractors/bio_extractors_cache.sqlite
+
+# Logs
+*.log
+
+# Virtual environments
+bio_extractors/venv/
 
 # IDE
 .vscode/
