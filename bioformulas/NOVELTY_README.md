@@ -1,6 +1,6 @@
-# NOVELTY.db - Novel AI Architectures Derived from Biology
+# NOVELTY - Novel AI Architectures Derived from Biology
 
-**Database of 24 novel neural network architectures extracted from 86,418 biological formulas**
+**Database of 33 novel neural network architectures extracted from 86,418 biological formulas**
 
 ---
 
@@ -26,7 +26,9 @@ python3 query_novelty.py stats
 
 ---
 
-## Architecture Catalog (24 Total)
+## Architecture Catalog (33 Total)
+
+**Note:** Architectures are now available in CSV format (NOVELTY.csv and NOVELTY_SUMMARY.csv) instead of SQLite database to avoid storage issues.
 
 ### 🧬 **Metabolic Optimization (5 architectures)**
 
@@ -221,7 +223,7 @@ python3 query_novelty.py show 11
 ## Statistics
 
 ```
-Total Architectures: 24
+Total Architectures: 33
 
 By Category:
   Metabolic           :  5
@@ -231,6 +233,7 @@ By Category:
   Energy/Regulation   :  6
   Amplification       :  2
   Routing             :  2
+  Novel from Analysis :  9  (architectures #25-33)
 ```
 
 **Top Biological Sources:**
