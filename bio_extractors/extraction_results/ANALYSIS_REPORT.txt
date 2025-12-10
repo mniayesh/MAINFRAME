@@ -1,0 +1,159 @@
+================================================================================
+BIOLOGICAL DATABASE EXTRACTION ANALYSIS
+================================================================================
+
+📊 Total Entities Extracted: 200
+📦 Databases: 5
+
+================================================================================
+DATABASE BREAKDOWN
+================================================================================
+  AllenBrain           :   50 entities
+  CognitiveAtlas       :   50 entities
+  InterPro             :   50 entities
+  KEGG                 :   50 entities
+  Reactome             :    0 entities
+
+================================================================================
+ENTITY TYPES
+================================================================================
+  enzyme               :   50
+  computation          :   50
+  pathway              :   50
+  network_structure    :   50
+
+================================================================================
+COMPUTATIONAL PRIMITIVES (Cognitive Atlas)
+================================================================================
+
+  ATTENTION CONTROL (6 operations):
+    - attention
+    - attention capacity
+    - attentional effort
+    - attentional resources
+    - attentional state
+    - auditory attention
+
+  LEARNING MECHANISMS (3 operations):
+    - acoustic encoding
+    - analogical encoding
+    - association learning
+
+  OTHER OPERATIONS (33 operations):
+    - abstract analogy
+    - abstract knowledge
+    - acoustic coding
+    - acoustic phonetic processing
+    - acoustic processing
+    - action
+    - activation
+    - activation level
+    - adaptation
+    - adaptive control
+    ... and 23 more
+
+  PERCEPTION SYSTEMS (3 operations):
+    - affect perception
+    - apperception
+    - audiovisual perception
+
+  REASONING SYSTEMS (5 operations):
+    - abductive reasoning
+    - analogical inference
+    - analogical problem solving
+    - analogical reasoning
+    - analogical transfer
+
+================================================================================
+NETWORK ARCHITECTURES (Allen Brain Atlas)
+================================================================================
+
+  AMYGDALA SYSTEM (1 structures):
+    - Lateral amygdalar nucleus [LA]
+
+  CEREBELLAR SYSTEM (2 structures):
+    - cerebellar peduncles [cbp]
+    - ventral spinocerebellar tract [sctv]
+
+  CONNECTIVITY PATHWAYS (5 structures):
+    - Nucleus of the lateral olfactory tract [NLOT]
+    - Nucleus of the solitary tract, medial part [NTSm]
+    - efferent cochleovestibular bundle [cvb]
+    - extrapyramidal fiber systems [eps]
+    - fiber tracts [fiber tracts]
+
+  CORTICAL STRUCTURES (20 structures):
+    - Agranular insular area, posterior part, layer 2/3 [AIp2/3]
+    - Agranular insular area, posterior part, layer 6b [AIp6b]
+    - Anterolateral visual area, layer 1 [VISal1]
+    - Dentate gyrus lateral blade, polymorph layer [DGlb-po]
+    - Entorhinal area, medial part, dorsal zone, layer 6 [ENTm6]
+    - Frontal pole, cerebral cortex [FRP]
+    - Lingula (I), Purkinje layer [LINGpu]
+    - Main olfactory bulb, inner plexiform layer [MOBipl]
+    ... and 12 more
+
+  OTHER STRUCTURES (18 structures):
+    - Dentate gyrus medial blade [DGmb]
+    - Field CA3, stratum lucidum [CA3slu]
+    - Field CA3, stratum oriens [CA3so]
+    - Intergeniculate leaflet of the lateral geniculate complex [IGL]
+    - Lobule V [CUL5]
+    - Medial mammillary nucleus, posterior part [MMp]
+    - Parabrachial nucleus, lateral division, external lateral part [PBle]
+    - Pontine reticular nucleus, ventral part [PRNv]
+    ... and 10 more
+
+  THALAMIC SYSTEM (4 structures):
+    - Anteroventral nucleus of thalamus [AV]
+    - Arcuate hypothalamic nucleus [ARH]
+    - Mediodorsal nucleus of thalamus [MD]
+    - Reticular nucleus of the thalamus [RT]
+
+================================================================================
+METABOLIC PATTERNS (KEGG)
+================================================================================
+
+  METABOLIC PATHWAYS (43 pathways):
+    - 2-Oxocarboxylic acid metabolism - Homo sapiens (human)
+    - Alanine, aspartate and glutamate metabolism - Homo sapiens (human)
+    - Arachidonic acid metabolism - Homo sapiens (human)
+    - Arginine and proline metabolism - Homo sapiens (human)
+    - Arginine biosynthesis - Homo sapiens (human)
+    - Ascorbate and aldarate metabolism - Homo sapiens (human)
+    - Biosynthesis of amino acids - Homo sapiens (human)
+    - Biosynthesis of cofactors - Homo sapiens (human)
+    ... and 35 more
+
+  OTHER PATHWAYS (7 pathways):
+    - Citrate cycle (TCA cycle) - Homo sapiens (human)
+    - Fatty acid elongation - Homo sapiens (human)
+    - Glycolysis / Gluconeogenesis - Homo sapiens (human)
+    - Oxidative phosphorylation - Homo sapiens (human)
+    - Pentose and glucuronate interconversions - Homo sapiens (human)
+    - Pentose phosphate pathway - Homo sapiens (human)
+    - Sulfur cycle - Homo sapiens (human)
+
+================================================================================
+KEY COMPUTATIONAL INSIGHTS
+================================================================================
+
+🧠 COGNITIVE OPERATIONS IDENTIFIED:
+   - 0 memory primitives
+   - 6 attention mechanisms
+   - 0 decision systems
+   - 3 learning operations
+   - 5 reasoning primitives
+
+🏗️ ARCHITECTURAL STRUCTURES IDENTIFIED:
+   - 20 cortical regions
+   - 0 hippocampal structures
+   - 5 connectivity pathways
+   - 0 basal ganglia components
+
+⚡ METABOLIC SYSTEMS IDENTIFIED:
+   - 0 signaling pathways
+   - 43 metabolic networks
+   - 0 neuro-specific pathways
+
+================================================================================
