@@ -21,6 +21,9 @@ sys.path.insert(0, str(Path(__file__).parent))
 # Import fixed extractors
 from reactome_extractor_fixed import ReactomeExtractorFixed
 from interpro_extractor_fixed import InterProExtractorFixed
+from kegg_extractor_fixed import KEGGExtractorFixed
+from allen_brain_extractor_fixed import AllenBrainExtractorFixed
+from cognitive_atlas_extractor_fixed import CognitiveAtlasExtractorFixed
 
 from rich.console import Console
 from rich.table import Table
@@ -79,62 +82,58 @@ class ParallelExtractor:
             return 'InterPro', {'status': 'failed', 'error': str(e), 'was_fixed': True}
 
     def extract_kegg(self) -> Tuple[str, Dict[str, Any]]:
-        """Extract KEGG pathways (working original)"""
+        """Extract KEGG pathways (FIXED)"""
         try:
             console.print("[cyan]Starting KEGG extraction...[/cyan]")
-            # Import inline to avoid module issues
-            from mechanisms_extractors import KEGGExtractor
-
-            extractor = KEGGExtractor()
-            pathways = extractor.extract_pathways(max_pathways=200)
+            extractor = KEGGExtractorFixed()
+            pathways = extractor.extract_pathways(organism='hsa', max_pathways=200)
 
             return 'KEGG', {
                 'status': 'success',
                 'count': len(pathways),
                 'data': pathways[:50],  # Sample
-                'was_fixed': False
+                'was_fixed': True,
+                'stats': extractor.get_stats()
             }
         except Exception as e:
             logging.error(f"KEGG error: {e}")
-            return 'KEGG', {'status': 'failed', 'error': str(e), 'was_fixed': False}
+            return 'KEGG', {'status': 'failed', 'error': str(e), 'was_fixed': True}
 
     def extract_allen_brain(self) -> Tuple[str, Dict[str, Any]]:
-        """Extract Allen Brain structures (working original)"""
+        """Extract Allen Brain structures (FIXED)"""
         try:
             console.print("[cyan]Starting Allen Brain extraction...[/cyan]")
-            from neuroscience_extractors import AllenBrainExtractor
-
-            extractor = AllenBrainExtractor()
+            extractor = AllenBrainExtractorFixed()
             structures = extractor.extract_structures(max_structures=300)
 
             return 'AllenBrain', {
                 'status': 'success',
                 'count': len(structures),
                 'data': structures[:50],  # Sample
-                'was_fixed': False
+                'was_fixed': True,
+                'stats': extractor.get_stats()
             }
         except Exception as e:
             logging.error(f"Allen Brain error: {e}")
-            return 'AllenBrain', {'status': 'failed', 'error': str(e), 'was_fixed': False}
+            return 'AllenBrain', {'status': 'failed', 'error': str(e), 'was_fixed': True}
 
     def extract_cognitive_atlas(self) -> Tuple[str, Dict[str, Any]]:
-        """Extract Cognitive Atlas concepts (working original)"""
+        """Extract Cognitive Atlas concepts (FIXED)"""
         try:
             console.print("[cyan]Starting Cognitive Atlas extraction...[/cyan]")
-            from cognitive_extractors import CognitiveAtlasExtractor
-
-            extractor = CognitiveAtlasExtractor()
+            extractor = CognitiveAtlasExtractorFixed()
             concepts = extractor.extract_concepts(max_concepts=300)
 
             return 'CognitiveAtlas', {
                 'status': 'success',
                 'count': len(concepts),
                 'data': concepts[:50],  # Sample
-                'was_fixed': False
+                'was_fixed': True,
+                'stats': extractor.get_stats()
             }
         except Exception as e:
             logging.error(f"Cognitive Atlas error: {e}")
-            return 'CognitiveAtlas', {'status': 'failed', 'error': str(e), 'was_fixed': False}
+            return 'CognitiveAtlas', {'status': 'failed', 'error': str(e), 'was_fixed': True}
 
     def run_parallel(self) -> Dict[str, Dict[str, Any]]:
         """Run all extractors in parallel"""

@@ -1,0 +1,852 @@
+[
+  {
+    "identifier": "ABA:1000",
+    "name": "extrapyramidal fiber systems",
+    "description": "extrapyramidal fiber systems",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "eps",
+      "parent_id": 1009,
+      "depth": 2,
+      "graph_order": 1218,
+      "atlas_id": 690,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:223",
+    "name": "Arcuate hypothalamic nucleus",
+    "description": "Arcuate hypothalamic nucleus",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "ARH",
+      "parent_id": 157,
+      "depth": 6,
+      "graph_order": 733,
+      "atlas_id": 27,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:12998",
+    "name": "Somatosensory areas, layer 6b",
+    "description": "Somatosensory areas layer 6b",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "SS6b",
+      "parent_id": 453,
+      "depth": 7,
+      "graph_order": 36,
+      "atlas_id": null,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:163",
+    "name": "Agranular insular area, posterior part, layer 2/3",
+    "description": "Agranular insular area posterior part layer 2/3",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "AIp2/3",
+      "parent_id": 111,
+      "depth": 8,
+      "graph_order": 287,
+      "atlas_id": 1010,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:552",
+    "name": "Pontine reticular nucleus, ventral part",
+    "description": "Pontine reticular nucleus ventral part",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "PRNv",
+      "parent_id": 987,
+      "depth": 6,
+      "graph_order": 914,
+      "atlas_id": 917,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:875",
+    "name": "Parabrachial nucleus, lateral division, external lateral part",
+    "description": "Parabrachial nucleus lateral division external lateral part",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "PBle",
+      "parent_id": 881,
+      "depth": 8,
+      "graph_order": 895,
+      "atlas_id": 816,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:484682524",
+    "name": "auditory radiation",
+    "description": "auditory radiation",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "ar",
+      "parent_id": 896,
+      "depth": 4,
+      "graph_order": 1217,
+      "atlas_id": null,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:484682500",
+    "name": "Prosubiculum, ventral part, pyramidal layer",
+    "description": "Prosubiculum ventral part pyramidal layer",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "ProSv-sp",
+      "parent_id": 484682492,
+      "depth": 9,
+      "graph_order": 551,
+      "atlas_id": null,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:561",
+    "name": "Visual areas, layer 2/3",
+    "description": "Visual areas layer 2/3",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "VIS2/3",
+      "parent_id": 669,
+      "depth": 7,
+      "graph_order": 159,
+      "atlas_id": 1060,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:965",
+    "name": "Retrosplenial area, lateral agranular part, layer 2/3",
+    "description": "Retrosplenial area lateral agranular part layer 2/3",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "RSPagl2/3",
+      "parent_id": 894,
+      "depth": 8,
+      "graph_order": 300,
+      "atlas_id": 969,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:355",
+    "name": "Agranular insular area, posterior part, layer 6b",
+    "description": "Agranular insular area posterior part layer 6b",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "AIp6b",
+      "parent_id": 111,
+      "depth": 8,
+      "graph_order": 290,
+      "atlas_id": 1034,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:1009",
+    "name": "fiber tracts",
+    "description": "fiber tracts",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "fiber tracts",
+      "parent_id": 997,
+      "depth": 1,
+      "graph_order": 1101,
+      "atlas_id": 691,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:43",
+    "name": "ansoparamedian fissure",
+    "description": "ansoparamedian fissure",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "apf",
+      "parent_id": 1040,
+      "depth": 3,
+      "graph_order": 1321,
+      "atlas_id": 712,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:46",
+    "name": "mammillary related",
+    "description": "mammillary related",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "mfbsma",
+      "parent_id": 824,
+      "depth": 4,
+      "graph_order": 1277,
+      "atlas_id": 571,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:390",
+    "name": "Supraoptic nucleus",
+    "description": "Supraoptic nucleus",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "SO",
+      "parent_id": 157,
+      "depth": 6,
+      "graph_order": 717,
+      "atlas_id": 331,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:241",
+    "name": "Posterior parietal association areas, layer 2/3",
+    "description": "Posterior parietal association areas layer 2/3",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "PTLp2/3",
+      "parent_id": 22,
+      "depth": 7,
+      "graph_order": 341,
+      "atlas_id": 454,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:262",
+    "name": "Reticular nucleus of the thalamus",
+    "description": "Reticular nucleus of the thalamus",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "RT",
+      "parent_id": 856,
+      "depth": 6,
+      "graph_order": 703,
+      "atlas_id": 315,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:101",
+    "name": "Ventral cochlear nucleus",
+    "description": "Ventral cochlear nucleus",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "VCO",
+      "parent_id": 607,
+      "depth": 7,
+      "graph_order": 942,
+      "atlas_id": 861,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:244",
+    "name": "Main olfactory bulb, outer plexiform layer",
+    "description": "Main olfactory bulb outer plexiform layer",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "MOBopl",
+      "parent_id": 507,
+      "depth": 7,
+      "graph_order": 385,
+      "atlas_id": 737,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:1076",
+    "name": "efferent cochleovestibular bundle",
+    "description": "efferent cochleovestibular bundle",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "cvb",
+      "parent_id": 933,
+      "depth": 4,
+      "graph_order": 1134,
+      "atlas_id": 558,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:1074",
+    "name": "Anterolateral visual area, layer 1",
+    "description": "Anterolateral visual area layer 1",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "VISal1",
+      "parent_id": 402,
+      "depth": 8,
+      "graph_order": 165,
+      "atlas_id": 1124,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:1055",
+    "name": "endorhinal groove",
+    "description": "endorhinal groove",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "eg",
+      "parent_id": 1032,
+      "depth": 3,
+      "graph_order": 1306,
+      "atlas_id": 697,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:412",
+    "name": "Orbital area, lateral part, layer 2/3",
+    "description": "Orbital area lateral part layer 2/3",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "ORBl2/3",
+      "parent_id": 723,
+      "depth": 8,
+      "graph_order": 260,
+      "atlas_id": 1041,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:658",
+    "name": "lateral lemniscus",
+    "description": "lateral lemniscus",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "ll",
+      "parent_id": 948,
+      "depth": 5,
+      "graph_order": 1140,
+      "atlas_id": 506,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:619",
+    "name": "Nucleus of the lateral olfactory tract",
+    "description": "Nucleus of the lateral olfactory tract",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "NLOT",
+      "parent_id": 698,
+      "depth": 6,
+      "graph_order": 421,
+      "atlas_id": 218,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:657",
+    "name": "Primary somatosensory area, mouth, layer 2/3",
+    "description": "Primary somatosensory area mouth layer 2/3",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "SSp-m2/3",
+      "parent_id": 345,
+      "depth": 9,
+      "graph_order": 74,
+      "atlas_id": 1072,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:378",
+    "name": "Supplemental somatosensory area",
+    "description": "Supplemental somatosensory area",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "SSs",
+      "parent_id": 453,
+      "depth": 7,
+      "graph_order": 100,
+      "atlas_id": 754,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:669",
+    "name": "Visual areas",
+    "description": "Visual areas",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "VIS",
+      "parent_id": 315,
+      "depth": 6,
+      "graph_order": 157,
+      "atlas_id": 366,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:743",
+    "name": "Entorhinal area, medial part, dorsal zone, layer 6",
+    "description": "Entorhinal area medial part dorsal zone layer 6",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "ENTm6",
+      "parent_id": 926,
+      "depth": 9,
+      "graph_order": 516,
+      "atlas_id": 941,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:10706",
+    "name": "Lingula (I), Purkinje layer",
+    "description": "Lingula (I) Purkinje layer",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "LINGpu",
+      "parent_id": 912,
+      "depth": 6,
+      "graph_order": 1022,
+      "atlas_id": null,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:362",
+    "name": "Mediodorsal nucleus of thalamus",
+    "description": "Mediodorsal nucleus of thalamus",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "MD",
+      "parent_id": 444,
+      "depth": 7,
+      "graph_order": 685,
+      "atlas_id": 186,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:691",
+    "name": "Nucleus of the solitary tract, medial part",
+    "description": "Nucleus of the solitary tract medial part",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "NTSm",
+      "parent_id": 651,
+      "depth": 7,
+      "graph_order": 953,
+      "atlas_id": 227,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:687",
+    "name": "Retrosplenial area, ventral part, layer 5",
+    "description": "Retrosplenial area ventral part layer 5",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "RSPv5",
+      "parent_id": 886,
+      "depth": 8,
+      "graph_order": 336,
+      "atlas_id": 651,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:1001",
+    "name": "Lobule V",
+    "description": "Lobule V",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "CUL5",
+      "parent_id": 928,
+      "depth": 6,
+      "graph_order": 1038,
+      "atlas_id": 407,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:799",
+    "name": "Dentate gyrus medial blade",
+    "description": "Dentate gyrus medial blade",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "DGmb",
+      "parent_id": 726,
+      "depth": 8,
+      "graph_order": 486,
+      "atlas_id": 99,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:422",
+    "name": "Subparafascicular nucleus, parvicellular part",
+    "description": "Subparafascicular nucleus parvicellular part",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "SPFp",
+      "parent_id": 406,
+      "depth": 7,
+      "graph_order": 654,
+      "atlas_id": 335,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:228",
+    "name": "Main olfactory bulb, inner plexiform layer",
+    "description": "Main olfactory bulb inner plexiform layer",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "MOBipl",
+      "parent_id": 507,
+      "depth": 7,
+      "graph_order": 383,
+      "atlas_id": 735,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:486",
+    "name": "Field CA3, stratum oriens",
+    "description": "Field CA3 stratum oriens",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "CA3so",
+      "parent_id": 463,
+      "depth": 9,
+      "graph_order": 470,
+      "atlas_id": 60,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:606826655",
+    "name": "Medial mammillary nucleus, posterior part",
+    "description": "Medial mammillary nucleus posterior part",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "MMp",
+      "parent_id": 491,
+      "depth": 8,
+      "graph_order": 768,
+      "atlas_id": null,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:479",
+    "name": "Field CA3, stratum lucidum",
+    "description": "Field CA3 stratum lucidum",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "CA3slu",
+      "parent_id": 463,
+      "depth": 9,
+      "graph_order": 469,
+      "atlas_id": 59,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:255",
+    "name": "Anteroventral nucleus of thalamus",
+    "description": "Anteroventral nucleus of thalamus",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "AV",
+      "parent_id": 239,
+      "depth": 7,
+      "graph_order": 675,
+      "atlas_id": 31,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:866",
+    "name": "ventral spinocerebellar tract",
+    "description": "ventral spinocerebellar tract",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "sctv",
+      "parent_id": 326,
+      "depth": 5,
+      "graph_order": 1178,
+      "atlas_id": 532,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:878",
+    "name": "Primary somatosensory area, mouth, layer 1",
+    "description": "Primary somatosensory area mouth layer 1",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "SSp-m1",
+      "parent_id": 345,
+      "depth": 9,
+      "graph_order": 73,
+      "atlas_id": 958,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:752",
+    "name": "cerebellar peduncles",
+    "description": "cerebellar peduncles",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "cbp",
+      "parent_id": 960,
+      "depth": 3,
+      "graph_order": 1173,
+      "atlas_id": 659,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:236",
+    "name": "Main olfactory bulb, mitral layer",
+    "description": "Main olfactory bulb mitral layer",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "MOBmi",
+      "parent_id": 507,
+      "depth": 7,
+      "graph_order": 384,
+      "atlas_id": 736,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:27",
+    "name": "Intergeniculate leaflet of the lateral geniculate complex",
+    "description": "Intergeniculate leaflet of the lateral geniculate complex",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "IGL",
+      "parent_id": 1014,
+      "depth": 7,
+      "graph_order": 705,
+      "atlas_id": 144,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:184",
+    "name": "Frontal pole, cerebral cortex",
+    "description": "Frontal pole cerebral cortex",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "FRP",
+      "parent_id": 315,
+      "depth": 6,
+      "graph_order": 6,
+      "atlas_id": 871,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:782",
+    "name": "Dentate gyrus lateral blade, polymorph layer",
+    "description": "Dentate gyrus lateral blade polymorph layer",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "DGlb-po",
+      "parent_id": 766,
+      "depth": 9,
+      "graph_order": 484,
+      "atlas_id": 97,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:131",
+    "name": "Lateral amygdalar nucleus",
+    "description": "Lateral amygdalar nucleus",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "LA",
+      "parent_id": 703,
+      "depth": 5,
+      "graph_order": 561,
+      "atlas_id": 157,
+      "graph_id": 1
+    }
+  },
+  {
+    "identifier": "ABA:434",
+    "name": "Retrosplenial area, dorsal part, layer 2/3",
+    "description": "Retrosplenial area dorsal part layer 2/3",
+    "entity_type": "network_structure",
+    "source_database": "Allen Brain Atlas",
+    "confidence_score": 0.9,
+    "evidence_strength": "experimental",
+    "metadata": {
+      "acronym": "RSPd2/3",
+      "parent_id": 879,
+      "depth": 8,
+      "graph_order": 327,
+      "atlas_id": 761,
+      "graph_id": 1
+    }
+  }
+]

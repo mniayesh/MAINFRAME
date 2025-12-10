@@ -1,21 +1,19 @@
 {
-  "timestamp": "2025-12-10T04:19:48.654006",
-  "duration_seconds": 0.9581184387207031,
+  "timestamp": "2025-12-10T04:36:33.454325",
+  "duration_seconds": 600.6081562042236,
   "results": {
-    "CognitiveAtlas": {
-      "status": "failed",
-      "error": "attempted relative import with no known parent package",
-      "was_fixed": false
-    },
-    "AllenBrain": {
-      "status": "failed",
-      "error": "attempted relative import with no known parent package",
-      "was_fixed": false
-    },
-    "KEGG": {
-      "status": "failed",
-      "error": "attempted relative import with no known parent package",
-      "was_fixed": false
+    "InterPro": {
+      "status": "success",
+      "count": 200,
+      "was_fixed": true,
+      "stats": {
+        "requests": 2,
+        "cache_hits": 2,
+        "cache_misses": 0,
+        "errors": 0,
+        "validations_failed": 0,
+        "cache_hit_rate": "100.0%"
+      }
     },
     "Reactome": {
       "status": "success",
@@ -30,24 +28,50 @@
         "cache_hit_rate": "0.0%"
       }
     },
-    "InterPro": {
+    "CognitiveAtlas": {
+      "status": "success",
+      "count": 300,
+      "was_fixed": true,
+      "stats": {
+        "requests": 1,
+        "cache_hits": 0,
+        "cache_misses": 1,
+        "errors": 0,
+        "validations_failed": 0,
+        "cache_hit_rate": "0.0%"
+      }
+    },
+    "AllenBrain": {
+      "status": "success",
+      "count": 300,
+      "was_fixed": true,
+      "stats": {
+        "requests": 1,
+        "cache_hits": 0,
+        "cache_misses": 1,
+        "errors": 0,
+        "validations_failed": 0,
+        "cache_hit_rate": "0.0%"
+      }
+    },
+    "KEGG": {
       "status": "success",
       "count": 200,
       "was_fixed": true,
       "stats": {
-        "requests": 2,
-        "cache_hits": 1,
-        "cache_misses": 1,
+        "requests": 201,
+        "cache_hits": 0,
+        "cache_misses": 201,
         "errors": 0,
         "validations_failed": 0,
-        "cache_hit_rate": "50.0%"
+        "cache_hit_rate": "0.0%"
       }
     }
   },
   "summary": {
     "total_databases": 5,
-    "successful": 2,
-    "total_entities": 200,
-    "fixed_databases": 2
+    "successful": 5,
+    "total_entities": 1000,
+    "fixed_databases": 5
   }
 }

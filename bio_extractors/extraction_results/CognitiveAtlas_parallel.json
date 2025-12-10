@@ -1,0 +1,702 @@
+[
+  {
+    "identifier": "COGAT:trm_4a3fd79d096be",
+    "name": "abductive reasoning",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "reasoning"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d096e3",
+    "name": "abstract analogy",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d096f0",
+    "name": "abstract knowledge",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d096fc",
+    "name": "acoustic coding",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d09707",
+    "name": "acoustic encoding",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d09713",
+    "name": "acoustic phonetic processing",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d0971e",
+    "name": "acoustic processing",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d09735",
+    "name": "action",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d09741",
+    "name": "activation",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d0974d",
+    "name": "activation level",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d09758",
+    "name": "adaptation",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d09764",
+    "name": "adaptive control",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d09770",
+    "name": "affect perception",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "perception"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d0977b",
+    "name": "affect recognition",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d097b4",
+    "name": "altruism",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "selflessness",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d097bf",
+    "name": "altruistic motivation",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d097cb",
+    "name": "alveolar",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d097d6",
+    "name": "amodal representation",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d097e2",
+    "name": "analog representation",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d097ed",
+    "name": "analogical encoding",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d097f9",
+    "name": "analogical inference",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d09804",
+    "name": "analogical problem solving",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d09810",
+    "name": "analogical reasoning",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "reasoning"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d0981b",
+    "name": "analogical transfer",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d09827",
+    "name": "analogy",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d09833",
+    "name": "anchoring",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d09849",
+    "name": "anticipation",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "intuition, foreknowledge, prescience, foresight, prediction, imaginative speculation",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d09855",
+    "name": "apparent motion",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "apparent movement",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d0986c",
+    "name": "apperception",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "perception"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d09877",
+    "name": "appetitive motivation",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d09883",
+    "name": "arousal",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d0988f",
+    "name": "articulation",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d0989a",
+    "name": "articulatory planning",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d098a6",
+    "name": "articulatory rehearsal",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d098b2",
+    "name": "assimilation",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d098bd",
+    "name": "association",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d098c9",
+    "name": "association learning",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "learning"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d098e0",
+    "name": "attachment",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d098eb",
+    "name": "attended channel",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d098f7",
+    "name": "attended stimulus",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d09902",
+    "name": "attention",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "attention_control"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d0990e",
+    "name": "attention capacity",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "attention_control"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d09919",
+    "name": "attentional effort",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "attention_control"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d09925",
+    "name": "attentional resources",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "attention_control"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d09930",
+    "name": "attentional state",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "attention_control"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d09947",
+    "name": "attitude",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d09953",
+    "name": "audiovisual perception",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "perception"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d0995e",
+    "name": "audition",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "auditory",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d09a10",
+    "name": "auditory attention",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "attention_control"
+    }
+  },
+  {
+    "identifier": "COGAT:trm_4a3fd79d09a3d",
+    "name": "auditory coding",
+    "description": "",
+    "entity_type": "computation",
+    "source_database": "Cognitive Atlas",
+    "confidence_score": 0.85,
+    "evidence_strength": "computational",
+    "metadata": {
+      "alias": "",
+      "event_stamp": "2009-06-22T19:12:54",
+      "operation_type": "cognitive_operation"
+    }
+  }
+]

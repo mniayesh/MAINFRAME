@@ -1,0 +1,802 @@
+[
+  {
+    "identifier": "hsa01100",
+    "name": "Metabolic pathways - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": null,
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 0,
+      "compound_count": 0
+    }
+  },
+  {
+    "identifier": "hsa01200",
+    "name": "Carbon metabolism - Homo sapiens (human)",
+    "description": "Carbon metabolism is the most basic aspect of life. This map presents an overall view of central carbon metabolism, where the number of carbons is shown for each compound denoted by a circle, excluding a cofactor (CoA, CoM, THF, or THMPT) that is replaced by an asterisk. The map contains carbon utilization pathways of glycolysis (map00010), pentose phosphate pathway (map00030), and citrate cycle (map00020), and six known carbon fixation pathways (map00710 and map00720) as well as some pathways of methane metabolism (map00680). The six carbon fixation pathways are: (1) reductive pentose phosphate cycle (Calvin cycle) in plants and cyanobacteria that perform oxygenic photosynthesis, (2) reductive citrate cycle in photosynthetic green sulfur bacteria and some chemolithoautotrophs, (3) 3-hydroxypropionate bi-cycle in photosynthetic green nonsulfur bacteria, two variants of 4-hydroxybutyrate pathways in Crenarchaeota called (4) hydroxypropionate-hydroxybutyrate cycle and (5) dicarboxylate-hydroxybutyrate cycle, and (6) reductive acetyl-CoA pathway in methanogenic bacteria.",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": null,
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 0,
+      "compound_count": 0
+    }
+  },
+  {
+    "identifier": "hsa01210",
+    "name": "2-Oxocarboxylic acid metabolism - Homo sapiens (human)",
+    "description": "2-Oxocarboxylic acids, also called 2-oxo acids and alpha-keto acids, are the most elementary set of metabolites that includes pyruvate (2-oxopropanoate), 2-oxobutanoate, oxaloacetate (2-oxosuccinate) and 2-oxoglutarate. This diagram illustrates the architecture of chain extension and modification reaction modules for 2-oxocarboxylic acids. The chain extension module RM001 is a tricarboxylic pathway where acetyl-CoA derived carbon is used to extend the chain length by one. The chain modification modules RM002 (including RM032) and RM033, together with a reductive amination step (RC00006 or RC00036), generate basic and branched-chain amino acids, respectively. The modification module RM030 is used in the biosynthesis of glucosinolates, a class of plant secondary metabolites, for conversion to oxime followed by addition of thio-glucose moiety. Furthermore, the chain extension from 2-oxoadipate to 2-oxosuberate is followed by coenzyme B biosynthesis in methonogenic archaea.",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": null,
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 0,
+      "compound_count": 0
+    }
+  },
+  {
+    "identifier": "hsa01212",
+    "name": "Fatty acid metabolism - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": null,
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 0,
+      "compound_count": 0
+    }
+  },
+  {
+    "identifier": "hsa01230",
+    "name": "Biosynthesis of amino acids - Homo sapiens (human)",
+    "description": "This map presents a modular architecture of the biosynthesis pathways of twenty amino acids, which may be viewed as consisting of the core part and its extensions. The core part is the KEGG module for conversion of three-carbon compounds from glyceraldehyde-3P to pyruvate [MD:M00002], together with the pathways around serine and glycine. This KEGG module is the most conserved one in the KEGG MODULE database and is found in almost all the completely sequenced genomes. The extensions are the pathways containing the reaction modules RM001, RM033, RM032, and RM002 for biosynthesis of branched-chain amino acids (left) and basic amino acids (bottom), and the pathways for biosynthesis of histidine and aromatic amino acids (top right). It is interesting to note that the so-called essential amino acids that cannot be synthesized in human and other organisms generally appear in these extensions. Furthermore, the bottom extension of basic amino acids appears to be most divergent containing multiple pathways for lysine biosynthesis and multiple gene sets for arginine biosynthesis.",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": null,
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 0,
+      "compound_count": 0
+    }
+  },
+  {
+    "identifier": "hsa01232",
+    "name": "Nucleotide metabolism - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": null,
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 0,
+      "compound_count": 0
+    }
+  },
+  {
+    "identifier": "hsa01250",
+    "name": "Biosynthesis of nucleotide sugars - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": null,
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 0,
+      "compound_count": 0
+    }
+  },
+  {
+    "identifier": "hsa01240",
+    "name": "Biosynthesis of cofactors - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": null,
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 0,
+      "compound_count": 0
+    }
+  },
+  {
+    "identifier": "hsa01320",
+    "name": "Sulfur cycle - Homo sapiens (human)",
+    "description": "Sulfur is one of the six most common chemical elements CHNOPS that constitute living organisms. This map shows a biogeochemical cycle of sulfur compounds and how different microorganisms are responsible for chemical transformations under different environments including atmospheric, hydrospheric and lithospheric environments. Details of chemical reactions and responsible enzymes are shown in map00920 for Sulfur metabolism. Here chemical transformations are represented by KEGG modules, including sulfur reduction [MD:M00986] [KO:K16952] from elemental sulfur to hydrogen sulfide by sulfur-reducing bacteria and archaea, sulfide oxidation [MD:M00985] from hydrogen sulfide to elemental sulfur by sulfur-oxidizing phototrophs, sulfur oxidataion [MD:M00595 M00984] from thiosulfate to sulfate by sulfur-oxidizing chemotrophs, dissimilatory sulfate reduction [MD:M00596] by sulfate-reducing bacteria and archaea, and assimilatory sulfate reduction [MD:M00176 M00987] by both prokaryotes and eukaryotes excluding animals.",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": null,
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 0,
+      "compound_count": 0
+    }
+  },
+  {
+    "identifier": "hsa00010",
+    "name": "Glycolysis / Gluconeogenesis - Homo sapiens (human)",
+    "description": "Glycolysis is the process of converting glucose into pyruvate and generating small amounts of ATP (energy) and NADH (reducing power). It is a central pathway that produces important precursor metabolites: six-carbon compounds of glucose-6P and fructose-6P and three-carbon compounds of glycerone-P, glyceraldehyde-3P, glycerate-3P, phosphoenolpyruvate, and pyruvate [MD:M00001]. Acetyl-CoA, another important precursor metabolite, is produced by oxidative decarboxylation of pyruvate [MD:M00307]. When the enzyme genes of this pathway are examined in completely sequenced genomes, the reaction steps of three-carbon compounds from glycerone-P to pyruvate form a conserved core module [MD:M00002], which is found in almost all organisms and which sometimes contains operon structures in bacterial genomes. Gluconeogenesis is a synthesis pathway of glucose from noncarbohydrate precursors. It is essentially a reversal of glycolysis with minor variations of alternative paths [MD:M00003].",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Carbohydrate metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 67,
+      "compound_count": 31
+    }
+  },
+  {
+    "identifier": "hsa00020",
+    "name": "Citrate cycle (TCA cycle) - Homo sapiens (human)",
+    "description": "The citrate cycle (TCA cycle, Krebs cycle) is an important aerobic pathway for the final steps of the oxidation of carbohydrates and fatty acids. The cycle starts with acetyl-CoA, the activated form of acetate, derived from glycolysis and pyruvate oxidation for carbohydrates and from beta oxidation of fatty acids. The two-carbon acetyl group in acetyl-CoA is transferred to the four-carbon compound of oxaloacetate to form the six-carbon compound of citrate. In a series of reactions two carbons in citrate are oxidized to CO2 and the reaction pathway supplies NADH for use in the oxidative phosphorylation and other metabolic processes. The pathway also supplies important precursor metabolites including 2-oxoglutarate. At the end of the cycle the remaining four-carbon part is transformed back to oxaloacetate. According to the genome sequence data, many organisms seem to lack genes for the full cycle [MD:M00009], but contain genes for specific segments [MD:M00010 M00011].",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Carbohydrate metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 30,
+      "compound_count": 20
+    }
+  },
+  {
+    "identifier": "hsa00030",
+    "name": "Pentose phosphate pathway - Homo sapiens (human)",
+    "description": "The pentose phosphate pathway is a process of glucose turnover that produces NADPH as reducing equivalents and pentoses as essential parts of nucleotides. There are two different phases in the pathway. One is irreversible oxidative phase in which glucose-6P is converted to ribulose-5P by oxidative decarboxylation, and NADPH is generated [MD:M00006]. The other is reversible non-oxidative phase in which phosphorylated sugars are interconverted to generate xylulose-5P, ribulose-5P, and ribose-5P [MD:M00007]. Phosphoribosyl pyrophosphate (PRPP) formed from ribose-5P [MD:M00005] is an activated compound used in the biosynthesis of histidine and purine/pyrimidine nucleotides. This pathway map also shows the Entner-Doudoroff pathway where 6-P-gluconate is dehydrated and then cleaved into pyruvate and glyceraldehyde-3P [MD:M00008].",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Carbohydrate metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 31,
+      "compound_count": 37
+    }
+  },
+  {
+    "identifier": "hsa00040",
+    "name": "Pentose and glucuronate interconversions - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Carbohydrate metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 36,
+      "compound_count": 59
+    }
+  },
+  {
+    "identifier": "hsa00051",
+    "name": "Fructose and mannose metabolism - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Carbohydrate metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 35,
+      "compound_count": 55
+    }
+  },
+  {
+    "identifier": "hsa00052",
+    "name": "Galactose metabolism - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Carbohydrate metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 32,
+      "compound_count": 46
+    }
+  },
+  {
+    "identifier": "hsa00053",
+    "name": "Ascorbate and aldarate metabolism - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Carbohydrate metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 31,
+      "compound_count": 57
+    }
+  },
+  {
+    "identifier": "hsa00500",
+    "name": "Starch and sucrose metabolism - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Carbohydrate metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 40,
+      "compound_count": 37
+    }
+  },
+  {
+    "identifier": "hsa00620",
+    "name": "Pyruvate metabolism - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Carbohydrate metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 47,
+      "compound_count": 32
+    }
+  },
+  {
+    "identifier": "hsa00630",
+    "name": "Glyoxylate and dicarboxylate metabolism - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Carbohydrate metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 32,
+      "compound_count": 67
+    }
+  },
+  {
+    "identifier": "hsa00640",
+    "name": "Propanoate metabolism - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Carbohydrate metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 32,
+      "compound_count": 42
+    }
+  },
+  {
+    "identifier": "hsa00650",
+    "name": "Butanoate metabolism - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Carbohydrate metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 27,
+      "compound_count": 47
+    }
+  },
+  {
+    "identifier": "hsa00562",
+    "name": "Inositol phosphate metabolism - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Carbohydrate metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 78,
+      "compound_count": 50
+    }
+  },
+  {
+    "identifier": "hsa00190",
+    "name": "Oxidative phosphorylation - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Energy metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 138,
+      "compound_count": 12
+    }
+  },
+  {
+    "identifier": "hsa00910",
+    "name": "Nitrogen metabolism - Homo sapiens (human)",
+    "description": "The biological process of the nitrogen cycle is a complex interplay among different microorganisms catalyzing different reactions, where nitrogen is found in various oxidation states ranging from +5 in nitrate to -3 in ammonia. The core nitrogen cycle involves four reduction pathways and two oxidation pathways. Nitrogen fixation [MD:M00175] is the process of reducing atmospheric molecular nitrogen to ammonia, a biologically useful reduced form incorporated into amino acids and other vital compounds. The ability of fixing atmospheric nitrogen by the nitrogenase enzyme complex is present in restricted prokaryotes (diazotrophs). The other reduction pathways are assimilatory nitrate reduction [MD:M00531] and dissimilatory nitrate reduction [MD:M00530] both for conversion to ammonia, and denitrification [MD:M00529]. Denitrification is a respiration in which nitrate or nitrite is reduced as a terminal electron acceptor under low oxygen or anoxic conditions, producing gaseous nitrogen compounds (N2, NO and N2O) to the atmosphere. The two oxidation pathways are nitrification [MD:M00528] and anaerobic ammonium oxidation (anammox) [MD:M00973]. Nitrification is the oxidation of ammonia (NH3) with oxygen into nitrite followed by the oxidation of nitrite into nitrate. The first step is performed by ammonia-oxidizing microorganisms (e.g., Nitrosomonas and Nitrosococcus) and the second step by nitrite-oxidizing microorganisms (e.g., Nitrobacter). Anammox is a biochemical process of oxidizing ammonium (NH4+) into dinitrogen gas (N2) using nitrite as an electron acceptor. It occurs in the anammoxosome, a membrane bound compartment inside the cytoplasm, of anammox bacteria (e.g., Planctomycetes).",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Energy metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 17,
+      "compound_count": 20
+    }
+  },
+  {
+    "identifier": "hsa00920",
+    "name": "Sulfur metabolism - Homo sapiens (human)",
+    "description": "Sulfur is an essential element for life and the metabolism of organic sulfur compounds plays an important role in the global sulfur cycle. Sulfur occurs in various oxidation states ranging from +6 in sulfate to -2 in sulfide (H2S). Sulfate reduction can occur in both an energy consuming assimilatory pathway and an energy producing dissimilatory pathway. The assimilatory pathway, which is found in a wide range of organisms, produces reduced sulfur compounds for the biosynthesis of S-containing amino acids and does not lead to direct excretion of sulfide. In the dissimilatory pathway, which is restricted to obligatory anaerobic bacterial and archaeal lineages, sulfate (or sulfur) is the terminal electron acceptor of the respiratory chain producing large quantities of inorganic sulfide. Both pathways start from the activation of sulfate by reaction with ATP to form adenylyl sulfate (APS). In the assimilatory pathway [MD:M00176] APS is converted to 3'-phosphoadenylyl sulfate (PAPS) and then reduced to sulfite, and sulfite is further reduced to sulfide by the assimilatory sulfite reductase. In the dissimilatory pathway [MD:M00596] APS is directly reduced to sulfite, and sulfite is further reduced to sulfide by the dissimilatory sulfite reductase. The capacity for oxidation of sulfur is quite widespread among bacteria and archaea, comprising phototrophs and chemolithoautotrophs. The SOX (sulfur-oxidation) system [MD:M00595] is a well-known sulfur oxidation pathway and is found in both photosynthetic and non-photosynthetic sulfur-oxidizing bacteria. Green sulfur bacteria and purple sulfur bacteria carry out anoxygenic photosynthesis with reduced sulfur compounds such as sulfide and elemental sulfur, as well as thiosulfate (in some species with the SOX system), as the electron donor for photoautotrophic growth. In some chemolithoautotrophic sulfur oxidizers (such as Thiobacillus denitrificans), it has been suggested that dissimilatory sulfur reduction enzymes operate in the reverse direction, forming a sulfur oxidation pathway from sulfite to APS and then to sulfate.",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Energy metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 10,
+      "compound_count": 45
+    }
+  },
+  {
+    "identifier": "hsa00061",
+    "name": "Fatty acid biosynthesis - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Lipid metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 18,
+      "compound_count": 58
+    }
+  },
+  {
+    "identifier": "hsa00062",
+    "name": "Fatty acid elongation - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Lipid metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 28,
+      "compound_count": 40
+    }
+  },
+  {
+    "identifier": "hsa00071",
+    "name": "Fatty acid degradation - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Lipid metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 43,
+      "compound_count": 50
+    }
+  },
+  {
+    "identifier": "hsa00100",
+    "name": "Steroid biosynthesis - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Lipid metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 20,
+      "compound_count": 57
+    }
+  },
+  {
+    "identifier": "hsa00120",
+    "name": "Primary bile acid biosynthesis - Homo sapiens (human)",
+    "description": "Bile acids are steroid carboxylic acids derived from cholesterol in vertebrates. The primary bile acids, cholic acid and chenodeoxycholic acid, are synthesized in the liver and conjugated with taurine or glycine before secretion via bile into the intestine. The conversion from cholesterol to cholic and chenodeoxycholic acids involves four steps: 1) the initiation of synthesis by 7alpha-hydroxylation of sterol precursors, 2) further modifications to the ring structures, 3) side-chain oxidation and shortening (cleavage) by three carbons, and 4) conjugation of the bile acid with taurine or glycine.",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Lipid metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 17,
+      "compound_count": 47
+    }
+  },
+  {
+    "identifier": "hsa00140",
+    "name": "Steroid hormone biosynthesis - Homo sapiens (human)",
+    "description": "Steroid hormones derived from cholesterol are a class of biologically active compounds in vertebrates. The cholesterol side-chain cleavage enzyme CYP11A1 catalyzes conversion of cholesterol, a C27 compound, to the first C21 steroid, pregnenolone, which is converted by a bifunctional enzyme complex to the gestagen hormone, progesterone [MD:M00107]. Pregnenolone and progesterone are the starting materials for the three groups of steroids: C21 steroids of glucocorticoids and mineralocorticoids, C19 steroids of androgens, and C18 steroids of estrogens. (i) Progesterone is converted by hydroxylations at carbons 21 and 11 to corticosterone, which is further modified by hydroxylation and oxydoreduction at carbon 18 to yield aldosterone, a mineralcorticoid [MD:M00108]. Cortisol, the main glucocorticoid, is formed from 17alpha-hydroxyprogesterone with 11-deoxycortisol as an intermediate [MD:M00109]. (ii) Male hormone testosterone is formed from pregnenolone by two pathways, delta5 pathway via dehydroepiandrosterone and delta4 pathway via androstenedione [MD:M00110]. The enzyme CYP17A1 is responsible for the 17,20 lyase and 17alpha-hydroxylase activities in respective pathways. (iii) Female hormones estrone and estradiol are formed from testosterone and 4-androstene-3,17-dione by oxidative removal of the C19 methyl group and subsequent aromatization of ring A. In addition to these three groups, recent studies show that there is another group, termed neurosteroids, synthesized in the brain rather than the peripheral endocrine gland.",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Lipid metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 64,
+      "compound_count": 101
+    }
+  },
+  {
+    "identifier": "hsa00561",
+    "name": "Glycerolipid metabolism - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Lipid metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 65,
+      "compound_count": 38
+    }
+  },
+  {
+    "identifier": "hsa00564",
+    "name": "Glycerophospholipid metabolism - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Lipid metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 103,
+      "compound_count": 56
+    }
+  },
+  {
+    "identifier": "hsa00565",
+    "name": "Ether lipid metabolism - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Lipid metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 51,
+      "compound_count": 25
+    }
+  },
+  {
+    "identifier": "hsa00600",
+    "name": "Sphingolipid metabolism - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Lipid metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 55,
+      "compound_count": 36
+    }
+  },
+  {
+    "identifier": "hsa00590",
+    "name": "Arachidonic acid metabolism - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Lipid metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 63,
+      "compound_count": 79
+    }
+  },
+  {
+    "identifier": "hsa00591",
+    "name": "Linoleic acid metabolism - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Lipid metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 30,
+      "compound_count": 29
+    }
+  },
+  {
+    "identifier": "hsa00592",
+    "name": "alpha-Linolenic acid metabolism - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Lipid metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 26,
+      "compound_count": 44
+    }
+  },
+  {
+    "identifier": "hsa01040",
+    "name": "Biosynthesis of unsaturated fatty acids - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Lipid metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 27,
+      "compound_count": 74
+    }
+  },
+  {
+    "identifier": "hsa00230",
+    "name": "Purine metabolism - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Nucleotide metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 128,
+      "compound_count": 101
+    }
+  },
+  {
+    "identifier": "hsa00240",
+    "name": "Pyrimidine metabolism - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Nucleotide metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 58,
+      "compound_count": 66
+    }
+  },
+  {
+    "identifier": "hsa00250",
+    "name": "Alanine, aspartate and glutamate metabolism - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Amino acid metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 37,
+      "compound_count": 28
+    }
+  },
+  {
+    "identifier": "hsa00260",
+    "name": "Glycine, serine and threonine metabolism - Homo sapiens (human)",
+    "description": "Serine is derived from 3-phospho-D-glycerate, an intermediate of glycolysis [MD:M00020], and glycine is derived from serine. Threonine is an essential amino acid, which animals cannot synthesize. In bacteria and plants, threonine is derived from aspartate [MD:M00018].",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Amino acid metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 41,
+      "compound_count": 48
+    }
+  },
+  {
+    "identifier": "hsa00270",
+    "name": "Cysteine and methionine metabolism - Homo sapiens (human)",
+    "description": "Cysteine and methionine are sulfur-containing amino acids. Cysteine is synthesized from serine through different pathways in different organism groups. In bacteria and plants, cysteine is converted from serine (via acetylserine) by transfer of hydrogen sulfide [MD:M00021]. In animals, methionine-derived homocysteine is used as sulfur source and its condensation product with serine (cystathionine) is converted to cysteine [MD:M00338]. Cysteine is metabolized to pyruvate in multiple routes. Methionine is an essential amino acid, which animals cannot synthesize. In bacteria and plants, methionine is synthesized from aspartate [MD:M00017]. S-Adenosylmethionine (SAM), synthesized from methionine and ATP, is a methyl group donor in many important transfer reactions including DNA methylation for regulation of gene expression. SAM may also be used to regenerate methionine in the methionine salvage pathway [MD:M00034].",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Amino acid metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 52,
+      "compound_count": 68
+    }
+  },
+  {
+    "identifier": "hsa00280",
+    "name": "Valine, leucine and isoleucine degradation - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Amino acid metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 48,
+      "compound_count": 42
+    }
+  },
+  {
+    "identifier": "hsa00290",
+    "name": "Valine, leucine and isoleucine biosynthesis - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Amino acid metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 4,
+      "compound_count": 23
+    }
+  },
+  {
+    "identifier": "hsa00310",
+    "name": "Lysine degradation - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Amino acid metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 63,
+      "compound_count": 56
+    }
+  },
+  {
+    "identifier": "hsa00220",
+    "name": "Arginine biosynthesis - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Amino acid metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 23,
+      "compound_count": 24
+    }
+  },
+  {
+    "identifier": "hsa00330",
+    "name": "Arginine and proline metabolism - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Amino acid metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 50,
+      "compound_count": 71
+    }
+  },
+  {
+    "identifier": "hsa00340",
+    "name": "Histidine metabolism - Homo sapiens (human)",
+    "description": "",
+    "entity_type": "pathway",
+    "source_database": "KEGG",
+    "confidence_score": 0.9,
+    "evidence_strength": "curated",
+    "metadata": {
+      "pathway_class": "Metabolism; Amino acid metabolism",
+      "organism": "Homo sapiens (human) [GN:hsa]",
+      "disease": null,
+      "gene_count": 22,
+      "compound_count": 47
+    }
+  }
+]
