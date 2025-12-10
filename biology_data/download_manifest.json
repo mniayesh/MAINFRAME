@@ -1,0 +1,272 @@
+{
+  "generated": "2025-12-10T01:05:53.665586",
+  "databases": {
+    "phase_1_chemistry": {
+      "name": "Atomic & Molecular Databases",
+      "files": [
+        {
+          "name": "Gene Ontology",
+          "url": "https://purl.obolibrary.org/obo/go.obo",
+          "type": "obo",
+          "path": "chemistry/gene_ontology.obo",
+          "size_mb": "35",
+          "items": "~45,000 terms"
+        },
+        {
+          "name": "ChEBI (Chemical Entities of Biological Interest)",
+          "url": "ftp://ftp.ebi.ac.uk/pub/databases/chebi/archive/release-latest/Flat_file_formats/chebi_complete.sdf",
+          "type": "sdf",
+          "path": "chemistry/chebi_complete.sdf",
+          "size_mb": "1,200",
+          "items": "~200,000 compounds"
+        },
+        {
+          "name": "PubChem Compounds (first 10M)",
+          "url": "https://ftp.ncbi.nlm.nih.gov/pubchem/Compound/CURRENT-Full/SDF/pubchem_compounds_001_010.sdf.gz",
+          "type": "sdf.gz",
+          "path": "chemistry/pubchem_compounds_sample.sdf.gz",
+          "size_mb": "2,500",
+          "items": "~10,000,000 compounds (sample)"
+        },
+        {
+          "name": "IUPAC InChI",
+          "url": "https://www.inchi-trust.org/download/",
+          "type": "zip",
+          "path": "chemistry/iupac_inchi.zip",
+          "size_mb": "500",
+          "items": "Structure standardization"
+        }
+      ]
+    },
+    "phase_2_proteins": {
+      "name": "Protein & Interaction Databases",
+      "files": [
+        {
+          "name": "UniProt (SwissProt curated)",
+          "url": "https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.xml.gz",
+          "type": "xml.gz",
+          "path": "proteins/uniprot_sprot.xml.gz",
+          "size_mb": "800",
+          "items": "~569,000 proteins (curated)"
+        },
+        {
+          "name": "UniProt (TrEMBL all)",
+          "url": "https://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_trembl.xml.gz",
+          "type": "xml.gz",
+          "path": "proteins/uniprot_trembl.xml.gz",
+          "size_mb": "70,000",
+          "items": "~230,000,000 sequences (unreviewed)"
+        },
+        {
+          "name": "PDB (Protein Data Bank structures)",
+          "url": "https://www.wwpdb.org/ftp/pdb-files/divided/pdb/index.txt.Z",
+          "type": "index",
+          "path": "proteins/pdb_index.txt",
+          "size_mb": "2",
+          "items": "~200,000 structures"
+        },
+        {
+          "name": "InterPro Domains",
+          "url": "https://ftp.ebi.ac.uk/pub/databases/interpro/current/interpro.xml.gz",
+          "type": "xml.gz",
+          "path": "proteins/interpro_domains.xml.gz",
+          "size_mb": "1,200",
+          "items": "~40,000 protein domains"
+        },
+        {
+          "name": "BioGRID (Protein Interactions)",
+          "url": "https://downloads.thebiogrid.org/Download/BioGRID/Latest-Release/BIOGRID-ALL-LATEST.psi25.zip",
+          "type": "zip",
+          "path": "proteins/biogrid_interactions.zip",
+          "size_mb": "2,000",
+          "items": "~900,000 interactions"
+        }
+      ]
+    },
+    "phase_3_pathways": {
+      "name": "Pathway & Reaction Databases",
+      "files": [
+        {
+          "name": "Reactome Pathways",
+          "url": "https://reactome.org/download/current/reactome.owl",
+          "type": "owl",
+          "path": "pathways/reactome.owl",
+          "size_mb": "400",
+          "items": "~10,500 pathways"
+        },
+        {
+          "name": "Rhea Reactions (ChEBI-based)",
+          "url": "https://ftp.expasy.org/databases/rhea/tsv/rhea-reactions.tsv.gz",
+          "type": "tsv.gz",
+          "path": "pathways/rhea_reactions.tsv.gz",
+          "size_mb": "150",
+          "items": "~13,600 reactions"
+        },
+        {
+          "name": "KEGG Pathways",
+          "url": "http://rest.kegg.jp/list/pathway",
+          "type": "txt",
+          "path": "pathways/kegg_pathways.txt",
+          "size_mb": "1",
+          "items": "~500+ pathways"
+        },
+        {
+          "name": "MetaBoAnalyst Compounds",
+          "url": "https://www.metaboanalyst.ca/resources/databases/",
+          "type": "csv",
+          "path": "pathways/metabolites.csv",
+          "size_mb": "50",
+          "items": "~200,000 metabolites"
+        }
+      ]
+    },
+    "phase_4_electrophysiology": {
+      "name": "Ion Channels & Electrophysiology",
+      "files": [
+        {
+          "name": "Channelpedia (Ion Channel Properties)",
+          "url": "https://channelpedia.epfl.ch/downloads/",
+          "type": "csv",
+          "path": "electrophysiology/channelpedia.csv",
+          "size_mb": "100",
+          "items": "~500 channels"
+        },
+        {
+          "name": "IUPHAR/BPS Guide to Pharmacology",
+          "url": "https://www.guidetopharmacology.org/DATA/",
+          "type": "csv",
+          "path": "electrophysiology/iuphar_targets.csv",
+          "size_mb": "500",
+          "items": "~11,000 pharmacological targets"
+        },
+        {
+          "name": "Allen Cell Types Database",
+          "url": "https://celltypes.brain-map.org/api/v1/cell_types/models/download",
+          "type": "json",
+          "path": "electrophysiology/allen_cell_types.json",
+          "size_mb": "5,000",
+          "items": "~1,800+ neuron types"
+        }
+      ]
+    },
+    "phase_5_morphology": {
+      "name": "Neuromorphology Databases",
+      "files": [
+        {
+          "name": "Allen Brain Atlas (ISH data)",
+          "url": "https://mouse.brain-map.org/api/v2/data/download",
+          "type": "nii",
+          "path": "morphology/allen_brain_atlas.nii.gz",
+          "size_mb": "10,000",
+          "items": "3D brain anatomy + expression"
+        },
+        {
+          "name": "NeuroMorpho.Org Reconstructions",
+          "url": "http://neuromorpho.org/api/neuron/select?q=*",
+          "type": "json",
+          "path": "morphology/neuromorpho_catalog.json",
+          "size_mb": "500",
+          "items": "~170,000 neuron reconstructions"
+        },
+        {
+          "name": "Open Data for Structural Connectomics",
+          "url": "https://www.virtualflybrain.org/",
+          "type": "swc",
+          "path": "morphology/connectome_structures.swc",
+          "size_mb": "2,000",
+          "items": "Drosophila connectome"
+        }
+      ]
+    },
+    "phase_6_plasticity": {
+      "name": "Synaptic Plasticity & Learning",
+      "files": [
+        {
+          "name": "Synapse Ontology",
+          "url": "https://purl.obolibrary.org/obo/snpo.owl",
+          "type": "owl",
+          "path": "plasticity/synapse_ontology.owl",
+          "size_mb": "50",
+          "items": "~2,500 synaptic terms"
+        },
+        {
+          "name": "SynapseHub (Synapse Properties)",
+          "url": "https://www.ncbi.nlm.nih.gov/gene/synaptic/",
+          "type": "csv",
+          "path": "plasticity/synapse_hub.csv",
+          "size_mb": "500",
+          "items": "~2,000 plasticity proteins"
+        },
+        {
+          "name": "Protein Phosphorylation Sites",
+          "url": "https://www.phosphosite.org/staticDownloads.action",
+          "type": "txt",
+          "path": "plasticity/phosphosites.txt",
+          "size_mb": "300",
+          "items": "~100,000+ phosphorylation sites"
+        }
+      ]
+    },
+    "phase_7_connectivity": {
+      "name": "Brain Connectome & Network Data",
+      "files": [
+        {
+          "name": "Human Connectome Project (HCP)",
+          "url": "https://db.humanconnectome.org/data/projects/HCP",
+          "type": "nii",
+          "path": "connectivity/hcp_connectome.nii.gz",
+          "size_mb": "50,000",
+          "items": "1,200+ subjects"
+        },
+        {
+          "name": "BAMS (Brain Architecture Management System)",
+          "url": "http://www.bams.brain-map.org/",
+          "type": "json",
+          "path": "connectivity/bams_connections.json",
+          "size_mb": "200",
+          "items": "~50,000 connections"
+        },
+        {
+          "name": "C. elegans Connectome",
+          "url": "https://www.wormwiring.org/pages/data.html",
+          "type": "json",
+          "path": "connectivity/celegans_connectome.json",
+          "size_mb": "50",
+          "items": "302 neurons, ~7,000 synapses"
+        }
+      ]
+    },
+    "phase_8_cognition": {
+      "name": "Cognitive & Behavioral Ontologies",
+      "files": [
+        {
+          "name": "Cognitive Atlas",
+          "url": "https://www.cognitiveatlas.org/download/",
+          "type": "json",
+          "path": "cognition/cognitive_atlas.json",
+          "size_mb": "50",
+          "items": "~650 cognitive concepts"
+        },
+        {
+          "name": "OpenNeuro (fMRI datasets)",
+          "url": "https://openneuro.org/",
+          "type": "nii",
+          "path": "cognition/openneuro_metadata.json",
+          "size_mb": "100",
+          "items": "~300+ fMRI experiments"
+        },
+        {
+          "name": "BrainMap (neuroimaging meta-analysis)",
+          "url": "http://brainmap.org/",
+          "type": "txt",
+          "path": "cognition/brainmap_coordinates.txt",
+          "size_mb": "100",
+          "items": "~100,000+ peak coordinates"
+        }
+      ]
+    }
+  },
+  "total_databases": 28,
+  "estimated_total_size_gb": 156,
+  "estimated_items": "5,000,000+ mechanisms"
+}
