@@ -1,9 +1,33 @@
+# Biological database downloads - too large for git
+biology_data/**/*.sdf
+biology_data/**/*.sdf.gz
+biology_data/**/*.xml.gz
+biology_data/**/*.obo
+biology_data/**/*.owl
+biology_data/**/*.tsv.gz
+biology_data/**/*.nii.gz
+biology_data/**/*.Z
+biology_data/**/*.zip
+biology_data/**/*.pdb
+biology_data/**/*.swc
+
+# Keep directory structure and manifest
+!biology_data/
+!biology_data/**/
+!biology_data/download_manifest.json
+
 # Python
 __pycache__/
 *.py[cod]
 *$py.class
 *.so
 .Python
+*.egg-info/
+dist/
+build/
+*.pyc
+*.pyo
+*.pyd
 venv/
 ENV/
 env/
@@ -21,3 +45,18 @@ bio_extractors/bio_extractors_cache.sqlite
 # Virtual environments
 bio_extractors/venv/
 
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

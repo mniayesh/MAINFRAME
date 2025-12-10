@@ -1359,6 +1359,1091 @@ def populate_systems_biology_formulas(conn, sources, cats):
         model_origin="turing"
     )
 
+def populate_cognitive_formulas(conn, sources, cats):
+    """Add brain-inspired cognitive computing formulas."""
+    log.info("=" * 60)
+    log.info("ADDING COGNITIVE COMPUTING FORMULAS")
+    log.info("=" * 60)
+
+    # Main cognitive category
+    cats['cognitive'] = add_category(conn, 'Cognitive Computing', None,
+        'Brain-inspired cognitive operating system formulas')
+
+    # Subcategories
+    cats['molecular'] = add_category(conn, 'Molecular/Cellular Level', cats['cognitive'],
+        'Genetic encoding, gene regulation, signal integration')
+    cats['dendritic'] = add_category(conn, 'Dendritic Computation', cats['cognitive'],
+        'Cable equation, spike generation, temporal integration')
+    cats['plasticity_cog'] = add_category(conn, 'Synaptic Plasticity', cats['cognitive'],
+        'Calcium-based learning, STDP, Hebbian rules')
+    cats['network_dyn'] = add_category(conn, 'Network Dynamics', cats['cognitive'],
+        'Normalization, attractor dynamics, population coding')
+    cats['sensory'] = add_category(conn, 'Sensory Computations', cats['cognitive'],
+        'Visual, auditory, somatosensory processing')
+    cats['working_mem'] = add_category(conn, 'Working Memory & Decision', cats['cognitive'],
+        'Decision making, reinforcement learning, strategy selection')
+    cats['language'] = add_category(conn, 'Language & Cognition', cats['cognitive'],
+        'Language parsing, semantic composition, inference')
+    cats['motivation'] = add_category(conn, 'Motivation & Action', cats['cognitive'],
+        'Reward prediction, threat evaluation, action selection')
+    cats['inference'] = add_category(conn, 'Probabilistic Inference', cats['cognitive'],
+        'Bayesian inference, Kalman filtering, belief propagation')
+    cats['optimization_cog'] = add_category(conn, 'Optimization', cats['cognitive'],
+        'Gradient descent, tensor operations, graph propagation')
+
+    log.info("-" * 40)
+    log.info("Molecular/Cellular Level")
+    log.info("-" * 40)
+
+    # Transcription rate
+    add_formula(conn,
+        name="Transcription Rate",
+        latex=r"\frac{dR}{dt} = \frac{k_{tx} [TF]^n}{K_d^n + [TF]^n} - \gamma_R R",
+        description="Transcription rate with Hill coefficient",
+        formula_type="ODE",
+        category_id=cats['molecular'],
+        source_id=sources['literature'],
+        python_code="dR_dt = (k_tx * TF**n / (K_d**n + TF**n)) - gamma_R * R",
+        domain="molecular-cellular"
+    )
+
+    # Translation rate
+    add_formula(conn,
+        name="Translation Rate",
+        latex=r"\frac{dP}{dt} = k_{tl} R - \gamma_P P",
+        description="Protein translation rate from mRNA",
+        formula_type="ODE",
+        category_id=cats['molecular'],
+        source_id=sources['literature'],
+        python_code="dP_dt = k_tl * R - gamma_P * P",
+        domain="molecular-cellular"
+    )
+
+    # Hill equation
+    add_formula(conn,
+        name="Hill Equation (Gene Regulation)",
+        latex=r"Output = \frac{V_{max} [Input]^n}{K^n + [Input]^n}",
+        description="Gene regulatory output with Hill coefficient",
+        formula_type="algebraic",
+        category_id=cats['molecular'],
+        source_id=sources['literature'],
+        python_code="output = V_max * (Input**n) / (K**n + Input**n)",
+        domain="molecular-cellular"
+    )
+
+    # Repressilator
+    add_formula(conn,
+        name="Repressilator",
+        latex=r"\frac{dx_i}{dt} = \frac{\alpha}{1 + x_j^n} - x_i",
+        description="Repressilator genetic oscillator dynamics",
+        formula_type="ODE",
+        category_id=cats['molecular'],
+        source_id=sources['literature'],
+        python_code="dx_dt = alpha / (1 + x_j**n) - x",
+        domain="molecular-cellular"
+    )
+
+    # Linear summation
+    add_formula(conn,
+        name="Linear Signal Summation",
+        latex=r"S = \sum w_i I_i",
+        description="Linear summation of weighted inputs",
+        formula_type="algebraic",
+        category_id=cats['molecular'],
+        source_id=sources['literature'],
+        python_code="S = sum(w[i] * I[i] for i in range(n))",
+        domain="molecular-cellular"
+    )
+
+    # Michaelis-Menten (repeated for context)
+    add_formula(conn,
+        name="Michaelis-Menten Kinetics (Cognitive Context)",
+        latex=r"v = \frac{V_{max} [S]}{K_m + [S]}",
+        description="Enzyme kinetics in protein-protein interactions",
+        formula_type="rate_equation",
+        category_id=cats['molecular'],
+        source_id=sources['literature'],
+        python_code="v = V_max * S / (K_m + S)",
+        domain="molecular-cellular"
+    )
+
+    log.info("-" * 40)
+    log.info("Dendritic Level")
+    log.info("-" * 40)
+
+    # Cable equation
+    add_formula(conn,
+        name="Cable Equation (Dendrite)",
+        latex=r"\lambda^2 \frac{\partial^2 V}{\partial x^2} = \tau \frac{\partial V}{\partial t} + V - V_{rest}",
+        description="Passive signal propagation in dendrites",
+        formula_type="PDE",
+        category_id=cats['dendritic'],
+        source_id=sources['literature'],
+        domain="dendritic-computation"
+    )
+
+    # Compartmental model
+    add_formula(conn,
+        name="Compartmental Membrane Equation",
+        latex=r"C \frac{dV_i}{dt} = \sum(g_{ij}(V_j - V_i)) + I_{syn} - I_{leak}",
+        description="Compartmental neuron model with coupled segments",
+        formula_type="ODE",
+        category_id=cats['dendritic'],
+        source_id=sources['literature'],
+        python_code="dV_dt = (sum(g[i,j]*(V[j]-V[i]) for j) + I_syn - I_leak) / C",
+        domain="dendritic-computation"
+    )
+
+    # Integrate-and-fire
+    add_formula(conn,
+        name="Integrate-and-Fire",
+        latex=r"\tau \frac{dV}{dt} = -(V - V_{rest}) + R I",
+        description="Simple neuron model: integrate input, fire when threshold crossed",
+        formula_type="ODE",
+        category_id=cats['dendritic'],
+        source_id=sources['literature'],
+        python_code="dV_dt = (-(V - V_rest) + R * I) / tau",
+        domain="dendritic-computation"
+    )
+
+    # Exponential decay
+    add_formula(conn,
+        name="Exponential Decay (Temporal Integration)",
+        latex=r"V(t) = V_0 \exp(-t/\tau)",
+        description="Exponential decay of voltage over time",
+        formula_type="algebraic",
+        category_id=cats['dendritic'],
+        source_id=sources['literature'],
+        python_code="V = V_0 * np.exp(-t / tau)",
+        domain="dendritic-computation"
+    )
+
+    # Leaky integration
+    add_formula(conn,
+        name="Leaky Integration",
+        latex=r"V(t) = (R I)(1 - \exp(-t/\tau))",
+        description="Leaky temporal integration of input",
+        formula_type="algebraic",
+        category_id=cats['dendritic'],
+        source_id=sources['literature'],
+        python_code="V = (R * I) * (1 - np.exp(-t / tau))",
+        domain="dendritic-computation"
+    )
+
+    # AND gate
+    add_formula(conn,
+        name="Coincidence Detection (AND Gate)",
+        latex=r"Output = 1 \text{ if } (|t_1 - t_2| < \Delta t_{window})",
+        description="Detect synchronous input from multiple sources",
+        formula_type="boolean",
+        category_id=cats['dendritic'],
+        source_id=sources['literature'],
+        python_code="output = 1 if abs(t1 - t2) < dt_window else 0",
+        domain="dendritic-computation"
+    )
+
+    # NMDA voltage dependence
+    add_formula(conn,
+        name="NMDA Voltage Dependence",
+        latex=r"g = \frac{g_{max}}{1 + [Mg^{2+}] \exp(-0.062 V)/3.57}",
+        description="Voltage-dependent Mg2+ block of NMDA receptors",
+        formula_type="algebraic",
+        category_id=cats['dendritic'],
+        source_id=sources['literature'],
+        python_code="g = g_max / (1 + (Mg / 3.57) * np.exp(-0.062 * V))",
+        domain="dendritic-computation"
+    )
+
+    log.info("-" * 40)
+    log.info("Synaptic Plasticity (Cognitive)")
+    log.info("-" * 40)
+
+    # BCM rule
+    add_formula(conn,
+        name="BCM Learning Rule",
+        latex=r"\frac{dw}{dt} = \eta y (y - \theta) x",
+        description="Bienenstock-Cooper-Munro rule with sliding threshold",
+        formula_type="ODE",
+        category_id=cats['plasticity_cog'],
+        source_id=sources['literature'],
+        python_code="dw_dt = eta * y * (y - theta) * x",
+        domain="synaptic-plasticity",
+        doi="10.1523/JNEUROSCI.02-01-00032.1982",
+        year=1982
+    )
+
+    # BCM threshold
+    add_formula(conn,
+        name="BCM Threshold",
+        latex=r"\theta = \langle y^2 \rangle",
+        description="Sliding modification threshold in BCM rule",
+        formula_type="algebraic",
+        category_id=cats['plasticity_cog'],
+        source_id=sources['literature'],
+        python_code="theta = mean(y**2)",
+        domain="synaptic-plasticity"
+    )
+
+    # Hebbian
+    add_formula(conn,
+        name="Hebbian Learning",
+        latex=r"\Delta w = \eta x y",
+        description="Basic Hebbian learning rule",
+        formula_type="plasticity_rule",
+        category_id=cats['plasticity_cog'],
+        source_id=sources['literature'],
+        python_code="dw = eta * x * y",
+        domain="synaptic-plasticity"
+    )
+
+    # Covariance
+    add_formula(conn,
+        name="Covariance Learning",
+        latex=r"\Delta w = \eta (x - \langle x \rangle)(y - \langle y \rangle)",
+        description="Covariance-based Hebbian rule",
+        formula_type="plasticity_rule",
+        category_id=cats['plasticity_cog'],
+        source_id=sources['literature'],
+        python_code="dw = eta * (x - mean_x) * (y - mean_y)",
+        domain="synaptic-plasticity"
+    )
+
+    # Oja's rule
+    add_formula(conn,
+        name="Oja's Learning Rule (Cognitive)",
+        latex=r"\Delta w = \eta y (x - w y)",
+        description="Hebbian rule with weight normalization (PCA)",
+        formula_type="plasticity_rule",
+        category_id=cats['plasticity_cog'],
+        source_id=sources['literature'],
+        python_code="dw = eta * y * (x - w * y)",
+        domain="synaptic-plasticity"
+    )
+
+    # STDP
+    fid = add_formula(conn,
+        name="Spike-Timing Dependent Plasticity (STDP)",
+        latex=r"\Delta w(\Delta t) = \begin{cases} A_+ \exp(-\Delta t/\tau_+) & \text{if } \Delta t > 0 \\ -A_- \exp(\Delta t/\tau_-) & \text{if } \Delta t < 0 \end{cases}",
+        description="STDP: potentiation if presynaptic fires before postsynaptic",
+        formula_type="plasticity_rule",
+        category_id=cats['plasticity_cog'],
+        source_id=sources['literature'],
+        python_code="dw = A_plus * np.exp(-dt/tau_plus) if dt > 0 else -A_minus * np.exp(dt/tau_minus)",
+        domain="synaptic-plasticity",
+        doi="10.1523/JNEUROSCI.18-24-10464.1998",
+        year=1998
+    )
+    add_plasticity_rule(conn, fid, "STDP", 20.0, 20.0, 0.005, "additive", False)
+
+    # Triplet STDP
+    add_formula(conn,
+        name="Triplet STDP",
+        latex=r"\Delta w = r_1(t)(A_2^+ + A_3^+ r_2(t-\epsilon)) - o_1(t)(A_2^- + A_3^- o_2(t-\epsilon))",
+        description="Triplet STDP capturing frequency dependence",
+        formula_type="plasticity_rule",
+        category_id=cats['plasticity_cog'],
+        source_id=sources['literature'],
+        domain="synaptic-plasticity"
+    )
+
+    # Short-term depression
+    add_formula(conn,
+        name="Short-Term Depression",
+        latex=r"\frac{dx}{dt} = \frac{1-x}{\tau_{rec}}",
+        description="Resource depletion in short-term plasticity",
+        formula_type="ODE",
+        category_id=cats['plasticity_cog'],
+        source_id=sources['literature'],
+        python_code="dx_dt = (1 - x) / tau_rec",
+        domain="synaptic-plasticity"
+    )
+
+    # Short-term facilitation
+    add_formula(conn,
+        name="Short-Term Facilitation",
+        latex=r"\frac{du}{dt} = \frac{U-u}{\tau_{fac}}",
+        description="Increased release probability in short-term plasticity",
+        formula_type="ODE",
+        category_id=cats['plasticity_cog'],
+        source_id=sources['literature'],
+        python_code="du_dt = (U - u) / tau_fac",
+        domain="synaptic-plasticity"
+    )
+
+    log.info("-" * 40)
+    log.info("Network Dynamics")
+    log.info("-" * 40)
+
+    # Softmax
+    add_formula(conn,
+        name="Softmax Normalization",
+        latex=r"y_i = \frac{\exp(x_i)}{\sum_j \exp(x_j)}",
+        description="Probability distribution from scores",
+        formula_type="algebraic",
+        category_id=cats['network_dyn'],
+        source_id=sources['literature'],
+        python_code="y = np.exp(x) / np.sum(np.exp(x))",
+        domain="network-dynamics"
+    )
+
+    # Divisive normalization
+    add_formula(conn,
+        name="Divisive Normalization",
+        latex=r"y_i = \frac{x_i}{\sigma + \sum_j x_j}",
+        description="Divisive inhibition for gain control",
+        formula_type="algebraic",
+        category_id=cats['network_dyn'],
+        source_id=sources['literature'],
+        python_code="y = x / (sigma + np.sum(x))",
+        domain="network-dynamics"
+    )
+
+    # Hopfield energy
+    add_formula(conn,
+        name="Hopfield Network Energy",
+        latex=r"E = -\frac{1}{2} \sum_{ij} w_{ij} s_i s_j - \sum_i \theta_i s_i",
+        description="Energy function for Hopfield attractor networks",
+        formula_type="algebraic",
+        category_id=cats['network_dyn'],
+        source_id=sources['literature'],
+        python_code="E = -0.5 * np.dot(s, np.dot(w, s)) - np.dot(theta, s)",
+        domain="network-dynamics"
+    )
+
+    # Population vector
+    add_formula(conn,
+        name="Population Vector Decoding",
+        latex=r"v_{pop} = \frac{\sum_i r_i d_i}{\sum_i r_i}",
+        description="Decode stimulus from population response",
+        formula_type="algebraic",
+        category_id=cats['network_dyn'],
+        source_id=sources['literature'],
+        python_code="v_pop = np.sum(r * d) / np.sum(r)",
+        domain="network-dynamics"
+    )
+
+    # Fisher information
+    add_formula(conn,
+        name="Fisher Information (Population Coding)",
+        latex=r"I(s) = \sum_i \frac{[df_i/ds]^2}{f_i(s)}",
+        description="Information encoded by neural population",
+        formula_type="algebraic",
+        category_id=cats['network_dyn'],
+        source_id=sources['literature'],
+        domain="network-dynamics"
+    )
+
+    # PCA
+    add_formula(conn,
+        name="Principal Component Analysis",
+        latex=r"x_{reduced} = W^T (x - \mu)",
+        description="Dimensionality reduction via PCA",
+        formula_type="algebraic",
+        category_id=cats['network_dyn'],
+        source_id=sources['literature'],
+        python_code="x_red = np.dot(W.T, x - mu)",
+        domain="network-dynamics"
+    )
+
+    # Sparse coding
+    add_formula(conn,
+        name="Sparse Coding",
+        latex=r"minimize ||x - W s||^2 + \lambda ||s||_1",
+        description="Sparse representation learning",
+        formula_type="optimization",
+        category_id=cats['network_dyn'],
+        source_id=sources['literature'],
+        python_code="minimize squared_error(x, W @ s) + lambda * L1_norm(s)",
+        domain="network-dynamics"
+    )
+
+    # Pattern completion
+    add_formula(conn,
+        name="Pattern Completion (Autoassociative)",
+        latex=r"y = Wx",
+        description="Retrieve full pattern from partial cue",
+        formula_type="algebraic",
+        category_id=cats['network_dyn'],
+        source_id=sources['literature'],
+        python_code="y = np.dot(W, x)",
+        domain="network-dynamics"
+    )
+
+    # Recurrent RNN
+    add_formula(conn,
+        name="Recurrent Neural Network",
+        latex=r"\tau \frac{dy}{dt} = -y + f(W_{rec} y + W_{in} x + b)",
+        description="Continuous recurrent neural network dynamics",
+        formula_type="ODE",
+        category_id=cats['network_dyn'],
+        source_id=sources['literature'],
+        python_code="dy_dt = (-y + f(W_rec @ y + W_in @ x + b)) / tau",
+        domain="network-dynamics"
+    )
+
+    # LSTM forget gate
+    add_formula(conn,
+        name="LSTM Forget Gate",
+        latex=r"f_t = \sigma(W_f [h_{t-1}, x_t] + b_f)",
+        description="LSTM forget gate dynamics",
+        formula_type="algebraic",
+        category_id=cats['network_dyn'],
+        source_id=sources['literature'],
+        python_code="f_t = sigmoid(W_f @ np.hstack([h_prev, x]) + b_f)",
+        domain="network-dynamics"
+    )
+
+    # LSTM input gate
+    add_formula(conn,
+        name="LSTM Input Gate",
+        latex=r"i_t = \sigma(W_i [h_{t-1}, x_t] + b_i)",
+        description="LSTM input gate dynamics",
+        formula_type="algebraic",
+        category_id=cats['network_dyn'],
+        source_id=sources['literature'],
+        python_code="i_t = sigmoid(W_i @ np.hstack([h_prev, x]) + b_i)",
+        domain="network-dynamics"
+    )
+
+    # LSTM cell state
+    add_formula(conn,
+        name="LSTM Cell State",
+        latex=r"C_t = f_t \odot C_{t-1} + i_t \odot \tilde{C}_t",
+        description="LSTM cell state update",
+        formula_type="algebraic",
+        category_id=cats['network_dyn'],
+        source_id=sources['literature'],
+        python_code="C_t = f_t * C_prev + i_t * C_tilde",
+        domain="network-dynamics"
+    )
+
+    # Phase oscillator
+    add_formula(conn,
+        name="Phase Oscillator",
+        latex=r"\frac{d\theta}{dt} = \omega + K \sin(\theta_j - \theta_i)",
+        description="Coupled phase oscillators for synchronization",
+        formula_type="ODE",
+        category_id=cats['network_dyn'],
+        source_id=sources['literature'],
+        python_code="dtheta_dt = omega + K * np.sin(theta_j - theta)",
+        domain="network-dynamics"
+    )
+
+    # Wilson-Cowan
+    add_formula(conn,
+        name="Wilson-Cowan Equations",
+        latex=r"\tau_E \frac{dE}{dt} = -E + f_E(w_{EE}E - w_{EI}I + I_{ext})",
+        description="Population rate model with excitation/inhibition",
+        formula_type="ODE",
+        category_id=cats['network_dyn'],
+        source_id=sources['literature'],
+        python_code="dE_dt = (-E + f_E(w_EE*E - w_EI*I + I_ext)) / tau_E",
+        domain="network-dynamics"
+    )
+
+    # Predictive coding
+    add_formula(conn,
+        name="Predictive Coding Hierarchy",
+        latex=r"\mu_l = f(\mu_{l+1})",
+        description="Hierarchical prediction in predictive coding",
+        formula_type="algebraic",
+        category_id=cats['network_dyn'],
+        source_id=sources['literature'],
+        python_code="mu_l = f(mu_next)",
+        domain="network-dynamics"
+    )
+
+    # Prediction error
+    add_formula(conn,
+        name="Prediction Error (Predictive Coding)",
+        latex=r"\varepsilon_l = x_l - \mu_l",
+        description="Mismatch between observation and prediction",
+        formula_type="algebraic",
+        category_id=cats['network_dyn'],
+        source_id=sources['literature'],
+        python_code="epsilon = x - mu",
+        domain="network-dynamics"
+    )
+
+    log.info("-" * 40)
+    log.info("Sensory Computations")
+    log.info("-" * 40)
+
+    # Convolution
+    add_formula(conn,
+        name="Convolutional Filtering (V1)",
+        latex=r"r(x,y) = \sum_{ij} w(i,j) I(x+i, y+j)",
+        description="Receptive field computation via convolution",
+        formula_type="algebraic",
+        category_id=cats['sensory'],
+        source_id=sources['literature'],
+        python_code="r = convolve2d(I, w)",
+        domain="sensory-computation"
+    )
+
+    # Gabor filter
+    add_formula(conn,
+        name="Gabor Filter",
+        latex=r"G(x,y) = \exp(-(x'^2 + \gamma^2 y'^2)/(2\sigma^2)) \cos(2\pi x'/\lambda + \psi)",
+        description="Oriented frequency-selective filter",
+        formula_type="algebraic",
+        category_id=cats['sensory'],
+        source_id=sources['literature'],
+        domain="sensory-computation"
+    )
+
+    # Edge detection
+    add_formula(conn,
+        name="Edge Detection (Sensory)",
+        latex=r"I_{edge} = [\partial I/\partial x, \partial I/\partial y]",
+        description="Spatial gradient for edge detection",
+        formula_type="algebraic",
+        category_id=cats['sensory'],
+        source_id=sources['literature'],
+        python_code="I_edge = np.gradient(I)",
+        domain="sensory-computation"
+    )
+
+    # Complex cell
+    add_formula(conn,
+        name="Complex Cell Response",
+        latex=r"C = \sqrt{S_{even}^2 + S_{odd}^2}",
+        description="Orientation-selective response with phase invariance",
+        formula_type="algebraic",
+        category_id=cats['sensory'],
+        source_id=sources['literature'],
+        python_code="C = np.sqrt(S_even**2 + S_odd**2)",
+        domain="sensory-computation"
+    )
+
+    # Cochlear filterbank
+    add_formula(conn,
+        name="Cochlear Filterbank",
+        latex=r"H_i(f) = \frac{(f/f_i)^p}{(f/f_i)^p + q}",
+        description="Frequency analysis in auditory system",
+        formula_type="algebraic",
+        category_id=cats['sensory'],
+        source_id=sources['literature'],
+        domain="sensory-computation"
+    )
+
+    # Gammatone filter
+    add_formula(conn,
+        name="Gammatone Filter",
+        latex=r"g(t) = t^{n-1} \exp(-2\pi b t) \cos(2\pi f_c t + \phi)",
+        description="Auditory filter approximation",
+        formula_type="algebraic",
+        category_id=cats['sensory'],
+        source_id=sources['literature'],
+        domain="sensory-computation"
+    )
+
+    log.info("-" * 40)
+    log.info("Working Memory & Decision Making")
+    log.info("-" * 40)
+
+    # Working memory maintenance
+    add_formula(conn,
+        name="Working Memory Maintenance",
+        latex=r"\tau \frac{dx}{dt} = -x + f(W x + I_{input})",
+        description="Persistent activity for working memory",
+        formula_type="ODE",
+        category_id=cats['working_mem'],
+        source_id=sources['literature'],
+        python_code="dx_dt = (-x + f(W @ x + I)) / tau",
+        domain="working-memory"
+    )
+
+    # Working memory gating
+    add_formula(conn,
+        name="Working Memory Gating",
+        latex=r"x_{new} = g x_{input} + (1-g) x_{old}",
+        description="Gate for updating working memory",
+        formula_type="algebraic",
+        category_id=cats['working_mem'],
+        source_id=sources['literature'],
+        python_code="x_new = g * x_in + (1 - g) * x_old",
+        domain="working-memory"
+    )
+
+    # Drift-diffusion
+    add_formula(conn,
+        name="Drift-Diffusion Model",
+        latex=r"\frac{dx}{dt} = \mu I + \sigma \xi(t)",
+        description="Decision variable accumulation with noise",
+        formula_type="SDE",
+        category_id=cats['working_mem'],
+        source_id=sources['literature'],
+        python_code="dx_dt = mu * I + sigma * noise",
+        domain="decision-making"
+    )
+
+    # Race model
+    add_formula(conn,
+        name="Race Model (Decision)",
+        latex=r"\frac{dx_i}{dt} = I_i + noise",
+        description="Competing accumulators for decision",
+        formula_type="ODE",
+        category_id=cats['working_mem'],
+        source_id=sources['literature'],
+        python_code="dx_dt = I + np.random.normal()",
+        domain="decision-making"
+    )
+
+    # Q-learning
+    add_formula(conn,
+        name="Q-Learning",
+        latex=r"Q(s,a) \leftarrow Q(s,a) + \alpha [r + \gamma \max_a' Q(s',a') - Q(s,a)]",
+        description="Value-based reinforcement learning",
+        formula_type="update_rule",
+        category_id=cats['working_mem'],
+        source_id=sources['literature'],
+        python_code="Q[s,a] = Q[s,a] + alpha * (r + gamma * max(Q[s_next]) - Q[s,a])",
+        domain="reinforcement-learning"
+    )
+
+    # SARSA
+    add_formula(conn,
+        name="SARSA Algorithm",
+        latex=r"Q(s,a) \leftarrow Q(s,a) + \alpha [r + \gamma Q(s',a') - Q(s,a)]",
+        description="On-policy temporal difference learning",
+        formula_type="update_rule",
+        category_id=cats['working_mem'],
+        source_id=sources['literature'],
+        python_code="Q[s,a] = Q[s,a] + alpha * (r + gamma * Q[s_next,a_next] - Q[s,a])",
+        domain="reinforcement-learning"
+    )
+
+    # Actor-Critic TD error
+    add_formula(conn,
+        name="Actor-Critic TD Error",
+        latex=r"\delta = r + \gamma V(s') - V(s)",
+        description="Temporal difference error for actor-critic",
+        formula_type="algebraic",
+        category_id=cats['working_mem'],
+        source_id=sources['literature'],
+        python_code="delta = r + gamma * V[s_next] - V[s]",
+        domain="reinforcement-learning"
+    )
+
+    # Value function
+    add_formula(conn,
+        name="Value Function",
+        latex=r"V(s) = E[\sum \gamma^t r_t | s_0 = s]",
+        description="Expected discounted future reward",
+        formula_type="algebraic",
+        category_id=cats['working_mem'],
+        source_id=sources['literature'],
+        domain="reinforcement-learning"
+    )
+
+    # Softmax policy
+    add_formula(conn,
+        name="Softmax Policy (Boltzmann)",
+        latex=r"P(a|s) = \frac{\exp(Q(s,a)/\tau)}{\sum_a' \exp(Q(s,a')/\tau)}",
+        description="Stochastic action selection from Q-values",
+        formula_type="algebraic",
+        category_id=cats['working_mem'],
+        source_id=sources['literature'],
+        python_code="p = np.exp(Q / tau) / np.sum(np.exp(Q / tau))",
+        domain="reinforcement-learning"
+    )
+
+    # Confidence computation
+    add_formula(conn,
+        name="Bayesian Confidence",
+        latex=r"confidence \propto P(hypothesis|data)",
+        description="Confidence from posterior probability",
+        formula_type="algebraic",
+        category_id=cats['working_mem'],
+        source_id=sources['literature'],
+        domain="decision-making"
+    )
+
+    log.info("-" * 40)
+    log.info("Language & Cognition")
+    log.info("-" * 40)
+
+    # Shift-reduce parsing
+    add_formula(conn,
+        name="Shift-Reduce Parser",
+        latex=r"\text{If } A \to BC \text{ matches: reduce}(B,C) \to A; \text{ Else: shift}",
+        description="Syntactic parsing rule",
+        formula_type="algorithm",
+        category_id=cats['language'],
+        source_id=sources['literature'],
+        domain="language-parsing"
+    )
+
+    # Vector addition composition
+    add_formula(conn,
+        name="Vector Composition (Addition)",
+        latex=r"v_{phrase} = v_1 + v_2",
+        description="Simple additive semantic composition",
+        formula_type="algebraic",
+        category_id=cats['language'],
+        source_id=sources['literature'],
+        python_code="v_phrase = v1 + v2",
+        domain="semantic-composition"
+    )
+
+    # Tensor product
+    add_formula(conn,
+        name="Tensor Product Composition",
+        latex=r"T_{phrase} = v_1 \otimes v_2",
+        description="Tensor product for structured composition",
+        formula_type="algebraic",
+        category_id=cats['language'],
+        source_id=sources['literature'],
+        python_code="T = np.outer(v1, v2)",
+        domain="semantic-composition"
+    )
+
+    # Circular convolution
+    add_formula(conn,
+        name="Circular Convolution",
+        latex=r"v_1 \star v_2 = \mathcal{F}^{-1}(\mathcal{F}(v_1) \cdot \mathcal{F}(v_2))",
+        description="Bind vectors for structured representation",
+        formula_type="algebraic",
+        category_id=cats['language'],
+        source_id=sources['literature'],
+        domain="semantic-composition"
+    )
+
+    # Analogy
+    add_formula(conn,
+        name="Proportional Analogy",
+        latex=r"a : b :: c : ? \rightarrow d = b - a + c",
+        description="Solve analogy relations",
+        formula_type="algebraic",
+        category_id=cats['language'],
+        source_id=sources['literature'],
+        python_code="d = b - a + c",
+        domain="semantic-composition"
+    )
+
+    # Modus ponens
+    add_formula(conn,
+        name="Modus Ponens",
+        latex=r"(A \to B) \land A \Rightarrow B",
+        description="Logical inference rule",
+        formula_type="logic",
+        category_id=cats['language'],
+        source_id=sources['literature'],
+        domain="logical-inference"
+    )
+
+    log.info("-" * 40)
+    log.info("Motivation & Action")
+    log.info("-" * 40)
+
+    # TD error (dopamine)
+    add_formula(conn,
+        name="Temporal Difference Error",
+        latex=r"\delta(t) = r(t) + \gamma V(s_{t+1}) - V(s_t)",
+        description="Reward prediction error (dopamine signal)",
+        formula_type="algebraic",
+        category_id=cats['motivation'],
+        source_id=sources['literature'],
+        python_code="delta = r + gamma * V_next - V",
+        domain="reward-prediction",
+        doi="10.1016/0166-2236(93)90090-C",
+        year=1993
+    )
+
+    # Threat evaluation
+    add_formula(conn,
+        name="Threat-Based Urgency",
+        latex=r"Risk = P(threat) \cdot magnitude(harm)",
+        description="Threat evaluation for action urgency",
+        formula_type="algebraic",
+        category_id=cats['motivation'],
+        source_id=sources['literature'],
+        python_code="risk = p_threat * harm_magnitude",
+        domain="motivation"
+    )
+
+    # Temporal discounting
+    add_formula(conn,
+        name="Temporal Discounting (Hyperbolic)",
+        latex=r"V(t) = \frac{V_0}{1 + kt}",
+        description="Value decrease over time",
+        formula_type="algebraic",
+        category_id=cats['motivation'],
+        source_id=sources['literature'],
+        python_code="V = V_0 / (1 + k * t)",
+        domain="motivation"
+    )
+
+    # Expected value
+    add_formula(conn,
+        name="Expected Value",
+        latex=r"EV = \sum P(outcome_i) \cdot value(outcome_i)",
+        description="Expected value computation",
+        formula_type="algebraic",
+        category_id=cats['motivation'],
+        source_id=sources['literature'],
+        python_code="EV = sum(p[i] * v[i] for i)",
+        domain="motivation"
+    )
+
+    # Action-value
+    add_formula(conn,
+        name="Action-Value Function",
+        latex=r"Q(s,a) = E[R | s,a]",
+        description="Expected return for action in state",
+        formula_type="algebraic",
+        category_id=cats['motivation'],
+        source_id=sources['literature'],
+        domain="action-selection"
+    )
+
+    # Habit learning
+    add_formula(conn,
+        name="Habit Formation (Model-Free)",
+        latex=r"Q_{MF}(s,a) \leftarrow Q_{MF} + \alpha \delta",
+        description="Habitual action values from TD learning",
+        formula_type="update_rule",
+        category_id=cats['motivation'],
+        source_id=sources['literature'],
+        domain="learning"
+    )
+
+    # Model-based value
+    add_formula(conn,
+        name="Model-Based Value",
+        latex=r"Q_{MB}(s,a) = \sum P(s'|s,a) \max_a' Q(s',a')",
+        description="Goal-directed planning-based value",
+        formula_type="algebraic",
+        category_id=cats['motivation'],
+        source_id=sources['literature'],
+        python_code="Q_MB = sum(p_trans * max_Q_next)",
+        domain="planning"
+    )
+
+    log.info("-" * 40)
+    log.info("Probabilistic Inference")
+    log.info("-" * 40)
+
+    # Bayes rule
+    add_formula(conn,
+        name="Bayes' Rule",
+        latex=r"P(\theta|D) = \frac{P(D|\theta) P(\theta)}{P(D)}",
+        description="Posterior from likelihood and prior",
+        formula_type="algebraic",
+        category_id=cats['inference'],
+        source_id=sources['literature'],
+        python_code="posterior = likelihood * prior / evidence",
+        domain="bayesian-inference"
+    )
+
+    # Log odds
+    add_formula(conn,
+        name="Log Odds Update",
+        latex=r"\log\frac{P(A|D)}{P(\neg A|D)} = \log\frac{P(D|A)}{P(D|\neg A)} + \log\frac{P(A)}{P(\neg A)}",
+        description="Logarithmic odds update rule",
+        formula_type="algebraic",
+        category_id=cats['inference'],
+        source_id=sources['literature'],
+        domain="bayesian-inference"
+    )
+
+    # Kalman predict
+    add_formula(conn,
+        name="Kalman Filter: Predict",
+        latex=r"\hat{x}_{t|t-1} = F \hat{x}_{t-1|t-1}, P_{t|t-1} = F P_{t-1|t-1} F^T + Q",
+        description="Kalman filter prediction step",
+        formula_type="algebraic",
+        category_id=cats['inference'],
+        source_id=sources['literature'],
+        domain="filtering"
+    )
+
+    # Kalman update
+    add_formula(conn,
+        name="Kalman Filter: Update",
+        latex=r"K_t = P_{t|t-1} H^T (H P_{t|t-1} H^T + R)^{-1}",
+        description="Kalman gain computation",
+        formula_type="algebraic",
+        category_id=cats['inference'],
+        source_id=sources['literature'],
+        domain="filtering"
+    )
+
+    # Belief propagation
+    add_formula(conn,
+        name="Belief Propagation (Sum-Product)",
+        latex=r"m_{ij}(x_j) = \sum_{x_i} \psi(x_i,x_j) \phi(x_i) \prod_{k \in N(i)\j} m_{ki}(x_i)",
+        description="Message passing for probabilistic inference",
+        formula_type="algorithm",
+        category_id=cats['inference'],
+        source_id=sources['literature'],
+        domain="graphical-models"
+    )
+
+    # Max-product
+    add_formula(conn,
+        name="Max-Product Algorithm",
+        latex=r"m_{ij}(x_j) = \max_{x_i} \psi(x_i,x_j) \phi(x_i) \prod_{k \in N(i)\j} m_{ki}(x_i)",
+        description="Max-product (Viterbi) for MAP inference",
+        formula_type="algorithm",
+        category_id=cats['inference'],
+        source_id=sources['literature'],
+        domain="graphical-models"
+    )
+
+    log.info("-" * 40)
+    log.info("Optimization")
+    log.info("-" * 40)
+
+    # Gradient descent
+    add_formula(conn,
+        name="Gradient Descent",
+        latex=r"\theta \leftarrow \theta - \eta \nabla L(\theta)",
+        description="Basic gradient descent update",
+        formula_type="update_rule",
+        category_id=cats['optimization_cog'],
+        source_id=sources['literature'],
+        python_code="theta = theta - eta * gradient",
+        domain="optimization"
+    )
+
+    # SGD with momentum
+    add_formula(conn,
+        name="SGD with Momentum",
+        latex=r"v \leftarrow \beta v + \nabla L, \theta \leftarrow \theta - \eta v",
+        description="Stochastic gradient descent with momentum",
+        formula_type="update_rule",
+        category_id=cats['optimization_cog'],
+        source_id=sources['literature'],
+        python_code="v = beta * v + grad; theta = theta - eta * v",
+        domain="optimization"
+    )
+
+    # Adam optimizer first moment
+    add_formula(conn,
+        name="Adam: First Moment",
+        latex=r"m \leftarrow \beta_1 m + (1-\beta_1) \nabla L",
+        description="Adam exponential moving average of gradients",
+        formula_type="update_rule",
+        category_id=cats['optimization_cog'],
+        source_id=sources['literature'],
+        domain="optimization"
+    )
+
+    # Adam optimizer second moment
+    add_formula(conn,
+        name="Adam: Second Moment",
+        latex=r"v \leftarrow \beta_2 v + (1-\beta_2) (\nabla L)^2",
+        description="Adam exponential moving average of squared gradients",
+        formula_type="update_rule",
+        category_id=cats['optimization_cog'],
+        source_id=sources['literature'],
+        domain="optimization"
+    )
+
+    # RMSprop
+    add_formula(conn,
+        name="RMSprop Optimizer",
+        latex=r"E[g^2]_t = \beta E[g^2]_{t-1} + (1-\beta) g_t^2, \theta \leftarrow \theta - \eta g_t/\sqrt{E[g^2]_t + \epsilon}",
+        description="Root mean square propagation optimizer",
+        formula_type="update_rule",
+        category_id=cats['optimization_cog'],
+        source_id=sources['literature'],
+        domain="optimization"
+    )
+
+    # Matrix multiply
+    add_formula(conn,
+        name="Matrix Multiplication",
+        latex=r"C_{ij} = \sum_k A_{ik} B_{kj}",
+        description="Bilinear tensor contraction",
+        formula_type="algebraic",
+        category_id=cats['optimization_cog'],
+        source_id=sources['literature'],
+        python_code="C = np.dot(A, B)",
+        domain="tensor-operations"
+    )
+
+    # GCN layer
+    add_formula(conn,
+        name="Graph Convolutional Layer",
+        latex=r"H^{(l+1)} = \sigma(D^{-1/2} A D^{-1/2} H^{(l)} W^{(l)})",
+        description="Graph convolution for relational data",
+        formula_type="algebraic",
+        category_id=cats['optimization_cog'],
+        source_id=sources['literature'],
+        domain="graph-neural-networks"
+    )
+
+    # Graph attention
+    add_formula(conn,
+        name="Graph Attention",
+        latex=r"\alpha_{ij} = softmax(LeakyReLU(a^T[W h_i || W h_j]))",
+        description="Attention mechanism for graphs",
+        formula_type="algebraic",
+        category_id=cats['optimization_cog'],
+        source_id=sources['literature'],
+        domain="graph-neural-networks"
+    )
+
+    # Fuzzy AND
+    add_formula(conn,
+        name="Fuzzy Logic AND",
+        latex=r"\mu_{AND} = \min(\mu_A, \mu_B)",
+        description="Min t-norm for fuzzy AND",
+        formula_type="algebraic",
+        category_id=cats['optimization_cog'],
+        source_id=sources['literature'],
+        python_code="fuzzy_and = min(mu_A, mu_B)",
+        domain="fuzzy-logic"
+    )
+
+    # Fuzzy OR
+    add_formula(conn,
+        name="Fuzzy Logic OR",
+        latex=r"\mu_{OR} = \max(\mu_A, \mu_B)",
+        description="Max t-conorm for fuzzy OR",
+        formula_type="algebraic",
+        category_id=cats['optimization_cog'],
+        source_id=sources['literature'],
+        python_code="fuzzy_or = max(mu_A, mu_B)",
+        domain="fuzzy-logic"
+    )
+
+    # EM algorithm E-step
+    add_formula(conn,
+        name="EM Algorithm: E-Step",
+        latex=r"Q(\theta|\theta_{old}) = E_Z[\log P(X,Z|\theta) | X, \theta_{old}]",
+        description="Expectation step of EM algorithm",
+        formula_type="algorithm",
+        category_id=cats['optimization_cog'],
+        source_id=sources['literature'],
+        domain="unsupervised-learning"
+    )
+
+    # VAE encoder
+    add_formula(conn,
+        name="VAE Encoder",
+        latex=r"q_\phi(z|x) = \mathcal{N}(\mu_\phi(x), \sigma^2_\phi(x))",
+        description="Variational autoencoder inference network",
+        formula_type="algebraic",
+        category_id=cats['optimization_cog'],
+        source_id=sources['literature'],
+        domain="generative-models"
+    )
+
+    # VAE ELBO
+    add_formula(conn,
+        name="VAE ELBO Loss",
+        latex=r"L = -E_q[\log p_\theta(x|z)] + KL(q_\phi(z|x) || p(z))",
+        description="Evidence lower bound for VAE",
+        formula_type="loss_function",
+        category_id=cats['optimization_cog'],
+        source_id=sources['literature'],
+        domain="generative-models"
+    )
+
 def main():
     """Main population routine."""
     log.info("=" * 60)
@@ -1379,6 +2464,7 @@ def main():
         populate_biochemistry_formulas(conn, sources, cats)
         populate_gene_regulation_formulas(conn, sources, cats)
         populate_systems_biology_formulas(conn, sources, cats)
+        populate_cognitive_formulas(conn, sources, cats)
 
         # Summary statistics
         log.info("=" * 60)
