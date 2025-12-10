@@ -1,0 +1,32 @@
+{
+  "feedback_loops": [
+    {
+      "formula_id": 1,
+      "name": "Hodgkin-Huxley Membrane Equation",
+      "description": "Main membrane potential equation from the Hodgkin-Huxley model describing action potential generation",
+      "symbolic": "C_m * Derivative(V, t) + g_Na * m**3 * h * (V - E_Na) + g_K * n**4 * (V - E_K) + g_L * (V - E_L) - I_ext",
+      "latex": "C_m \\frac{dV}{dt} = -g_{Na} m^3 h (V - E_{Na}) - g_K n^4 (V - E_K) - g_L (V - E_L) + I_{ext}",
+      "formula_type": "ODE",
+      "domain": "electrophysiology",
+      "feedback_type": "unknown"
+    }
+  ],
+  "bistable_switches": [],
+  "feedforward_loops": [],
+  "fanout_patterns": [],
+  "fanin_patterns": [],
+  "coherent_incoherent_loops": [],
+  "hill_functions": [
+    {
+      "formula_id": 41,
+      "name": "Hill Equation",
+      "description": "Cooperative binding with Hill coefficient",
+      "symbolic": "V_max * S**n / (K_half**n + S**n)",
+      "latex": "v = \\frac{V_{max} [S]^n}{K_{0.5}^n + [S]^n}",
+      "domain": "enzyme-kinetics",
+      "hill_coefficient": 2.0,
+      "km": null,
+      "enzyme_name": "cooperative enzyme"
+    }
+  ]
+}

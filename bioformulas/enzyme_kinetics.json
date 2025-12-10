@@ -1,0 +1,452 @@
+[
+  {
+    "id": 35,
+    "name": "Michaelis-Menten Kinetics",
+    "description": "Classic enzyme kinetics with substrate saturation",
+    "latex": "v = \\frac{V_{max} [S]}{K_m + [S]}",
+    "symbolic": "V_max * S / (K_m + S)",
+    "python": "v = V_max * S / (K_m + S)",
+    "domain": "enzyme-kinetics"
+  },
+  {
+    "id": 36,
+    "name": "Michaelis-Menten Substrate Dynamics",
+    "description": "Substrate consumption under Michaelis-Menten kinetics",
+    "latex": "\\frac{d[S]}{dt} = -\\frac{V_{max} [S]}{K_m + [S]}",
+    "symbolic": null,
+    "python": "dS_dt = -V_max * S / (K_m + S)",
+    "domain": "enzyme-kinetics"
+  },
+  {
+    "id": 37,
+    "name": "Lineweaver-Burk Equation",
+    "description": "Double-reciprocal linearization of Michaelis-Menten",
+    "latex": "\\frac{1}{v} = \\frac{K_m}{V_{max}} \\cdot \\frac{1}{[S]} + \\frac{1}{V_{max}}",
+    "symbolic": null,
+    "python": "inv_v = (K_m / V_max) * (1 / S) + (1 / V_max)",
+    "domain": "enzyme-kinetics"
+  },
+  {
+    "id": 38,
+    "name": "Competitive Inhibition",
+    "description": "Enzyme kinetics with competitive inhibitor",
+    "latex": "v = \\frac{V_{max} [S]}{K_m \\left(1 + \\frac{[I]}{K_i}\\right) + [S]}",
+    "symbolic": null,
+    "python": "v = V_max * S / (K_m * (1 + I/K_i) + S)",
+    "domain": "enzyme-kinetics"
+  },
+  {
+    "id": 39,
+    "name": "Non-competitive Inhibition",
+    "description": "Enzyme kinetics with non-competitive inhibitor",
+    "latex": "v = \\frac{V_{max} [S]}{(K_m + [S])\\left(1 + \\frac{[I]}{K_i}\\right)}",
+    "symbolic": null,
+    "python": "v = V_max * S / ((K_m + S) * (1 + I/K_i))",
+    "domain": "enzyme-kinetics"
+  },
+  {
+    "id": 40,
+    "name": "Uncompetitive Inhibition",
+    "description": "Enzyme kinetics with uncompetitive inhibitor",
+    "latex": "v = \\frac{V_{max} [S]}{K_m + [S]\\left(1 + \\frac{[I]}{K_i}\\right)}",
+    "symbolic": null,
+    "python": "v = V_max * S / (K_m + S * (1 + I/K_i))",
+    "domain": "enzyme-kinetics"
+  },
+  {
+    "id": 41,
+    "name": "Hill Equation",
+    "description": "Cooperative binding with Hill coefficient",
+    "latex": "v = \\frac{V_{max} [S]^n}{K_{0.5}^n + [S]^n}",
+    "symbolic": "V_max * S**n / (K_half**n + S**n)",
+    "python": "v = V_max * S**n / (K_half**n + S**n)",
+    "domain": "enzyme-kinetics"
+  },
+  {
+    "id": 42,
+    "name": "Substrate Inhibition",
+    "description": "Enzyme kinetics with excess substrate inhibition",
+    "latex": "v = \\frac{V_{max} [S]}{K_m + [S] + \\frac{[S]^2}{K_{si}}}",
+    "symbolic": null,
+    "python": "v = V_max * S / (K_m + S + S**2/K_si)",
+    "domain": "enzyme-kinetics"
+  },
+  {
+    "id": 43,
+    "name": "Ordered Bi-Bi Mechanism",
+    "description": "Two-substrate ordered sequential mechanism",
+    "latex": "v = \\frac{V_{max} [A][B]}{K_{iA}K_B + K_B[A] + K_A[B] + [A][B]}",
+    "symbolic": null,
+    "python": "v = V_max * A * B / (K_iA * K_B + K_B * A + K_A * B + A * B)",
+    "domain": "enzyme-kinetics"
+  },
+  {
+    "id": 44,
+    "name": "Ping-Pong Bi-Bi Mechanism",
+    "description": "Two-substrate ping-pong mechanism",
+    "latex": "v = \\frac{V_{max} [A][B]}{K_A[B] + K_B[A] + [A][B]}",
+    "symbolic": null,
+    "python": "v = V_max * A * B / (K_A * B + K_B * A + A * B)",
+    "domain": "enzyme-kinetics"
+  },
+  {
+    "id": 49,
+    "name": "Monod-Wyman-Changeux (MWC) Model",
+    "description": "Concerted allosteric transition model",
+    "latex": "Y = \\frac{\\alpha(1+\\alpha)^{n-1} + Lc\\alpha(1+c\\alpha)^{n-1}}{(1+\\alpha)^n + L(1+c\\alpha)^n}",
+    "symbolic": null,
+    "python": null,
+    "domain": "enzyme-kinetics"
+  },
+  {
+    "id": 50,
+    "name": "KNF Sequential Model",
+    "description": "Koshland-N\u00e9methy-Filmer sequential binding model",
+    "latex": "Y = \\frac{[S](K_1 + 2K_1K_2[S] + 3K_1K_2K_3[S]^2 + 4K_1K_2K_3K_4[S]^3)}{4(1 + K_1[S] + K_1K_2[S]^2 + K_1K_2K_3[S]^3 + K_1K_2K_3K_4[S]^4)}",
+    "symbolic": null,
+    "python": null,
+    "domain": "enzyme-kinetics"
+  },
+  {
+    "id": 596,
+    "name": "BRENDA: Michaelis-Menten",
+    "description": "Standard Michaelis-Menten enzyme kinetics",
+    "latex": "v = \\frac{V_{max} [S]}{K_m + [S]}",
+    "symbolic": null,
+    "python": null,
+    "domain": "enzyme-kinetics"
+  },
+  {
+    "id": 597,
+    "name": "BRENDA: Competitive Inhibition",
+    "description": "Enzyme kinetics with competitive inhibitor",
+    "latex": "v = \\frac{V_{max} [S]}{K_m(1 + [I]/K_i) + [S]}",
+    "symbolic": null,
+    "python": null,
+    "domain": "enzyme-kinetics"
+  },
+  {
+    "id": 598,
+    "name": "BRENDA: Non-Competitive Inhibition",
+    "description": "Enzyme kinetics with non-competitive inhibitor",
+    "latex": "v = \\frac{V_{max} [S]}{(K_m + [S])(1 + [I]/K_i)}",
+    "symbolic": null,
+    "python": null,
+    "domain": "enzyme-kinetics"
+  },
+  {
+    "id": 599,
+    "name": "BRENDA: Uncompetitive Inhibition",
+    "description": "Enzyme kinetics with uncompetitive inhibitor",
+    "latex": "v = \\frac{V_{max} [S]}{K_m + [S](1 + [I]/K_i)}",
+    "symbolic": null,
+    "python": null,
+    "domain": "enzyme-kinetics"
+  },
+  {
+    "id": 600,
+    "name": "BRENDA: Substrate Inhibition",
+    "description": "Enzyme inhibited by excess substrate",
+    "latex": "v = \\frac{V_{max} [S]}{K_m + [S] + [S]^2/K_{si}}",
+    "symbolic": null,
+    "python": null,
+    "domain": "enzyme-kinetics"
+  },
+  {
+    "id": 601,
+    "name": "BRENDA: Hill Equation",
+    "description": "Cooperative enzyme kinetics (Hill equation)",
+    "latex": "v = \\frac{V_{max} [S]^n}{K_{0.5}^n + [S]^n}",
+    "symbolic": null,
+    "python": null,
+    "domain": "enzyme-kinetics"
+  },
+  {
+    "id": 602,
+    "name": "BRENDA: Bi-Bi Ordered Sequential",
+    "description": "Two-substrate ordered mechanism",
+    "latex": "v = \\frac{V_{max} [A][B]}{K_{iA}K_B + K_B[A] + K_A[B] + [A][B]}",
+    "symbolic": null,
+    "python": null,
+    "domain": "enzyme-kinetics"
+  },
+  {
+    "id": 603,
+    "name": "BRENDA: Bi-Bi Random Sequential",
+    "description": "Two-substrate random binding",
+    "latex": "v = \\frac{V_{max} [A][B]}{K_{iA}K_B + K_A[B] + K_B[A] + [A][B]}",
+    "symbolic": null,
+    "python": null,
+    "domain": "enzyme-kinetics"
+  },
+  {
+    "id": 604,
+    "name": "BRENDA: Ping-Pong Bi-Bi",
+    "description": "Ping-pong mechanism",
+    "latex": "v = \\frac{V_{max} [A][B]}{K_A[B] + K_B[A] + [A][B]}",
+    "symbolic": null,
+    "python": null,
+    "domain": "enzyme-kinetics"
+  },
+  {
+    "id": 605,
+    "name": "BRENDA: Allosteric Activation",
+    "description": "Enzyme with allosteric activator",
+    "latex": "v = \\frac{V_{max} [S]}{K_m + [S]} \\cdot \\frac{1 + ([A]/K_a)^n}{1 + ([A]/K_a)^n + (K_m/[S])}",
+    "symbolic": null,
+    "python": null,
+    "domain": "enzyme-kinetics"
+  },
+  {
+    "id": 606,
+    "name": "BRENDA: Product Inhibition",
+    "description": "Inhibition by reaction product",
+    "latex": "v = \\frac{V_{max} [S]}{K_m(1 + [P]/K_p) + [S]}",
+    "symbolic": null,
+    "python": null,
+    "domain": "enzyme-kinetics"
+  },
+  {
+    "id": 607,
+    "name": "BRENDA: Partial Competitive Inhibition",
+    "description": "Mixed competitive/non-competitive inhibition",
+    "latex": "v = \\frac{V_{max} [S]}{K_m(1 + [I]/K_i) + [S](1 + [I]/(\\alpha K_i))}",
+    "symbolic": null,
+    "python": null,
+    "domain": "enzyme-kinetics"
+  },
+  {
+    "id": 945,
+    "name": "BIOMD0000000470: S-ribosylhomocysteine cleavage enzyme",
+    "description": "Reaction rate law from BioModels BIOMD0000000470: S-ribosylhomocysteine cleavage enzyme",
+    "latex": "v = \\frac{Vmax cell \\left(s_{1558} - \\frac{s_{0310} s_{1112}}{Keq}\\right)}{Km_{1558} \\left(\\left(1 + \\frac{s_{0310}}{Km_{0310}}\\right) \\left(1 + \\frac{s_{1112}}{Km_{1112}}\\right) + \\frac{s_{1558}}{Km_{1558}}\\right)}",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry"
+  },
+  {
+    "id": 1477,
+    "name": "BIOMD0000000092: Intermolecular autoactivation-Enzyme release",
+    "description": "Reaction rate law from BioModels BIOMD0000000092: Intermolecular autoactivation-Enzyme release",
+    "latex": "v = compartment ez k_{3}",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry"
+  },
+  {
+    "id": 1885,
+    "name": "BIOMD0000000092: Intermolecular autoactivation-Enzyme release",
+    "description": "Reaction rate law from BioModels BIOMD0000000092: Intermolecular autoactivation-Enzyme release",
+    "latex": "v = compartment ez k_{3}",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry"
+  },
+  {
+    "id": 2668,
+    "name": "BIOMD0000000496: 1,4-alpha-glucan branching enzyme",
+    "description": "Reaction rate law from BioModels BIOMD0000000496: 1,4-alpha-glucan branching enzyme",
+    "latex": "v = intracellular \\operatorname{function}_{2}{\\left(Keq_{r 0006},Vmax_{r 0006},intracellular,kmp_{s 0743r 0006},kmp_{s 1434 br 0006},kms_{s 0438r 0006},s_{0438},s_{0743},s_{1434 b} \\right)}",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry"
+  },
+  {
+    "id": 2953,
+    "name": "BIOMD0000000497: 1,4-alpha-glucan branching enzyme",
+    "description": "Reaction rate law from BioModels BIOMD0000000497: 1,4-alpha-glucan branching enzyme",
+    "latex": "v = intracellular \\operatorname{function}_{2}{\\left(Keq_{r 0006},Vmax_{r 0006},intracellular,kmp_{s 0743r 0006},kmp_{s 1434 br 0006},kms_{s 0438r 0006},s_{0438},s_{0743},s_{1434 b} \\right)}",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry"
+  },
+  {
+    "id": 4414,
+    "name": "BIOMD0000000469: S-ribosylhomocysteine cleavage enzyme",
+    "description": "Reaction rate law from BioModels BIOMD0000000469: S-ribosylhomocysteine cleavage enzyme",
+    "latex": "v = cell v_{0} \\left(ep_{0310} \\log{\\left(\\frac{s_{0310}}{ic_{0310}} \\right)} + ep_{1112} \\log{\\left(\\frac{s_{1112}}{ic_{1112}} \\right)} + ep_{1558} \\log{\\left(\\frac{s_{1558}}{ic_{1558}} \\right)} + 1\\right)",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry"
+  },
+  {
+    "id": 4813,
+    "name": "BIOMD0000000470: S-ribosylhomocysteine cleavage enzyme",
+    "description": "Reaction rate law from BioModels BIOMD0000000470: S-ribosylhomocysteine cleavage enzyme",
+    "latex": "v = \\frac{Vmax cell \\left(s_{1558} - \\frac{s_{0310} s_{1112}}{Keq}\\right)}{Km_{1558} \\left(\\left(1 + \\frac{s_{0310}}{Km_{0310}}\\right) \\left(1 + \\frac{s_{1112}}{Km_{1112}}\\right) + \\frac{s_{1558}}{Km_{1558}}\\right)}",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry"
+  },
+  {
+    "id": 5787,
+    "name": "BIOMD0000000497: 1,4-alpha-glucan branching enzyme",
+    "description": "Reaction rate law from BioModels BIOMD0000000497: 1,4-alpha-glucan branching enzyme",
+    "latex": "v = intracellular \\operatorname{function}_{2}{\\left(Keq_{r 0006},Vmax_{r 0006},intracellular,kmp_{s 0743r 0006},kmp_{s 1434 br 0006},kms_{s 0438r 0006},s_{0438},s_{0743},s_{1434 b} \\right)}",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry"
+  },
+  {
+    "id": 6101,
+    "name": "BIOMD0000000092: Intermolecular autoactivation-Enzyme release",
+    "description": "Reaction rate law from BioModels BIOMD0000000092: Intermolecular autoactivation-Enzyme release",
+    "latex": "v = compartment ez k_{3}",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry"
+  },
+  {
+    "id": 6121,
+    "name": "BIOMD0000000496: 1,4-alpha-glucan branching enzyme",
+    "description": "Reaction rate law from BioModels BIOMD0000000496: 1,4-alpha-glucan branching enzyme",
+    "latex": "v = intracellular \\operatorname{function}_{2}{\\left(Keq_{r 0006},Vmax_{r 0006},intracellular,kmp_{s 0743r 0006},kmp_{s 1434 br 0006},kms_{s 0438r 0006},s_{0438},s_{0743},s_{1434 b} \\right)}",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry"
+  },
+  {
+    "id": 7582,
+    "name": "BIOMD0000000469: S-ribosylhomocysteine cleavage enzyme",
+    "description": "Reaction rate law from BioModels BIOMD0000000469: S-ribosylhomocysteine cleavage enzyme",
+    "latex": "v = cell v_{0} \\left(ep_{0310} \\log{\\left(\\frac{s_{0310}}{ic_{0310}} \\right)} + ep_{1112} \\log{\\left(\\frac{s_{1112}}{ic_{1112}} \\right)} + ep_{1558} \\log{\\left(\\frac{s_{1558}}{ic_{1558}} \\right)} + 1\\right)",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry"
+  },
+  {
+    "id": 7981,
+    "name": "BIOMD0000000470: S-ribosylhomocysteine cleavage enzyme",
+    "description": "Reaction rate law from BioModels BIOMD0000000470: S-ribosylhomocysteine cleavage enzyme",
+    "latex": "v = \\frac{Vmax cell \\left(s_{1558} - \\frac{s_{0310} s_{1112}}{Keq}\\right)}{Km_{1558} \\left(\\left(1 + \\frac{s_{0310}}{Km_{0310}}\\right) \\left(1 + \\frac{s_{1112}}{Km_{1112}}\\right) + \\frac{s_{1558}}{Km_{1558}}\\right)}",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry"
+  },
+  {
+    "id": 9053,
+    "name": "BIOMD0000000062: Enzyme dilution due to cell growth",
+    "description": "Reaction rate law from BioModels BIOMD0000000062: Enzyme dilution due to cell growth",
+    "latex": "v = Enz compartment \\mu",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry"
+  },
+  {
+    "id": 9483,
+    "name": "BIOMD0000000092: Intermolecular autoactivation-Enzyme release",
+    "description": "Reaction rate law from BioModels BIOMD0000000092: Intermolecular autoactivation-Enzyme release",
+    "latex": "v = compartment ez k_{3}",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry"
+  },
+  {
+    "id": 10760,
+    "name": "BIOMD0000000107: intermediary enzyme activation",
+    "description": "Reaction rate law from BioModels BIOMD0000000107: intermediary enzyme activation",
+    "latex": "v = \\frac{dimer_{p} kg \\left(- IE_{p} + total_{IE}\\right)}{- IE_{p} + K_{g} + total_{IE}}",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry"
+  },
+  {
+    "id": 10761,
+    "name": "BIOMD0000000107: intermediary enzyme deactivation",
+    "description": "Reaction rate law from BioModels BIOMD0000000107: intermediary enzyme deactivation",
+    "latex": "v = \\frac{IE_{p} khPPAse}{IE_{p} + K_{h}}",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry"
+  },
+  {
+    "id": 10762,
+    "name": "BIOMD0000000107: ubiquitin conjugating enzyme activation",
+    "description": "Reaction rate law from BioModels BIOMD0000000107: ubiquitin conjugating enzyme activation",
+    "latex": "v = \\frac{IE_{p} kc \\left(- UbE_{star} + total_{UbE}\\right)}{K_{c} - UbE_{star} + total_{UbE}}",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry"
+  },
+  {
+    "id": 10763,
+    "name": "BIOMD0000000107: ubiquitin conjugating enzyme deactivation",
+    "description": "Reaction rate law from BioModels BIOMD0000000107: ubiquitin conjugating enzyme deactivation",
+    "latex": "v = \\frac{UbE_{star} kd_{anti IE}}{K_{d} + UbE_{star}}",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry"
+  },
+  {
+    "id": 10859,
+    "name": "BIOMD0000000111: slp1 activation by intermediary enzyme",
+    "description": "Reaction rate law from BioModels BIOMD0000000111: slp1 activation by intermediary enzyme",
+    "latex": "v = \\frac{IEP k_{7} \\left(- slp_{1} + slp1T\\right)}{J_{7} - slp_{1} + slp1T}",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry"
+  },
+  {
+    "id": 10862,
+    "name": "BIOMD0000000111: Intermediary enzyme activation",
+    "description": "Reaction rate law from BioModels BIOMD0000000111: Intermediary enzyme activation",
+    "latex": "v = \\frac{MPF k_{9} \\left(1 - IEP\\right)}{- IEP + J_{9} + 1}",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry"
+  },
+  {
+    "id": 11208,
+    "name": "BIOMD0000000144: activation of intermediary enzyme",
+    "description": "Reaction rate law from BioModels BIOMD0000000144: activation of intermediary enzyme",
+    "latex": "v = \\frac{IEa_{1} kiie nuclei}{IEa_{1} + Jiie}",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry"
+  },
+  {
+    "id": 11209,
+    "name": "BIOMD0000000144: inactivation of intermediary enzyme",
+    "description": "Reaction rate law from BioModels BIOMD0000000144: inactivation of intermediary enzyme",
+    "latex": "v = \\frac{MPFn kaie nuclei \\left(1 - IEa_{1}\\right)}{- IEa_{1} + Jaie + 1}",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry"
+  },
+  {
+    "id": 21231,
+    "name": "BIOMD0000000496: 1,4-alpha-glucan branching enzyme",
+    "description": "Reaction rate law from BioModels BIOMD0000000496: 1,4-alpha-glucan branching enzyme",
+    "latex": "v = intracellular \\operatorname{function}_{2}{\\left(Keq_{r 0006},Vmax_{r 0006},intracellular,kmp_{s 0743r 0006},kmp_{s 1434 br 0006},kms_{s 0438r 0006},s_{0438},s_{0743},s_{1434 b} \\right)}",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry"
+  },
+  {
+    "id": 21516,
+    "name": "BIOMD0000000497: 1,4-alpha-glucan branching enzyme",
+    "description": "Reaction rate law from BioModels BIOMD0000000497: 1,4-alpha-glucan branching enzyme",
+    "latex": "v = intracellular \\operatorname{function}_{2}{\\left(Keq_{r 0006},Vmax_{r 0006},intracellular,kmp_{s 0743r 0006},kmp_{s 1434 br 0006},kms_{s 0438r 0006},s_{0438},s_{0743},s_{1434 b} \\right)}",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry"
+  },
+  {
+    "id": 24032,
+    "name": "BIOMD0000000469: S-ribosylhomocysteine cleavage enzyme",
+    "description": "Reaction rate law from BioModels BIOMD0000000469: S-ribosylhomocysteine cleavage enzyme",
+    "latex": "v = cell v_{0} \\left(ep_{0310} \\log{\\left(\\frac{s_{0310}}{ic_{0310}} \\right)} + ep_{1112} \\log{\\left(\\frac{s_{1112}}{ic_{1112}} \\right)} + ep_{1558} \\log{\\left(\\frac{s_{1558}}{ic_{1558}} \\right)} + 1\\right)",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry"
+  },
+  {
+    "id": 24431,
+    "name": "BIOMD0000000470: S-ribosylhomocysteine cleavage enzyme",
+    "description": "Reaction rate law from BioModels BIOMD0000000470: S-ribosylhomocysteine cleavage enzyme",
+    "latex": "v = \\frac{Vmax cell \\left(s_{1558} - \\frac{s_{0310} s_{1112}}{Keq}\\right)}{Km_{1558} \\left(\\left(1 + \\frac{s_{0310}}{Km_{0310}}\\right) \\left(1 + \\frac{s_{1112}}{Km_{1112}}\\right) + \\frac{s_{1558}}{Km_{1558}}\\right)}",
+    "symbolic": null,
+    "python": null,
+    "domain": "biochemistry"
+  }
+]

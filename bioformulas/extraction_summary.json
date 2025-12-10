@@ -1,0 +1,12 @@
+{
+  "database": "/home/user/MAINFRAME/bioformulas/bioformulas.db",
+  "extraction_date": "2025-12-10",
+  "categories": {
+    "atp_formulas": 30,
+    "enzyme_kinetics": 50,
+    "glycolysis": 12,
+    "oxidative_phosphorylation": 7,
+    "enzyme_data": 64,
+    "resource_allocation": 7
+  }
+}

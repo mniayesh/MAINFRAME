@@ -1,0 +1,283 @@
+================================================================================
+NETWORK MOTIFS QUICK REFERENCE CARD
+================================================================================
+
+Database: /home/user/MAINFRAME/bioformulas/bioformulas.db
+Total Formulas: 90,313
+Analysis Date: 2025-12-10
+
+================================================================================
+MOTIF CATALOG
+================================================================================
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 1. POSITIVE FEEDBACK LOOPS (69 formulas)                                   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Pattern:     x^n where n >= 2                                              │
+│ Function:    Amplification, bistability, decision-making                   │
+│ Example:     dv/dt = 0.04v^2 + 5v + 140 - u + I  (Izhikevich)            │
+│ Use in NN:   Self-amplifying attention, winner-take-all                   │
+│ Advantage:   Creates sharp decision boundaries                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 2. NEGATIVE FEEDBACK LOOPS (6 formulas)                                    │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Pattern:     dx/dt = f(x) - decay*x                                       │
+│ Function:    Homeostasis, oscillations, stability                         │
+│ Example:     BCM plasticity with sliding threshold                        │
+│ Use in NN:   Adaptive normalization, preventing saturation                │
+│ Advantage:   Self-stabilizing, prevents runaway activation                │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 3. BISTABLE SWITCHES (7 formulas)                                          │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Pattern:     du/dt = α/(1+v^β) - u,  dv/dt = α/(1+u^γ) - v              │
+│ Function:    Two stable states, memory without storage                    │
+│ Example:     Genetic toggle switch                                        │
+│ Use in NN:   Binary classification, memory cells, state machines          │
+│ Advantage:   Latching behavior, noise-resistant                           │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 4. HILL FUNCTIONS / COOPERATIVE BINDING (4 formulas)                       │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Pattern:     f(x) = x^n / (K^n + x^n)                                     │
+│ Function:    Sigmoidal activation with tunable steepness                  │
+│ Example:     Pyruvate kinase (n=3), PFK1 (n=2)                           │
+│ Use in NN:   Activation function replacement for ReLU/sigmoid             │
+│ Advantage:   - Bounded [0,1]                                              │
+│              - Smooth gradients                                           │
+│              - Tunable cooperativity (n parameter)                        │
+│              - n=1: Michaelis-Menten                                      │
+│              - n=2-3: Moderate cooperativity                              │
+│              - n=4+: Ultra-sharp switching                                │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 5. STDP (Spike-Timing Dependent Plasticity) (9 formulas)                   │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Pattern:     Δw = A+ exp(-Δt/τ+) if pre before post                      │
+│              Δw = -A- exp(Δt/τ-) if post before pre                      │
+│ Function:    Temporal learning, "neurons that fire together wire together"│
+│ Example:     Pair-based STDP, Triplet STDP                               │
+│ Use in NN:   Local learning rule (no backprop), temporal credit assign.   │
+│ Advantage:   - Biologically plausible                                     │
+│              - No error signal needed                                     │
+│              - Natural temporal learning                                  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 6. BCM RULE (Sliding Threshold) (1 formula)                                │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Pattern:     dw/dt = η * post * (post - θ) * pre                         │
+│              dθ/dt = α * (post^2 - θ)                                     │
+│ Function:    Homeostatic learning, prevents runaway                       │
+│ Example:     BCM plasticity rule                                          │
+│ Use in NN:   Continual learning, preventing catastrophic forgetting       │
+│ Advantage:   - Self-normalizing                                           │
+│              - Adaptive threshold                                         │
+│              - Stable long-term learning                                  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 7. OJA'S RULE (Weight Normalization) (1 formula)                           │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Pattern:     Δw = η * y * (x - y*w)                                       │
+│ Function:    Hebbian learning + automatic weight normalization            │
+│ Example:     Oja's learning rule                                          │
+│ Use in NN:   Unsupervised learning, PCA extraction                        │
+│ Advantage:   - Self-normalizing weights                                   │
+│              - Performs PCA automatically                                 │
+│              - Prevents weight explosion                                  │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 8. MAPK CASCADE (Feed-Forward Amplification) (10 formulas)                 │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Pattern:     Raf → MEK → ERK (3-tier kinase cascade)                     │
+│ Function:    Signal amplification, ultrasensitivity                       │
+│ Example:     d[Raf*]/dt = k1[RasGTP][Raf] - k2[Raf*]                    │
+│              d[MEK*]/dt = k3[Raf*][MEK] - k4[MEK*]                       │
+│              d[ERK*]/dt = k5[MEK*][ERK] - k6[ERK*]                       │
+│ Use in NN:   Multi-tier activation before main layers                     │
+│ Advantage:   - >1000x signal amplification                                │
+│              - Noise filtering                                            │
+│              - Ultrasensitive response                                    │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 9. ALLOSTERIC REGULATION (200 formulas)                                    │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Pattern:     v = Vmax*[S] / (Km*(1 + [I]/Ki) + [S])  [competitive]       │
+│              output = f(input) * g(context)           [general]           │
+│ Function:    Context-dependent activity modulation                        │
+│ Example:     PFK1 with ATP inhibition + AMP activation                   │
+│ Use in NN:   Attention mechanisms, contextual gating                      │
+│ Advantage:   - Multi-input integration                                    │
+│              - Context-dependent processing                               │
+│              - Attention is allosteric control                            │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 10. ULTRASENSITIVE RESPONSES (50 formulas)                                 │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Pattern:     I_K = g_K * n^4 * (V - E_K)  [potassium channels]           │
+│              I_Na = g_Na * m^3 * h * (V - E_Na)  [sodium channels]        │
+│ Function:    Ultra-sharp switching, threshold detection                   │
+│ Example:     Kv channels (n^4 gating)                                     │
+│ Use in NN:   Classification layers, decision boundaries                   │
+│ Advantage:   - Very steep response curves                                 │
+│              - Clear thresholds                                           │
+│              - n^4 gives switch-like behavior                             │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│ 11. COUPLED ODE SYSTEMS (164 systems)                                      │
+├─────────────────────────────────────────────────────────────────────────────┤
+│ Pattern:     dh/dt = f(h, x, θ)  [continuous dynamics]                   │
+│ Function:    Network dynamics, recurrent processing                       │
+│ Example:     Hodgkin-Huxley system (4 coupled ODEs)                       │
+│ Use in NN:   Neural ODEs, continuous-time RNNs                            │
+│ Advantage:   - Adaptive computation time                                  │
+│              - Memory efficient                                           │
+│              - Biologically accurate                                      │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+================================================================================
+SIGNALING PATHWAYS SUMMARY
+================================================================================
+
+MAPK          10 formulas    3-tier cascade, >1000x amplification
+PI3K-AKT      10 formulas    Growth/survival, Akt activation
+JAK-STAT       5 formulas    Cytokine signaling to nucleus
+Wnt            5 formulas    Development, β-catenin regulation
+Notch          4 formulas    Cell fate, lateral inhibition
+cAMP           5 formulas    Second messenger, PKA activation
+NF-κB          5 formulas    Inflammation, immune response
+
+Glycolysis    12 formulas    Energy metabolism, allosteric control
+TCA Cycle      9 formulas    Citric acid cycle, NADH production
+OXPHOS         7 formulas    Oxidative phosphorylation, ATP synthesis
+PPP            8 formulas    Pentose phosphate pathway, NADPH
+
+================================================================================
+METABOLIC NETWORK MOTIFS (Glycolysis Example)
+================================================================================
+
+Feedback:      PFK1 - ATP inhibition (negative feedback)
+               PFK1 - AMP activation (positive feedback)
+
+Feedforward:   F1,6BP activates Pyruvate Kinase (glycolytic flux control)
+
+Bistability:   PFK1 allosteric regulation creates hysteresis
+
+Cooperativity: PFK1 (n=2), Pyruvate Kinase (n=3)
+
+================================================================================
+IMPLEMENTATION TEMPLATES
+================================================================================
+
+1. HILL ACTIVATION
+   def hill(x, n=2, K=0.5):
+       return x**n / (K**n + x**n)
+
+2. BCM LEARNING
+   phi = post * (post - threshold)
+   dw = lr * outer(phi, pre) - lr * post**2 * W
+   threshold += alpha * (post**2 - threshold)
+
+3. STDP LEARNING
+   if t_pre < t_post:
+       dw = A_plus * exp(-(t_post - t_pre) / tau_plus)
+   else:
+       dw = -A_minus * exp(-(t_pre - t_post) / tau_minus)
+
+4. TOGGLE SWITCH
+   du_dt = alpha / (1 + v**beta) - u
+   dv_dt = alpha / (1 + u**gamma) - v
+
+5. ALLOSTERIC GATE
+   output = activation(input) * context_gate(context)
+
+6. NEURAL ODE
+   dh_dt = f(h, x, theta) - decay * h + feedback(h)
+
+================================================================================
+COMPARISON TO STANDARD DEEP LEARNING
+================================================================================
+
+Component          Standard DL              Bio-Inspired Motif
+─────────────────────────────────────────────────────────────────────────────
+Activation         ReLU, sigmoid            Hill function (tunable n)
+Learning           Backprop                 STDP, BCM, Oja
+Normalization      BatchNorm, LayerNorm     Negative feedback, Oja
+Attention          Softmax attention        Allosteric gating
+Recurrence         LSTM, GRU                Coupled ODEs, feedback loops
+Memory             Explicit storage         Bistable switches
+Decision           Softmax                  Ultrasensitive (n^4)
+Dynamics           Discrete steps           Continuous ODEs
+Stability          Weight decay             Homeostatic plasticity
+
+================================================================================
+KEY ADVANTAGES
+================================================================================
+
+1. Biological Plausibility
+   - Matches actual neural computation
+   - Local learning (no backprop needed)
+   - Continuous dynamics
+
+2. Computational Benefits
+   - Adaptive computation time
+   - Memory efficiency
+   - Noise robustness
+
+3. Performance Benefits
+   - No catastrophic forgetting (BCM)
+   - Better decision boundaries (Hill n^4)
+   - Contextual processing (allosteric)
+
+4. Interpretability
+   - Clear biological analogies
+   - Parameter meanings
+   - Known dynamics
+
+================================================================================
+FILES GENERATED
+================================================================================
+
+NEURAL_ARCHITECTURE_GUIDE.txt         Complete implementation guide
+NETWORK_MOTIFS_SUMMARY.md             Detailed analysis (this file)
+network_motifs_comprehensive.json     All motifs with formulas
+deep_network_motifs.json              Pathway analysis, coupled systems
+formula_catalog.json                  Categorized formula examples
+QUICK_REFERENCE.txt                   This quick reference card
+
+================================================================================
+RECOMMENDED ARCHITECTURE STACK
+================================================================================
+
+Layer 1:  Input → Allosteric Context Gate
+Layer 2:  Feed-Forward Cascade (3 tiers, MAPK-like)
+Layer 3:  Hill Activation (n=2-3)
+Layer 4:  Lateral Inhibition (toggle switches)
+Layer 5:  Recurrent Feedback (positive/negative)
+Layer 6:  Adaptive Learning (BCM/STDP)
+Output:   Bistable switches or Hill(n=4) for classification
+
+================================================================================
+NEXT STEPS
+================================================================================
+
+1. Implement Hill activation in PyTorch/JAX
+2. Test BCM learning vs backprop
+3. Add bistable output layers
+4. Integrate allosteric gating into transformers
+5. Build full bio-inspired architecture
+6. Benchmark on ImageNet, language tasks
+
+================================================================================
+END OF QUICK REFERENCE
+================================================================================

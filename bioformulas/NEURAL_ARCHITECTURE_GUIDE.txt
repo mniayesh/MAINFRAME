@@ -1,0 +1,422 @@
+================================================================================
+COMPUTATIONAL NETWORK MOTIFS FOR NEURAL ARCHITECTURE DESIGN
+================================================================================
+
+Analysis of 90,313 biological formulas identifying proven information
+processing circuits that can improve neural network architectures.
+
+
+================================================================================
+1. FEEDBACK LOOPS - Recurrent Processing and Memory
+================================================================================
+
+Found: 181 formulas with feedback patterns
+
+BIOLOGICAL INSIGHT:
+- Positive feedback: Amplification, bistability, decision-making
+- Negative feedback: Homeostasis, oscillations, error correction
+
+KEY EXAMPLES:
+
+1. Hodgkin-Huxley Membrane Equation [UNKNOWN]
+   Formula: C_m \frac{dV}{dt} = -g_{Na} m^3 h (V - E_{Na}) - g_K n^4 (V - E_K) - g_L (V - E_L) + I_{ext}...
+   Domain: electrophysiology
+   Mechanism: nonlinear (power 4)
+   Bio-function: Main membrane potential equation from the Hodgkin-Huxley model describing action potential generation
+
+2. Izhikevich Membrane Equation [UNKNOWN]
+   Formula: \frac{dv}{dt} = 0.04v^2 + 5v + 140 - u + I...
+   Domain: computational-neuroscience
+   Mechanism: nonlinear (power 2)
+   Bio-function: Izhikevich model membrane potential dynamics
+
+3. FitzHugh-Nagumo Voltage [UNKNOWN]
+   Formula: \frac{dv}{dt} = v - \frac{v^3}{3} - w + I_{ext}...
+   Domain: computational-neuroscience
+   Mechanism: nonlinear (power 3)
+   Bio-function: FitzHugh-Nagumo model - simplified HH capturing excitability
+
+4. Mean-Field Firing Rate [UNKNOWN]
+   Formula: \nu = \phi(\mu, \sigma) = \left( \tau_{ref} + \tau_m \sqrt{\pi} \int_{(V_{reset}-\mu)/\sigma}^{(V_{t...
+   Domain: mean-field
+   Mechanism: nonlinear (power 2)
+   Bio-function: Mean-field firing rate for LIF neurons with noise
+
+5. Hill Equation [POSITIVE]
+   Formula: v = \frac{V_{max} [S]^n}{K_{0.5}^n + [S]^n}...
+   Domain: enzyme-kinetics
+   Mechanism: cooperative binding
+   Bio-function: Cooperative binding with Hill coefficient
+
+NEURAL ARCHITECTURE RECOMMENDATIONS:
+
+1.1 POSITIVE FEEDBACK (69 examples)
+    - Implement: Self-amplifying attention mechanisms
+    - Use case: Winner-take-all networks, decision boundaries
+    - Formula pattern: x^n where n >= 2 (cooperative binding)
+    - Example: Izhikevich model uses v^2 for burst generation
+
+1.2 NEGATIVE FEEDBACK (6 examples)
+    - Implement: Adaptive normalization layers
+    - Use case: Preventing saturation, maintaining stability
+    - Formula pattern: dx/dt = f(x) - decay*x
+    - Example: BCM plasticity rule with sliding threshold
+
+
+================================================================================
+2. BISTABLE SWITCHES - Binary Decision Making
+================================================================================
+
+Found: 7 formulas with bistability
+
+BIOLOGICAL INSIGHT:
+- Two stable states separated by threshold
+- Memory without explicit storage
+- Sharp transitions for classification
+
+KEY EXAMPLES:
+
+1. Hill Equation
+   Formula: v = \frac{V_{max} [S]^n}{K_{0.5}^n + [S]^n}...
+   Hill coefficient: 2.0
+   Bio-function: Cooperative binding with Hill coefficient
+
+2. Toggle Switch Gene 1
+   Formula: \frac{du}{dt} = \frac{\alpha_1}{1 + v^\beta} - u...
+   Hill coefficient: None
+   Bio-function: Genetic toggle switch - gene u dynamics
+
+3. Toggle Switch Gene 2
+   Formula: \frac{dv}{dt} = \frac{\alpha_2}{1 + u^\gamma} - v...
+   Hill coefficient: None
+   Bio-function: Genetic toggle switch - gene v dynamics
+
+NEURAL ARCHITECTURE RECOMMENDATIONS:
+
+2.1 TOGGLE SWITCH LAYERS
+    - Implement: Mutually inhibitory neuron pairs
+    - Use case: Binary gates, memory cells, state machines
+    - Formula: du/dt = α/(1+v^β) - u, dv/dt = α/(1+u^γ) - v
+    - Benefits: Latching behavior, noise resistance
+
+2.2 HILL FUNCTION ACTIVATIONS
+    - Implement: f(x) = x^n / (K^n + x^n)
+    - Use case: Sharp thresholding, ultra-sensitivity
+    - Hill coefficient n > 2 gives switch-like behavior
+    - Better than ReLU for decision tasks
+
+
+================================================================================
+3. FEED-FORWARD CASCADES - Hierarchical Processing
+================================================================================
+
+Found: 11 major signaling pathways
+
+BIOLOGICAL INSIGHT:
+- MAPK: 10 formulas - 3-tier kinase cascade (Raf→MEK→ERK)
+- PI3K-AKT: 10 formulas - Growth/survival signaling
+- JAK-STAT: 5 formulas - Cytokine signaling to nucleus
+
+KEY SIGNALING PROPERTIES:
+- Signal amplification at each layer
+- Multiple phosphorylation adds ultrasensitivity
+- Scaffold proteins create specificity
+
+NEURAL ARCHITECTURE RECOMMENDATIONS:
+
+3.1 MULTI-TIER ACTIVATION CASCADES
+    - Implement: 3-layer cascade before each main layer
+    - Each tier: phosphorylation-like activation
+    - Benefits: Signal amplification, noise filtering
+    - Example: MAPK cascade gives >1000x amplification
+
+3.2 COHERENT VS INCOHERENT LOOPS
+    - Coherent: A→B→C and A→C (same sign)
+    - Incoherent: A activates C, A→B inhibits C
+    - Use incoherent for: pulse detection, adaptation
+    - Use coherent for: persistent signals, filtering
+
+
+================================================================================
+4. SYNAPTIC PLASTICITY - Learning Rules
+================================================================================
+
+Found: 9 plasticity formulas
+
+KEY EXAMPLES:
+
+1. Pair-Based STDP
+   Rule type: pair-STDP
+   Weight dependence: additive
+   Formula: \Delta w = \begin{cases} A_+ \exp(-\Delta t / \tau_+) & \text{if } \Delta t > 0 \\ -A_- \exp(\Delta ...
+
+2. Triplet STDP Rule
+   Rule type: triplet-STDP
+   Weight dependence: multiplicative
+   Formula: \Delta w = r_1(t) \left( A_2^+ + A_3^+ r_2(t-\epsilon) \right) - o_1(t) \left( A_2^- + A_3^- o_2(t-\...
+
+3. BCM Plasticity Rule
+   Rule type: BCM
+   Weight dependence: sliding-threshold
+   Formula: \frac{dw}{dt} = \eta \phi(c) c_{pre}...
+
+4. Oja's Learning Rule
+   Rule type: Oja
+   Weight dependence: multiplicative
+   Formula: \Delta w_i = \eta y (x_i - y w_i)...
+
+5. Calcium-Based Plasticity
+   Rule type: calcium-based
+   Weight dependence: multiplicative
+   Formula: \frac{dw}{dt} = \gamma_p \Omega([Ca^{2+}]) - \gamma_d \Omega([Ca^{2+}]) w...
+
+NEURAL ARCHITECTURE RECOMMENDATIONS:
+
+4.1 STDP (Spike-Timing Dependent Plasticity)
+    - Current: Backprop uses error signals
+    - Bio-inspired: Δw based on pre/post timing
+    - Formula: Δw = A+ exp(-Δt/τ+) if Δt>0
+    - Benefits: Local learning, no backprop needed
+
+4.2 BCM RULE (Sliding Threshold)
+    - dw/dt = η φ(post) pre, where φ is nonlinear
+    - Threshold θ slides with average activity
+    - Benefits: Homeostatic, prevents runaway
+    - Better than fixed learning rates
+
+4.3 OJA'S RULE (Weight Normalization)
+    - Δw = η y (x - y w)
+    - Automatically normalizes weights
+    - Performs PCA (principal component analysis)
+    - Use for: Unsupervised feature learning
+
+
+================================================================================
+5. COOPERATIVE BINDING - Nonlinear Integration
+================================================================================
+
+Found: 4 Hill function formulas
+
+KEY EXAMPLES:
+
+1. Pyruvate Kinase Allosteric (Hill n=3.0)
+   Formula: v_{PK} = V_{max} \frac{[PEP]^n [ADP]}{(K_{PEP}^n + [PEP]^n)(K_{ADP} + [ADP])} \cdot \frac{[F1,6BP]}{...
+
+2. Hill Equation (Hill n=2.0)
+   Formula: v = \frac{V_{max} [S]^n}{K_{0.5}^n + [S]^n}...
+
+3. PFK1 Allosteric Regulation (Hill n=2.0)
+   Formula: v_{PFK1} = V_{max} \frac{[F6P]^n [ATP]}{(K_{F6P}^n + [F6P]^n)(K_{ATP} + [ATP])} \cdot \frac{K_i^m}{K...
+
+4. IDH NAD-dependent Regulation (Hill n=2.0)
+   Formula: v_{IDH} = V_{max} \frac{[Isocitrate]^n [NAD^+]}{(K_m^n + [Isocitrate]^n)(K_{NAD} + [NAD^+])} \cdot \...
+
+NEURAL ARCHITECTURE RECOMMENDATIONS:
+
+5.1 HILL ACTIVATION FUNCTIONS
+    - Replace: ReLU, tanh, sigmoid
+    - With: Hill(x, n, K) = x^n / (K^n + x^n)
+    - Advantages:
+      * Tunable cooperativity (n parameter)
+      * Bounded output [0,1]
+      * Smooth gradients
+      * Biologically accurate
+
+    - High n (3-4): Sharp switching for decisions
+    - Low n (1-2): Smooth integration
+
+
+================================================================================
+6. ALLOSTERIC REGULATION - Contextual Modulation
+================================================================================
+
+Found: 100 allosteric formulas
+
+BIOLOGICAL INSIGHT:
+- Enzyme activity modulated by distant binding sites
+- Allows context-dependent processing
+- Both activation and inhibition from same site
+
+KEY EXAMPLES:
+
+1. GABA-A Synaptic Current
+   Regulation: inhibition
+   Formula: I_{GABA_A} = g_{GABA_A} s (V - E_{Cl})...
+
+2. Wilson-Cowan Inhibitory
+   Regulation: inhibition
+   Formula: \tau_I \frac{dI}{dt} = -I + S_I(w_{IE}E - w_{II}I)...
+
+3. Competitive Inhibition
+   Regulation: inhibition
+   Formula: v = \frac{V_{max} [S]}{K_m \left(1 + \frac{[I]}{K_i}\right) + [S]}...
+
+4. Non-competitive Inhibition
+   Regulation: inhibition
+   Formula: v = \frac{V_{max} [S]}{(K_m + [S])\left(1 + \frac{[I]}{K_i}\right)}...
+
+5. Uncompetitive Inhibition
+   Regulation: inhibition
+   Formula: v = \frac{V_{max} [S]}{K_m + [S]\left(1 + \frac{[I]}{K_i}\right)}...
+
+NEURAL ARCHITECTURE RECOMMENDATIONS:
+
+6.1 CONTEXTUAL GATING
+    - Implement: y = f(x) * g(context)
+    - Context modulates neuron sensitivity
+    - Example: Attention is a form of allosteric control
+
+6.2 MWC MODEL (Monod-Wyman-Changeux)
+    - Two states: Relaxed (active) and Tense (inactive)
+    - Ligands shift equilibrium between states
+    - Use for: Multi-input gating, complex decisions
+
+
+================================================================================
+7. ULTRASENSITIVE RESPONSES - Sharp Thresholds
+================================================================================
+
+Found: 50 ultrasensitive formulas
+
+HIGHEST COOPERATIVITY:
+
+1. Hodgkin-Huxley Membrane Equation (power 4)
+   Formula: C_m \frac{dV}{dt} = -g_{Na} m^3 h (V - E_{Na}) - g_K n^4 (V - E_K) - g_L (V - E_...
+
+2. KNF Sequential Model (power 4)
+   Formula: Y = \frac{[S](K_1 + 2K_1K_2[S] + 3K_1K_2K_3[S]^2 + 4K_1K_2K_3K_4[S]^3)}{4(1 + K_...
+
+3. Kv1.1 Potassium Current (KCNA1) (power 4)
+   Formula: I_{Kv1.1} = g_{Kv1.1} n^4 (V - E_K)...
+
+4. Kv1.2 Potassium Current (KCNA2) (power 4)
+   Formula: I_{Kv1.2} = g_{Kv1.2} n^4 (V - E_K)...
+
+5. Kv1.3 Potassium Current (KCNA3) (power 4)
+   Formula: I_{Kv1.3} = g_{Kv1.3} n^4 (V - E_K)...
+
+NEURAL ARCHITECTURE RECOMMENDATIONS:
+
+7.1 HIGH-ORDER ACTIVATIONS
+    - n^4 (potassium channels): Very sharp switching
+    - m^3*h (sodium channels): Gated activation
+    - Use for: Classification heads, decision layers
+
+
+================================================================================
+8. COUPLED ODE SYSTEMS - Network Dynamics
+================================================================================
+
+Found: 20 coupled systems
+
+NEURAL ARCHITECTURE RECOMMENDATIONS:
+
+8.1 NEURAL ODES (Continuous Dynamics)
+    - Replace: Discrete layer updates
+    - With: dh/dt = f(h, x, θ)
+    - Benefits: Adaptive computation, memory efficiency
+    - Bio-systems use continuous ODEs, not discrete steps
+
+
+================================================================================
+SYNTHESIS: COMPLETE BIO-INSPIRED ARCHITECTURE
+================================================================================
+
+Combining all motifs into a unified architecture:
+
+LAYER STRUCTURE:
+1. Input → Allosteric Context Gate
+2. Feed-forward cascade (3 tiers, MAPK-like)
+3. Hill activation (cooperative, n=2-3)
+4. Lateral inhibition (toggle switches)
+5. Recurrent feedback (positive/negative)
+6. Adaptive learning (BCM/STDP)
+
+ACTIVATION FUNCTION:
+  Hill(x, n, K) = x^n / (K^n + x^n)
+  where n ∈ [2,4] depending on layer function
+
+LEARNING RULE:
+  Δw = η * φ(post - θ) * pre - λ*post²*w
+  (BCM with Oja normalization)
+
+GATING MECHANISM:
+  output = Hill(input) * allosteric_context
+
+DYNAMICS:
+  dh/dt = cascade(x) - decay*h + feedback(h)
+  (Neural ODE with feedback)
+
+
+================================================================================
+SPECIFIC USE CASES
+================================================================================
+
+CLASSIFICATION TASKS:
+- Use bistable switches in final layer
+- High Hill coefficient (n=3-4) for sharp decisions
+- Positive feedback for confidence amplification
+
+SEQUENCE PROCESSING:
+- Incoherent feed-forward for temporal filtering
+- STDP for temporal credit assignment
+- Oscillators for rhythm generation
+
+CONTINUAL LEARNING:
+- BCM rule prevents catastrophic forgetting
+- Homeostatic plasticity maintains stability
+- Metaplasticity (plasticity of plasticity)
+
+ATTENTION MECHANISMS:
+- Allosteric modulation = attention
+- Context gates = query/key interactions
+- Value pathway = feed-forward cascade
+
+
+================================================================================
+IMPLEMENTATION GUIDE
+================================================================================
+
+PSEUDOCODE FOR BIO-INSPIRED LAYER:
+
+class BioInspiredLayer:
+    def __init__(self, in_dim, out_dim, hill_n=2):
+        self.W = init_weights(in_dim, out_dim)
+        self.context_gate = ContextGate()
+        self.hill_n = hill_n
+        self.K_half = learnable_parameter()
+        self.threshold = adaptive_threshold()  # BCM
+
+    def hill_activation(self, x):
+        return x**self.hill_n / (self.K_half**self.hill_n + x**self.hill_n)
+
+    def forward(self, x, context=None):
+        # Feed-forward with context
+        h = x @ self.W
+        
+        # Allosteric modulation
+        if context:
+            gate = self.context_gate(context)
+            h = h * gate
+        
+        # Hill activation (cooperative)
+        h = self.hill_activation(h)
+        
+        # Lateral inhibition (optional)
+        h = h - mutual_inhibition(h)
+        
+        # Recurrent feedback (optional)
+        h = h + feedback_signal(h)
+        
+        return h
+
+    def update_weights(self, pre, post):
+        # BCM learning rule
+        phi = post * (post - self.threshold)
+        delta_w = learning_rate * outer(phi, pre)
+        
+        # Oja normalization
+        delta_w -= learning_rate * post**2 * self.W
+        
+        self.W += delta_w
+        self.threshold.update(post)  # Sliding threshold

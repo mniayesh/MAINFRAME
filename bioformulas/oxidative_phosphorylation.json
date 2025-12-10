@@ -1,0 +1,65 @@
+[
+  {
+    "id": 213,
+    "name": "Complex I (NADH Dehydrogenase)",
+    "description": "NADH:ubiquinone oxidoreductase, proton pumping",
+    "latex": "v_{CI} = k_{CI} [NADH] [Q] \\exp\\left(\\frac{n_H F \\Delta\\Psi}{RT}\\right)",
+    "symbolic": null,
+    "python": null,
+    "domain": "OXPHOS"
+  },
+  {
+    "id": 214,
+    "name": "Complex II (Succinate Dehydrogenase)",
+    "description": "Succinate:ubiquinone oxidoreductase (no proton pumping)",
+    "latex": "v_{CII} = \\frac{V_{max} [Succinate] [Q]}{(K_{Succ} + [Succinate])(K_Q + [Q])}",
+    "symbolic": null,
+    "python": null,
+    "domain": "OXPHOS"
+  },
+  {
+    "id": 215,
+    "name": "Complex III (Cytochrome bc1)",
+    "description": "Ubiquinol:cytochrome c oxidoreductase, Q cycle",
+    "latex": "v_{CIII} = k_{CIII} [QH_2] [cytc_{ox}] \\exp\\left(\\frac{2 F \\Delta\\Psi}{RT}\\right)",
+    "symbolic": null,
+    "python": null,
+    "domain": "OXPHOS"
+  },
+  {
+    "id": 216,
+    "name": "Complex IV (Cytochrome c Oxidase)",
+    "description": "Cytochrome c oxidase, final electron acceptor",
+    "latex": "v_{CIV} = k_{CIV} [cytc_{red}]^4 [O_2] \\exp\\left(\\frac{4 F \\Delta\\Psi}{RT}\\right)",
+    "symbolic": null,
+    "python": null,
+    "domain": "OXPHOS"
+  },
+  {
+    "id": 217,
+    "name": "ATP Synthase (Complex V)",
+    "description": "F1F0 ATP synthase, chemiosmotic coupling",
+    "latex": "v_{CV} = k_f [ADP][P_i] \\exp\\left(\\frac{n F \\Delta\\Psi}{RT}\\right) - k_r [ATP]",
+    "symbolic": null,
+    "python": null,
+    "domain": "OXPHOS"
+  },
+  {
+    "id": 218,
+    "name": "Proton Motive Force",
+    "description": "Electrochemical proton gradient",
+    "latex": "\\Delta p = \\Delta\\Psi - \\frac{2.303 RT}{F} \\Delta pH",
+    "symbolic": null,
+    "python": "Delta_p = Delta_Psi - 2.303 * R * T / F * Delta_pH",
+    "domain": "OXPHOS"
+  },
+  {
+    "id": 219,
+    "name": "Adenine Nucleotide Translocator",
+    "description": "ATP/ADP exchange across inner mitochondrial membrane",
+    "latex": "v_{ANT} = V_{max} \\frac{[ADP]_c [ATP]_m - [ADP]_m [ATP]_c / K_{eq}}{(K_{ADP} + [ADP]_c)(K_{ATP} + [ATP]_m)}",
+    "symbolic": null,
+    "python": null,
+    "domain": "OXPHOS"
+  }
+]
