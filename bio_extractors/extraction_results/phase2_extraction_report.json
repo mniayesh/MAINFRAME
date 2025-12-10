@@ -1,0 +1,37 @@
+{
+  "timestamp": "2025-12-10T04:13:34.438022",
+  "results": {
+    "Reactome": {
+      "status": "success",
+      "count": 29,
+      "was_broken": true
+    },
+    "InterPro": {
+      "status": "success",
+      "count": 100,
+      "was_broken": true
+    },
+    "KEGG": {
+      "status": "skipped",
+      "count": 300,
+      "was_broken": false
+    },
+    "AllenBrain": {
+      "status": "skipped",
+      "count": 500,
+      "was_broken": false
+    },
+    "CognitiveAtlas": {
+      "status": "skipped",
+      "count": 500,
+      "was_broken": false
+    }
+  },
+  "summary": {
+    "total_databases": 5,
+    "successful": 2,
+    "success_rate": "40.0%",
+    "total_entities": 1429,
+    "databases_fixed": 2
+  }
+}
