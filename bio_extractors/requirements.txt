@@ -16,7 +16,7 @@ lxml>=4.9.0               # XML processing
 xmltodict>=0.13.0         # XML to dict conversion
 
 # ===== Database =====
-sqlite3                   # Built-in SQLite support (no install needed)
+# sqlite3                 # Built-in SQLite support (no install needed)
 
 # ===== Async/Parallel =====
 # Built-in: concurrent.futures (no install needed)

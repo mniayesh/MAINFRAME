@@ -26,7 +26,7 @@ from .mechanisms_extractors import GOExtractor, ReactomeExtractor, KEGGExtractor
 from .neuroscience_extractors import AllenBrainExtractor, NeuroMorphoExtractor, CellOntologyExtractor
 from .protein_extractors import UniProtExtractor, InterProExtractor, BRENDAExtractor
 from .metabolic_extractors import ChEBIExtractor, EQuilibratorExtractor
-from .cognitive_extractors import CognitiveAtlasExtractor, CogPOExtractor
+from .cognitive_extractors import CognitiveAtlasExtractor, CogPOExtractor, MFOExtractor
 
 __all__ = [
     'BaseExtractor',
@@ -45,4 +45,5 @@ __all__ = [
     'EQuilibratorExtractor',
     'CognitiveAtlasExtractor',
     'CogPOExtractor',
+    'MFOExtractor',
 ]
