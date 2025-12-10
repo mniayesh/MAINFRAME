@@ -1,0 +1,34 @@
+[MASTER]
+# Ignore generated files and test files
+ignore=__pycache__,data
+
+[MESSAGES CONTROL]
+# Disable overly strict checks for scientific/ML code
+disable=
+    C0114,  # missing-module-docstring (we have them, but pylint is picky)
+    C0115,  # missing-class-docstring
+    C0116,  # missing-function-docstring
+    C0103,  # invalid-name (short variable names like x, n, k are common in math)
+    C0301,  # line-too-long (scientific formulas can be long)
+    R0913,  # too-many-arguments (ML layers often need many params)
+    R0914,  # too-many-locals
+    R0902,  # too-many-instance-attributes
+    R0903,  # too-few-public-methods (nn.Module subclasses often have just forward)
+    W0621,  # redefined-outer-name
+    W0612,  # unused-variable
+    W0611,  # unused-import (typing imports may appear unused)
+    E0401,  # import-error (torch may not be installed in CI)
+    E1101,  # no-member (torch dynamic attributes)
+
+[FORMAT]
+# Max line length
+max-line-length=120
+
+[DESIGN]
+# Allow many arguments for ML layer constructors
+max-args=15
+max-locals=25
+
+[SIMILARITIES]
+# Ignore imports when checking for duplicates
+ignore-imports=yes

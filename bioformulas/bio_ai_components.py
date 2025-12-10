@@ -190,9 +190,9 @@ class ChannelGate(nn.Module):
             m = m + dt * (m_inf - m) / (F.softplus(self.tau_m) + 1e-8)
             h = h + dt * (h_inf - h) / (F.softplus(self.tau_h) + 1e-8)
 
-            # Update running state
-            self.m_state = m.mean(0, keepdim=True).detach()
-            self.h_state = h.mean(0, keepdim=True).detach()
+            # Update running state (in-place to avoid pylint E0203)
+            self.m_state.data.copy_(m.mean(0, keepdim=True).detach())
+            self.h_state.data.copy_(h.mean(0, keepdim=True).detach())
         else:
             m, h = m_inf, h_inf
 
@@ -480,8 +480,8 @@ class STDPLayer(nn.Module):
             self.weight += lr * (dw_ltp - dw_ltd)
             self.weight.clamp_(0, 1)
 
-        self.pre_trace = pre_trace.detach()
-        self.post_trace = post_trace.detach()
+        self.pre_trace.data.copy_(pre_trace.detach())
+        self.post_trace.data.copy_(post_trace.detach())
 
     def reset_traces(self):
         """Reset eligibility traces"""
@@ -650,8 +650,8 @@ class WilsonCowanLayer(nn.Module):
             I = I + dt * dI
 
         if self.training:
-            self.E_state = E.mean(0, keepdim=True).detach()
-            self.I_state = I.mean(0, keepdim=True).detach()
+            self.E_state.data.copy_(E.mean(0, keepdim=True).detach())
+            self.I_state.data.copy_(I.mean(0, keepdim=True).detach())
 
         return torch.cat([E, I], dim=-1)
 
@@ -710,7 +710,7 @@ class KuramotoLayer(nn.Module):
         theta = (theta + dt * dtheta) % (2 * np.pi)
 
         if self.training:
-            self.theta = theta.mean(0, keepdim=True).detach()
+            self.theta.data.copy_(theta.mean(0, keepdim=True).detach())
 
         # Output as cos/sin pairs
         return torch.stack([torch.cos(theta), torch.sin(theta)], dim=-1).flatten(-2)

@@ -56,7 +56,7 @@ def load_extraction_results():
     if entities_to_insert:
         print(f'\n📥 Inserting {len(entities_to_insert)} entities into database...')
         try:
-            db.bulk_import_entities(entities_to_insert)
+            db.bulk_import_entities(entities_to_insert, entity_type='biological_entity')
             print(f'✓ Successfully inserted {len(entities_to_insert)} entities')
         except Exception as e:
             print(f'✗ Error during bulk insert: {e}')
