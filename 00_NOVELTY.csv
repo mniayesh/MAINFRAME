@@ -654,3 +654,136 @@ ID,Name,Description,Use_In_Nature,Architecture_Code,Source,Created_Date
         self.set_environment(to_env)
         
         return adaptation_cost",BIOMD 469/470 (65 met) vs 471/472 (51 met) vs 473 (49 met): Zero overlap in metabolite sets,2025-12-10 08:21:49
+34,Leak Conductance (Drosophila PN),"Passive ion leak conductance across membrane, determines resting potential and baseline metabolism","Antennal lobe projection neurons (Drosophila): Passive leak conductance (gmax=0.0003 S/cm², E_rev=-60mV)","class LeakConductance(nn.Module):
+    def __init__(self, gmax=0.0003, e_rev=-60.0):
+        super().__init__()
+        self.gmax = nn.Parameter(torch.tensor(gmax))
+        self.e_rev = torch.tensor(e_rev)
+    
+    def forward(self, v):
+        # i = gmax * (v - e_rev)
+        return self.gmax * (v - self.e_rev)","ModelDB 118662 (Gouwens & Wilson, 2009): Drosophila projection neuron electrotonic structure",2025-12-10 11:25:11
+35,Cable Equation (Continuous Form),Classical cable equation governing voltage propagation along axon/dendrite with passive membrane properties,"Drosophila projection neuron signal propagation (Rm=8300-19200 Ω·cm², Ra=163.9-224 Ω·cm, Cm=0.8-2.57 µF/cm²)","class CableEquation(nn.Module):
+    def __init__(self, Rm=13000, Ra=190, Cm=1.5):
+        super().__init__()
+        self.Rm = nn.Parameter(torch.tensor(float(Rm)))
+        self.Ra = nn.Parameter(torch.tensor(float(Ra)))
+        self.Cm = nn.Parameter(torch.tensor(float(Cm)))
+    
+    def forward(self, V, d2V_dx2, I_syn):
+        # Cm dV/dt = (1/Ra) d²V/dx² - V/Rm + I_syn
+        dV_dt = (1/self.Cm) * ((1/self.Ra) * d2V_dx2 - V/self.Rm + I_syn)
+        return dV_dt",ModelDB 118662: Cable theory for Drosophila neuron compartments,2025-12-10 11:25:11
+36,Cable Equation (Discretized),Discretized compartmental form of cable equation for numerical integration (640-1152 segments per neuron),Drosophila projection neuron compartmental model: Voltage integration across dendritic tree,"class CompartmentalNeuron(nn.Module):
+    def __init__(self, n_segments=640, Rm=13000, Ra=190, Cm=1.5):
+        super().__init__()
+        self.n_seg = n_segments
+        self.Rm = Rm
+        self.Ra = Ra
+        self.Cm = Cm
+        self.V = nn.Parameter(torch.ones(n_segments) * -60.0)
+        self.compute_coupling_conductances()
+    
+    def forward(self, I_syn, dt=0.01):
+        dV_dt = torch.zeros(self.n_seg)
+        for i in range(self.n_seg):
+            axial_in = self.G_axial[i-1] * (self.V[i-1] - self.V[i]) if i > 0 else 0
+            axial_out = self.G_axial[i] * (self.V[i] - self.V[i+1]) if i < self.n_seg-1 else 0
+            leak = self.V[i] / self.Rm
+            dV_dt[i] = (axial_in - axial_out - leak + I_syn[i]) / self.Cm
+        self.V.data += dV_dt * dt
+        return self.V",ModelDB 118662: Discretized cable equation for NEURON simulator,2025-12-10 11:25:11
+37,Voltage Attenuation (Electrotonic),Exponential voltage decay with distance along dendrite due to passive membrane properties,Drosophila projection neuron dendritic branches (46+ µm extent): V(x) = V₀ exp(-x/λ),"class VoltageAttenuation(nn.Module):
+    def __init__(self, lambda_electronic=150.0):
+        super().__init__()
+        self.lambda = nn.Parameter(torch.tensor(lambda_electronic))
+    
+    def forward(self, V0, distance):
+        # V(x) = V0 * exp(-distance / lambda)
+        # Exponential decay with electrotonic length constant
+        V_atten = V0 * torch.exp(-distance / self.lambda)
+        return V_atten",ModelDB 118662: Electrotonic length constant for Drosophila neurons,2025-12-10 11:25:11
+38,Electrotonic Length Constant,Characterizes voltage attenuation distance: λ = √(Rm×d/(4×Ra)). Determines signal propagation range,Drosophila projection neurons: λ ≈ 150 µm (determines how far signals propagate),"class ElectronicLengthConstant(nn.Module):
+    def __init__(self, Rm=13000, Ra=190, diameter=1.0):
+        super().__init__()
+        self.Rm = nn.Parameter(torch.tensor(float(Rm)))
+        self.Ra = nn.Parameter(torch.tensor(float(Ra)))
+        self.d = nn.Parameter(torch.tensor(float(diameter)))
+    
+    def forward(self):
+        # λ = √(Rm × d / (4 × Ra))
+        lambda_const = torch.sqrt((self.Rm * self.d) / (4.0 * self.Ra))
+        return lambda_const
+    
+    def compute_electronic_distance(self, anatomical_distance):
+        # L_electronic = L_anatomical / λ
+        lambda_const = self.forward()
+        return anatomical_distance / lambda_const",ModelDB 118662: Cable theory characterization,2025-12-10 11:25:11
+39,Membrane Time Constant,Integration time window τ_m = Rm × Cm. Varies per compartment (6.6-49.4 ms for Drosophila),Drosophila projection neurons: Determines synaptic integration window and plasticity timescale,"class MembraneTimeConstant(nn.Module):
+    def __init__(self, Rm=13000, Cm=1.5, n_compartments=640):
+        super().__init__()
+        self.Rm = nn.Parameter(torch.tensor(float(Rm)))
+        self.Cm = nn.Parameter(torch.tensor(float(Cm))))
+        # Time constant varies per compartment based on local geometry
+        self.tau_m_per_compartment = self.Rm * self.Cm
+    
+    def forward(self, diameter, length):
+        # τ_m = Rm × Cm (location-dependent)
+        # Higher Cm (larger surface area) → longer τ_m
+        tau_m = self.Rm * self.Cm
+        return tau_m",ModelDB 118662: Measured membrane properties from fly recordings,2025-12-10 11:25:11
+40,Axial Resistance (Compartmental Coupling),Internal resistance governing current flow between adjacent compartments: Ra_seg = Ra×L/(π(d/2)²),Drosophila projection neurons: Determines electrical coupling strength (thin dendrites decouple),"class AxialResistance(nn.Module):
+    def __init__(self, Ra=190):
+        super().__init__()
+        self.Ra = nn.Parameter(torch.tensor(float(Ra)))
+    
+    def compute_segment_resistance(self, length, diameter):
+        # Ra_segment = Ra × L / (π × (d/2)²)
+        Ra_seg = self.Ra * length / (3.14159 * (diameter/2)**2)
+        return Ra_seg
+    
+    def compute_coupling_conductance(self, length, diameter):
+        # G_coupling = 1 / Ra_segment
+        Ra_seg = self.compute_segment_resistance(length, diameter)
+        G_coupling = 1.0 / Ra_seg
+        return G_coupling",ModelDB 118662: Intracellular resistance measurements,2025-12-10 11:25:11
+41,Segment Resistance & Capacitance,"Per-compartment membrane resistance and capacitance: R_seg = Rm/(π×d×L), C_seg = Cm×π×d×L",Drosophila projection neurons: Terminal dendrites (d=0.22 µm) vs soma (d=10.2 µm),"class CompartmentProperties(nn.Module):
+    def __init__(self, Rm=13000, Cm=1.5):
+        super().__init__()
+        self.Rm = Rm
+        self.Cm = Cm
+    
+    def compute_segment_properties(self, diameter, length):
+        # R_segment = Rm / (π × d × L)
+        R_segment = self.Rm / (3.14159 * diameter * length)
+        # C_segment = Cm × π × d × L
+        C_segment = self.Cm * 3.14159 * diameter * length
+        return R_segment, C_segment
+    
+    def compute_time_constant(self, diameter, length):
+        # τ = R_segment × C_segment
+        R_seg, C_seg = self.compute_segment_properties(diameter, length)
+        tau = R_seg * C_seg
+        return tau",ModelDB 118662: Morphology-dependent membrane properties,2025-12-10 11:25:11
+42,Drosophila Morphological Integration,Complex 3D dendritic integration across 640-1152 compartments spanning 46+ µm with diameter range 0.22-10.2 µm,Drosophila projection neuron spatial structure: Olfactory input integration across dendritic arbor,"class DrosophilaMorphology(nn.Module):
+    def __init__(self, n_segments=640):
+        super().__init__()
+        self.n_seg = n_segments
+        # 3D coordinates (µm): X: -49-0, Y: -12-0, Z: 0-46
+        self.positions = nn.Parameter(torch.randn(n_segments, 3))
+        self.diameters = nn.Parameter(torch.ones(n_segments) * 1.0)
+    
+    def compute_segment_lengths(self):
+        diffs = self.positions[1:] - self.positions[:-1]
+        lengths = torch.norm(diffs, dim=1)
+        return lengths
+    
+    def compute_surface_area(self):
+        lengths = self.compute_segment_lengths()
+        areas = 3.14159 * self.diameters[:-1] * lengths
+        return areas.sum()
+    
+    def update_morphology(self, connectome_data):
+        # Update from connectome reconstruction
+        self.positions.data = torch.tensor(connectome_data['xyz'])
+        self.diameters.data = torch.tensor(connectome_data['diameter'])",ModelDB 118662: EM reconstruction of antennal lobe projection neurons,2025-12-10 11:25:11
