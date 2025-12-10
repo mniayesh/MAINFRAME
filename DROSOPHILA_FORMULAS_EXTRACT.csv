@@ -1,0 +1,171 @@
+ID,Name,Drosophila_System,Relevance,Implementation_Difficulty,Biological_Formula,AI_Architecture_Code,Drosophila_Circuit_Application
+1,Metabolic Loss Function,Behavioral Decision Making,Very High,Medium,"total_loss = sum(w_i * log(objective_i / baseline_i))","class MetabolicLoss(nn.Module):
+    def forward(self, objectives, weights, baselines):
+        total = sum(w * log(obj / base) for w,obj,base in zip(weights, objectives, baselines))
+        return max(0.0, 1.0 + total)","Multi-objective fly behavior: nutrition + avoidance + reproduction + sleep optimization"
+2,Metabolic Attention Mechanism,Visual Learning,Very High,Medium,"scores = Q@K / sqrt(d_k); modulated = scores * fitness; output = softmax(modulated) @ V","class MetabolicAttention(nn.Module):
+    def forward(self, Q, K, V, fitness):
+        scores = Q @ K.T / sqrt(d_k)
+        return softmax(scores * fitness) @ V","Mushroom body selective attention: focus on relevant odors during conditioning"
+3,Metabolic NAS,Neural Circuit Evolution,High,High,"for arch in search_space: fitness = f(arch, 65_objectives); best = argmax(fitness)","def metabolic_nas(architectures):
+    best = max(architectures, key=lambda a: f(a))
+    return best","Evolution-based circuit optimization explaining sparse encoding in Drosophila"
+4,Hill Activation,Receptive Fields,High,Low,"v = x^n / (K^n + x^n) where n=learnable","class HillActivation(nn.Module):
+    def forward(self, x):
+        n = F.softplus(self.n) + 0.1
+        return x**n / (self.K**n + x**n)","Visual neuron receptive field sharpening, olfactory receptor selectivity"
+5,Michaelis-Menten Activation,Receptor Kinetics,Very High,Low,"v = V_max * x / (K_m + x)","class MichaelisMentenActivation(nn.Module):
+    def forward(self, x):
+        return self.v_max * x / (self.k_m + x)","Universal enzyme kinetics: olfactory receptors, synaptic transmission saturation"
+6,Substrate Inhibition,Safety Mechanism,High,Low,"v = V_max * x / (K_m + x + x^2/K_si)","class SubstrateInhibition(nn.Module):
+    def forward(self, x):
+        return v_max * x / (k_m + x + x**2 / k_si)","Protection from runaway excitation, sensory adaptation to extreme stimuli"
+7,Energy-Aware Neurons,Sparse Coding,Very High,Medium,"threshold = 1/(ATP_pool/10 + 0.1); firing = relu(z - threshold); ATP -= 0.5*|firing|","class EnergyAwareNeuron(nn.Module):
+    def forward(self, x):
+        threshold = 1.0 / (self.atp_pool / 10 + 0.1)
+        firing = relu(x - threshold)
+        self.atp_pool -= 0.5 * firing.abs()","Mushroom body sparse coding (100K Kenyon cells), automatic sparsity without L1"
+8,Metabolic Compute Budget,Network Energy,High,Medium,"available -= amount; available += 0.1 if confidence > 0.8 else 0","class MetabolicComputeBudget:
+    def consume(self, amount): self.available -= amount
+    def regenerate(self, conf): self.available += 0.1 if conf > 0.8","Brain-wide ATP allocation across circuits, starvation reduces responsiveness"
+9,Dual-Channel Neurons,Fast-Slow Modulation,Very High,Medium,"fast = W_fast @ x; slow = 0.9*slow + 0.1*(W_slow@x); output = fast * sigmoid(slow)","class DualChannelNeuron(nn.Module):
+    def forward(self, x):
+        fast = F.linear(x, self.fast_w)
+        self.slow = 0.9*self.slow + 0.1*F.linear(x, self.slow_w)
+        return fast * torch.sigmoid(self.slow)","Fast synaptic + slow neuropeptide modulation in mushroom body learning"
+10,Multi-Timescale RNN,Temporal Integration,High,Medium,"h_new = h + (1/tau) * dh where tau varies per neuron","class MultiTimescaleRNN(nn.Module):
+    def forward(self, x, h):
+        dh = F.tanh(self.W @ x + self.U @ h)
+        return h + (1/self.tau) * dh","Neural diversity in central complex, different timescales for different functions"
+11,MAPK Amplifying Cascade,Signal Amplification,High,Low,"for stage in stages: x = stage(x) * 10; final = 1000x input","class MAPKCascade(nn.Module):
+    def forward(self, x):
+        for stage in self.stages:
+            x = stage(x) * 10
+        return x","Rare event detection: single odor molecule → 1000 activated neurons"
+12,Amplifying Attention,Rare Token Detection,Medium,Medium,"for i in range(3): scores = relu(cascade[i](scores)) * 10","class AmplifyingAttention(nn.Module):
+    def forward(self, Q, K, V):
+        scores = Q @ K.T / sqrt(d_k)
+        for layer in self.cascade:
+            scores = relu(layer(scores)) * 10
+        return softmax(scores) @ V","Novel odor detection with amplified attention response"
+13,Allosteric Regulation,Multi-Signal Integration,Very High,Medium,"y = main(x); y *= (1-inhibitor*sigmoid(i_gate)); y *= (1+activator*sigmoid(a_gate))","class AllostericLayer(nn.Module):
+    def forward(self, x, inhib, activ):
+        y = self.main(x)
+        if inhib > 0: y *= (1 - inhib*sigmoid(self.i_gate(x)))
+        if activ > 0: y *= (1 + activ*sigmoid(self.a_gate(x)))
+        return y","Dopamine (activator) + serotonin (inhibitor) modulation in mushroom body"
+14,Homeostatic Plasticity,Gain Normalization,Very High,Medium,"output = relu(x - threshold); threshold += 0.01*(actual_rate - target_rate)","class HomeostaticLayer(nn.Module):
+    def forward(self, x):
+        out = relu(x - self.threshold)
+        self.threshold += 0.01 * ((out>0).float().mean() - self.target)
+        return out","Kenyon cell activity stabilization, antennal lobe gain control"
+15,Bistable Switch,State Transitions,Very High,Low,"u_new = α/(1+v^β) - u; v_new = α/(1+u^γ) - v; 2 stable states","class BistableSwitch(nn.Module):
+    def forward(self, x):
+        self.u = alpha/(1+self.v**beta) - self.u
+        self.v = alpha/(1+self.u**gamma) - self.v
+        return self.u","Sleep-wake bistability, approach-avoidance decision toggle"
+16,Kuramoto Synchronization,Phase Binding,Very High,Medium,"dθ_i/dt = ω_i + (K/N)*Σsin(θ_j - θ_i)","class KuramotoLayer(nn.Module):
+    def forward(self, x):
+        theta = self.encode(x)
+        d_theta = self.omega + (self.K/self.N) * torch.sum(torch.sin(theta.unsqueeze(1) - theta.unsqueeze(0)), dim=2)
+        return self.decode(theta + d_theta)","Central complex heading direction encoding via ring neuron synchrony"
+17,FitzHugh-Nagumo Oscillatory,Periodic Scanning,High,Medium,"dv = v - v^3/3 - w + I; dw = ε(v + a - bw)","class FHN_Attention(nn.Module):
+    def forward(self, Q, K, V):
+        dv = self.v - self.v**3/3 - self.w + (Q@K.T)
+        dw = self.eps*(self.v + self.a - self.b*self.w)
+        scores = self.v  # limit cycle
+        return softmax(scores) @ V","Odor scanning during sniffing, periodic visual attention cycles"
+18,Van der Pol Routing,Alternating Control,High,Medium,"d²x/dt² = μ(1-x²)dx/dt - x; route = expert_A if x>0 else expert_B","class VanDerPolRouter(nn.Module):
+    def forward(self, x):
+        d2x = self.mu*(1-x**2)*self.dx - x
+        route = self.expert_A(x) if x>0 else self.expert_B(x)
+        return route","Left-right wing alternation, periodic feeding cycles"
+19,STDP Learning,Plasticity,Very High,Low,"if dt>0: dw = A₊*exp(-dt/τ₊) else: dw = -A₋*exp(|dt|/τ₋)","class STDPLearning:
+    def update(self, pre_t, post_t):
+        dt = post_t - pre_t
+        return (A_plus*np.exp(-dt/tau_plus) if dt>0
+                else -A_minus*np.exp(abs(dt)/tau_minus))","Mushroom body Kenyon cell synaptic plasticity, universal fly learning"
+20,BCM Learning Rule,Homeostatic Learning,Very High,Medium,"dw = η*(post - θ)*pre where θ = avg(post²)","class BCMLearning:
+    def update(self, pre, post):
+        dw = self.eta * post * (post - self.theta) * pre
+        self.theta = (post**2).mean()
+        return dw","Visual adaptation, mushroom body learning during odor adaptation"
+21,Oja's Rule,PCA Extraction,Very High,Low,"Δw = η*y*(x - y*w) → extracts principal components","class OjaLearning:
+    def update(self, x, y, w):
+        dw = self.eta * y * (x - y*w)
+        return dw","Antennal lobe: reduce 60 receptors to effective features; mushroom body dimensionality reduction"
+22,Enzyme Router,Affinity-Based Routing,Very High,Medium,"activity = prob/(km + prob); output = Σ activity_i * expert_i","class EnzymeRouter(nn.Module):
+    def forward(self, x):
+        probs = softmax(self.router(x))
+        for prob, km, expert in zip(probs, self.kms, self.experts):
+            activity = prob / (km + prob)
+            output += activity * expert(x)
+        return output","60 olfactory receptors with different odor affinities, dopamine receptor tuning"
+23,Adaptive Precision,Precision Tuning,Medium,Low,"if mag<0.1: FP32; elif mag<1.0: FP16; else: INT8","class AdaptivePrecision(nn.Module):
+    def forward(self, x):
+        mag = abs(x).mean()
+        if mag < 0.1: return self.fp32(x)
+        elif mag < 1.0: return self.fp16(x)
+        else: return self.int8(x)","Analog vs digital coding, energy efficiency in different sleep states"
+24,Metabolic Cascade Network,3-Stage Metabolism,High,Medium,"stage1 (fast); if demand>=medium: stage2 (TCA); if demand==high: stage3 (OXPHOS)","class MetabolicCascade(nn.Module):
+    def forward(self, x, demand):
+        x = self.glycolysis(x)  # 2 ATP
+        if demand >= 'medium': x = self.tca(x)  # medium yield
+        if demand == 'high': x = self.oxphos(x)  # 30 ATP
+        return x","Sleep-wake energy management, feeding behavior stages"
+25,PII Protein Multi-Head,Extreme Cooperativity,Medium,Medium,"for each head: mod *= (signal^4)/(Kd^4 + signal^4)","class PIIAttention(nn.Module):
+    def forward(self, Q, K, V, sig):
+        for head in self.heads:
+            mod = (sig**4) / (self.kd[head]**4 + sig**4)
+            out += softmax(scores*mod) @ V
+        return out","Multi-sensory olfactory processing with extreme gain modulation"
+26,PFK Learning Rate,Adaptive Learning,High,High,"lr = base_lr / (1 + L) where L = L0 * ATP²/AMP² * F26BP²","class PFKLearningRate:
+    def get_lr(self, loss, grad, mom):
+        ATP = loss; AMP = 1/(grad+1e-8); F26BP = mom
+        L = self.L0 * (ATP/Katp)**2 / ((AMP/Kamp)**2 * (F26BP/Kf)**2)
+        return self.base_lr / (1 + L)","Fast learning with high dopamine, slow consolidation during low activity"
+27,Pyruvate Kinase Gated,Feedforward + Feedback,High,Medium,"fdp_gate=(1+FDP/K)²; atp_inhib=1/(1+ATP/K); out=x+res*fdp_gate*atp_inhib","class PyKGated(nn.Module):
+    def forward(self, x, fdp):
+        res = self.main(x)
+        fdp_g = (1 + fdp/self.Kf)**2
+        atp_i = 1/(1 + res.abs().mean()/self.Ka)
+        return x + res * fdp_g * atp_i","Learning consolidation: feedforward odor activation, feedback satiety inhibition"
+28,Protein Aggregation Dropout,Permanent Pruning,Medium,High,"soluble=bernoulli(1-k_sol*nuc); insoluble accumulates; apply both masks","class AggregationDropout(nn.Module):
+    def forward(self, x):
+        nuc = x.abs().mean() ** self.n_n
+        sol = bernoulli(1 - self.k_sol * nuc)
+        new_insol = bernoulli(self.k_insol * nuc)
+        self.perm_mask *= (1 - new_insol)
+        return x * sol * self.perm_mask","Developmental pruning, metamorphosis circuit reorganization"
+29,GTPase Switch,Energy-Gated Binary,Medium,Medium,"gtp_frac = GTP/(GTP+GDP); out = gtp_frac*transform(x) + (1-gtp_frac)*x; GTP→GDP","class GTPaseSwitch(nn.Module):
+    def forward(self, x):
+        gtp_f = self.gtp_pool / (self.gtp_pool + self.gdp_pool)
+        y = gtp_f * self.transform(x) + (1-gtp_f) * x
+        self.gtp_pool -= 0.1 * y.abs().mean()
+        self.gdp_pool += 0.1 * y.abs().mean()
+        return y","Olfactory decision switching, motor command gating"
+30,Chain Length Attention,Length-Dependent Km,Low,Medium,"km = km_values[length_bin]; factor = seq_len/(km*100 + seq_len); scores *= factor","class ChainLengthAttention(nn.Module):
+    def forward(self, Q, K, V):
+        seq_len = Q.shape[1]
+        km = self.get_km(seq_len)
+        factor = seq_len / (km*100 + seq_len)
+        return softmax((Q@K.T)*factor) @ V","Context-dependent learning rates, working memory capacity scaling"
+31,Multi-Modal Consensus,All-or-Nothing Binding,Medium,Medium,"assembly = Π(all_modalities); if all present: output = Σ modalities else 0","class ConsensusLayer(nn.Module):
+    def forward(self, *inputs):
+        if len(inputs) != self.n_mod: return 0
+        assembly = torch.ones_like(inputs[0])
+        for inp in inputs:
+            assembly *= sigmoid(inp.mean(dim=-1,keep=True))
+        return assembly * sum(inputs) / len(inputs)","Multi-sensory binding: smell+taste+texture all required for full feeding"
+32,Holistic 40+ Loss,System-Level Optimization,High,Medium,"loss = Σ w_i*O_i + Σ I_ij*O_i*O_j; many objectives, interactions","class HolisticLoss(nn.Module):
+    def forward(self, out, tgt, state):
+        objs = [accuracy, energy, robustness, ...40 metrics]
+        loss = sum(w*o for w,o in zip(self.weights, objs))
+        loss += sum(I[i,j]*objs[i]*objs[j] for i,j)
+        return loss","Fly behavior emerges from 40+ objective integration (energy×safety×learning×reproduction)"
+33,Environment-Adaptive,Portfolio Switching,High,High,"cloud: 65 objectives; edge: 51 objectives; mobile: 49 objectives; ZERO overlap","class EnvironmentAdaptiveLoss(nn.Module):
+    def set_environment(self, env):
+        self.metrics = self.environments[env]['metrics']
+        self.weights = self.environments[env]['weights']
+    def migrate(self, from_env, to_env):
+        cost = len(lost_metrics) + len(gained_metrics)","Behavioral adaptation to starvation, escape mode vs normal behavior"
