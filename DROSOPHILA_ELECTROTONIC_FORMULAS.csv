@@ -1,0 +1,147 @@
+Formula_ID,Name,Category,Biological_Source,Equation,PyTorch_Implementation,Drosophila_Circuit_Application,Relevant_Architecture,Implementation_Notes
+DROS-1,Leak Conductance,Ion Channel,"Antennal lobe projection neuron (gmax=0.0003 S/cm²)","i = gmax × (v - e) where e = -60mV","class LeakChannel(nn.Module):
+    def __init__(self, gmax=0.0003, e=-60):
+        self.gmax = gmax
+        self.e = e
+    def forward(self, v):
+        return self.gmax * (v - self.e)","Resting membrane potential, passive ion leak across soma/dendritic membrane","ARCH-5, ARCH-7","Implement as constant conductance layer; varies gmax with compartment location"
+DROS-2,Cable Equation (Continuous),Electrotonic Structure,"Signal propagation along axon/dendrite (Rm=8300-19200 Ω·cm², Ra=163.9-224 Ω·cm)","Cm × ∂V/∂t = (1/Ra) × ∂²V/∂x² - V/Rm","# Continuous form (solved via discretization)
+class CableEquation(nn.Module):
+    def __init__(self, Rm, Ra, Cm):
+        self.Rm = Rm  # Ω·cm²
+        self.Ra = Ra  # Ω·cm
+        self.Cm = Cm  # µF/cm²
+    def forward(self, V, dV_dt):
+        # ∂²V/∂x² ≈ (V[i+1] - 2V[i] + V[i-1]) / dx²
+        d2V_dx2 = (V[1:] - 2*V[:-1] + V[:-1]) / (self.dx**2)
+        d2V_dt2 = (1/self.Cm) * ((1/self.Ra)*d2V_dx2 - V/self.Rm)
+        return d2V_dt2","Voltage propagation along projection neuron axon/dendrite, signal attenuation with distance","ARCH-9, ARCH-10, ARCH-14","Foundation for compartmental model; discretize into 640-1152 segments"
+DROS-3,Cable Equation (Discretized),Numerical Integration,"Compartmental model (nseg = number of segments)","Cm × dV_i/dt = G_i(V_parent - V_i) + G_i(V_child - V_i) - V_i/Rm where G_i = π·d·a·(Ra)⁻¹","class CompartmentalNeuron(nn.Module):
+    def __init__(self, n_segments=640):
+        self.n_seg = n_segments
+        self.V = nn.Parameter(torch.ones(n_seg) * -60)  # mV
+        self.G_axial = self._compute_axial_conductances()
+
+    def forward(self, V_parent, V_child, I_syn, dt):
+        dV_dt = torch.zeros(self.n_seg)
+        for i in range(self.n_seg):
+            axial_in = self.G_axial[i-1] * (V_parent[i] - self.V[i]) if i > 0 else 0
+            axial_out = self.G_axial[i] * (self.V[i] - V_child[i]) if i < self.n_seg-1 else 0
+            leak = self.V[i] / self.Rm
+            dV_dt[i] = (axial_in - axial_out - leak + I_syn[i]) / self.Cm
+        self.V += dV_dt * dt
+        return self.V","Voltage integration across 640-1152 dendritic compartments in projection neuron","ARCH-9, ARCH-10, ARCH-16, ARCH-17","Use CVODE solver; each compartment is separate state variable"
+DROS-4,Voltage Attenuation,Signal Propagation,"Electrotonic decay (V(x) = V(0) × exp(-x/λ))","V_atten = (v + 60.0) / 60.0 (normalized) OR V(x) = V(0) × exp(-x/λ) where λ = √(Rm×d/(4×Ra))","class VoltageAttenuation(nn.Module):
+    def __init__(self, lambda_eletrotonic=150):  # µm
+        self.lambda = lambda_eletrotonic
+
+    def forward(self, V0, distance):
+        # Exponential decay with distance
+        V_atten = V0 * torch.exp(-distance / self.lambda)
+        return V_atten","Signal loss across dendritic branches (46+ µm extent); determines effective integration distance","ARCH-2, ARCH-30, ARCH-14","Implement as distance-dependent gain; shorter distances have higher weights"
+DROS-5,Electrotonic Length Constant,Passive Propagation,"Cable theory characterization (λ ≈ 100-200 µm for Drosophila PNs)","λ = √(Rm × d / (4 × Ra))
+L_electronic = L_anatomical / λ
+For Drosophila: λ ≈ 150 µm, L_anat ≈ 46 µm → L_elec ≈ 0.3","def compute_electrotonic_length(Rm, Ra, diameter):
+    lambda_const = torch.sqrt((Rm * diameter) / (4 * Ra))
+    return lambda_const
+
+# For Drosophila PNs
+Rm = torch.tensor(13000)  # Ω·cm²
+Ra = torch.tensor(190)     # Ω·cm
+d = torch.tensor(1.0)      # µm
+lambda_PN = compute_electrotonic_length(Rm, Ra, d)  # ≈ 150 µm","Determines how far inputs influence spike output; neuron is electrotonically compact","ARCH-16, ARCH-30, ARCH-14","Project neurons are highly compact electrotonically; dendrite ≈ 0.3 electrotonic lengths"
+DROS-6,Membrane Time Constant,Temporal Dynamics,"Integration time window (τ_m = 6.6-49.4 ms for Drosophila)","τ_m = Rm × Cm
+For Drosophila: τ_m = (8300-19200 Ω·cm²) × (0.8-2.57 µF/cm²) = 6.6-49.4 ms","class MembraneTimeConstant(nn.Module):
+    def __init__(self, Rm, Cm):
+        self.tau_m = Rm * Cm  # ms
+
+    def forward(self, input_signal, dt):
+        # First-order exponential filter
+        # V(t+dt) = V(t) + (1/tau_m) * (input - V(t)) * dt
+        return input_signal","Determines synaptic integration window and spike-timing plasticity window","ARCH-19, ARCH-20, ARCH-9, ARCH-10","Varies per compartment (6.6-49.4 ms); affects STDP time window"
+DROS-7,Segment Resistance & Capacitance,Compartmental Properties,"Passive properties per segment (d=0.22-10.2 µm, L varies)","R_seg = Rm / (π × d × L)
+C_seg = Cm × π × d × L
+where Rm=13000 Ω·cm², Cm=1.5 µF/cm²","def compute_segment_RC(Rm, Cm, diameter, length):
+    R_segment = Rm / (3.14159 * diameter * length)
+    C_segment = Cm * 3.14159 * diameter * length
+    return R_segment, C_segment
+
+# For Drosophila PN segments
+Rs = []
+Cs = []
+for i, (d, L) in enumerate(zip(diameters, lengths)):
+    R, C = compute_segment_RC(13000, 1.5, d, L)
+    Rs.append(R)
+    Cs.append(C)","Per-compartment resistance and capacitance; determines local time constant and coupling","ARCH-9, ARCH-10, ARCH-14","Terminal dendrites (d=0.22 µm) have higher R, lower C than soma (d=10.2 µm)"
+DROS-8,Axial Resistance (Compartmental Coupling),Internal Current Flow,"Longitudinal resistance between compartments (Ra = 163.9-224 Ω·cm)","Ra_segment = Ra × L / (π × (d/2)²)
+Ra_segment_ohms = Ra_segment × 1000
+G_coupling = 1 / Ra_segment (conductance form)","def compute_axial_resistance(Ra, length, diameter):
+    Ra_seg = Ra * length / (3.14159 * (diameter/2)**2)
+    return Ra_seg
+
+def compute_coupling_conductance(Ra, length, diameter):
+    Ra_seg = compute_axial_resistance(Ra, length, diameter)
+    G_coupling = 1.0 / Ra_seg
+    return G_coupling
+
+# For Drosophila
+Ra = 190  # Ω·cm
+lengths = torch.tensor([...])  # µm per segment
+diameters = torch.tensor([...])  # µm per segment
+G_coupling = compute_coupling_conductance(Ra, lengths, diameters)","Determines electrical coupling between adjacent compartments; thin dendrites decouple","ARCH-9, ARCH-16, ARCH-22","Distal terminal dendrites (d=0.22 µm) have 100× higher Ra_seg than proximal (d=10 µm)"
+DROS-9,Morphological Integration (Compartmental),Neural Geometry,"Complex 3D reconstruction (640-1152 compartments, 46+ µm extent, X/Y/Z coordinates)","Total_area = Σ(π × d_i × L_i)
+Segment_length = √((x₁-x₀)² + (y₁-y₀)² + (z₁-z₀)²)
+X extent: -49 to 0 µm
+Y extent: -12 to 0 µm
+Z extent: 0 to 46+ µm
+Diameter range: 0.22-10.2 µm","class NeuronMorphology(nn.Module):
+    def __init__(self, n_segments=640):
+        self.positions = nn.Parameter(torch.randn(n_segments, 3))  # x, y, z
+        self.diameters = nn.Parameter(torch.ones(n_segments) * 1.0)  # µm
+
+    def compute_segment_lengths(self):
+        diffs = self.positions[1:] - self.positions[:-1]
+        lengths = torch.norm(diffs, dim=1)
+        return lengths
+
+    def compute_surface_area(self):
+        lengths = self.compute_segment_lengths()
+        areas = 3.14159 * self.diameters[:-1] * lengths
+        return areas.sum()","Spatial organization of olfactory input integration across dendritic arbor; 46 µm span → voltage attenuation","ARCH-14, ARCH-16, ARCH-21, ARCH-25","640-1152 compartments per neuron; can be learned or fixed from connectome"
+DROS-ADD-1,Leak Conductance + ARCH-7 Enhancement,Energy-Aware Integration,"Leak current consumes ATP (represents passive metabolic drain)","I_leak = gmax × (V - E)
+ATP_consumed = |I_leak| × dt
+ATP_pool -= ATP_consumed","class ATPAwareLeakChannel(nn.Module):
+    def __init__(self, gmax=0.0003, e=-60, ATP_cost=0.001):
+        self.gmax = gmax
+        self.e = e
+        self.ATP_cost = ATP_cost
+
+    def forward(self, v, ATP_pool, dt):
+        I_leak = self.gmax * (v - self.e)
+        ATP_consumed = abs(I_leak) * self.ATP_cost * dt
+        ATP_pool -= ATP_consumed
+        return I_leak, ATP_pool","Linking passive leak to ATP budget; starvation increases threshold (reduces excitability)","ARCH-7","Leak conductance is major ATP sink in real neurons (~40% baseline ATP cost)"
+DROS-ADD-2,Cable Equation + ARCH-9 Enhancement,Dual-Channel Fast/Slow,"Cable equation naturally separates fast (capacitive) and slow (resistive) components","Fast: Cm × dV/dt (immediate response to input)
+Slow: V/Rm (membrane leak, time constant τ_m = Rm × Cm)
+Coupling: (1/Ra) × ∂²V/∂x²","class DualChannelCable(nn.Module):
+    def forward(self, V_parent, V_child, I_syn, dt):
+        # Fast capacitive component
+        I_cap = self.Cm * dV_dt  # Immediate response
+        # Slow resistive component
+        I_res = V / self.Rm  # Exponential decay with tau_m
+        # Coupling component
+        I_axial = (1/self.Ra) * d2V_dx2
+        # Combined
+        dV_dt = (1/self.Cm) * (I_axial - I_res + I_syn)
+        return dV_dt","Biophysically separates fast synaptic response (ms) from slow integration (10-50 ms)","ARCH-9","Natural decomposition emerges from cable equation physics"
+DROS-ADD-3,Kuramoto + Electrotonic Distance,"Spatially-Extended Synchronization","Coupling strength decreases with electrotonic distance (exp(-d/λ))","dθ_i/dt = ω_i + (K/N) Σ_j [sin(θ_j - θ_i) × exp(-d_ij/λ)]
+where λ ≈ 150 µm for Drosophila","class KuramotoSpatial(nn.Module):
+    def forward(self, theta, omega, K, distances, lambda_const):
+        n = len(theta)
+        dtheta = omega.clone()
+        for i in range(n):
+            for j in range(n):
+                if i != j:
+                    spatial_coupling = torch.exp(-distances[i,j] / lambda_const)
+                    dtheta[i] += (K/n) * torch.sin(theta[j] - theta[i]) * spatial_coupling
+        return dtheta","Central complex neurons synchronize locally; distant units decouple (explains ring geometry)","ARCH-16","Central complex neurons separated by ~50-100 µm; λ ≈ 150 µm means moderate coupling"
