@@ -3,6 +3,10 @@
 large_harvest*.log
 complete_harvest*.log
 
+# Debug and test scripts (temporary)
+debug_*.py
+test_*.py
+
 # Downloaded data files (can be re-downloaded)
 data/biomodels/*.xml
 data/kegg/
