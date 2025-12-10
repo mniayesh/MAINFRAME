@@ -1,0 +1,53 @@
+{
+  "timestamp": "2025-12-10T04:19:48.654006",
+  "duration_seconds": 0.9581184387207031,
+  "results": {
+    "CognitiveAtlas": {
+      "status": "failed",
+      "error": "attempted relative import with no known parent package",
+      "was_fixed": false
+    },
+    "AllenBrain": {
+      "status": "failed",
+      "error": "attempted relative import with no known parent package",
+      "was_fixed": false
+    },
+    "KEGG": {
+      "status": "failed",
+      "error": "attempted relative import with no known parent package",
+      "was_fixed": false
+    },
+    "Reactome": {
+      "status": "success",
+      "count": 0,
+      "was_fixed": true,
+      "stats": {
+        "requests": 1,
+        "cache_hits": 0,
+        "cache_misses": 1,
+        "errors": 0,
+        "validations_failed": 0,
+        "cache_hit_rate": "0.0%"
+      }
+    },
+    "InterPro": {
+      "status": "success",
+      "count": 200,
+      "was_fixed": true,
+      "stats": {
+        "requests": 2,
+        "cache_hits": 1,
+        "cache_misses": 1,
+        "errors": 0,
+        "validations_failed": 0,
+        "cache_hit_rate": "50.0%"
+      }
+    }
+  },
+  "summary": {
+    "total_databases": 5,
+    "successful": 2,
+    "total_entities": 200,
+    "fixed_databases": 2
+  }
+}

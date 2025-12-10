@@ -1,0 +1,1083 @@
+[
+  {
+    "identifier": "IPR000001",
+    "name": "Kringle",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": null
+    }
+  },
+  {
+    "identifier": "IPR000007",
+    "name": "Tubby, C-terminal",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": null
+    }
+  },
+  {
+    "identifier": "IPR000008",
+    "name": "C2 domain",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": null
+    }
+  },
+  {
+    "identifier": "IPR000010",
+    "name": "Cystatin domain",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": [
+        {
+          "identifier": "GO:0004869",
+          "name": "cysteine-type endopeptidase inhibitor activity",
+          "category": {
+            "code": "F",
+            "name": "molecular_function"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "identifier": "IPR000014",
+    "name": "PAS domain",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": null
+    }
+  },
+  {
+    "identifier": "IPR000020",
+    "name": "Anaphylatoxin/fibulin",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": [
+        {
+          "identifier": "GO:0005576",
+          "name": "extracellular region",
+          "category": {
+            "code": "C",
+            "name": "cellular_component"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "identifier": "IPR000023",
+    "name": "Phosphofructokinase domain",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": [
+        {
+          "identifier": "GO:0003872",
+          "name": "6-phosphofructokinase activity",
+          "category": {
+            "code": "F",
+            "name": "molecular_function"
+          }
+        },
+        {
+          "identifier": "GO:0006096",
+          "name": "glycolytic process",
+          "category": {
+            "code": "P",
+            "name": "biological_process"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "identifier": "IPR000028",
+    "name": "Chloroperoxidase",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": [
+        {
+          "identifier": "GO:0004601",
+          "name": "peroxidase activity",
+          "category": {
+            "code": "F",
+            "name": "molecular_function"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "identifier": "IPR000030",
+    "name": "PPE domain",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": null
+    }
+  },
+  {
+    "identifier": "IPR000031",
+    "name": "PurE domain",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": [
+        {
+          "identifier": "GO:0006189",
+          "name": "'de novo' IMP biosynthetic process",
+          "category": {
+            "code": "P",
+            "name": "biological_process"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "identifier": "IPR000032",
+    "name": "Phosphocarrier protein HPr-like",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": null
+    }
+  },
+  {
+    "identifier": "IPR000034",
+    "name": "Laminin IV",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": null
+    }
+  },
+  {
+    "identifier": "IPR000045",
+    "name": "Prepilin type IV endopeptidase, peptidase domain",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": [
+        {
+          "identifier": "GO:0004190",
+          "name": "aspartic-type endopeptidase activity",
+          "category": {
+            "code": "F",
+            "name": "molecular_function"
+          }
+        },
+        {
+          "identifier": "GO:0016020",
+          "name": "membrane",
+          "category": {
+            "code": "C",
+            "name": "cellular_component"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "identifier": "IPR000052",
+    "name": "Potex/carlavirus coat protein",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": [
+        {
+          "identifier": "GO:0005198",
+          "name": "structural molecule activity",
+          "category": {
+            "code": "F",
+            "name": "molecular_function"
+          }
+        },
+        {
+          "identifier": "GO:0019028",
+          "name": "viral capsid",
+          "category": {
+            "code": "C",
+            "name": "cellular_component"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "identifier": "IPR000055",
+    "name": "Type I restriction modification DNA specificity domain",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": [
+        {
+          "identifier": "GO:0003677",
+          "name": "DNA binding",
+          "category": {
+            "code": "F",
+            "name": "molecular_function"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "identifier": "IPR000058",
+    "name": "Zinc finger, AN1-type",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": [
+        {
+          "identifier": "GO:0008270",
+          "name": "zinc ion binding",
+          "category": {
+            "code": "F",
+            "name": "molecular_function"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "identifier": "IPR000061",
+    "name": "SWAP/Surp",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": [
+        {
+          "identifier": "GO:0003723",
+          "name": "RNA binding",
+          "category": {
+            "code": "F",
+            "name": "molecular_function"
+          }
+        },
+        {
+          "identifier": "GO:0006396",
+          "name": "RNA processing",
+          "category": {
+            "code": "P",
+            "name": "biological_process"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "identifier": "IPR000064",
+    "name": "Endopeptidase, NLPC/P60 domain",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": null
+    }
+  },
+  {
+    "identifier": "IPR000066",
+    "name": "Antenna complex, alpha/beta subunit",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": [
+        {
+          "identifier": "GO:0019684",
+          "name": "photosynthesis, light reaction",
+          "category": {
+            "code": "P",
+            "name": "biological_process"
+          }
+        },
+        {
+          "identifier": "GO:0016020",
+          "name": "membrane",
+          "category": {
+            "code": "C",
+            "name": "cellular_component"
+          }
+        },
+        {
+          "identifier": "GO:0030077",
+          "name": "plasma membrane light-harvesting complex",
+          "category": {
+            "code": "C",
+            "name": "cellular_component"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "identifier": "IPR000069",
+    "name": "Envelope glycoprotein M, flavivirus",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": [
+        {
+          "identifier": "GO:0019058",
+          "name": "viral life cycle",
+          "category": {
+            "code": "P",
+            "name": "biological_process"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "identifier": "IPR000070",
+    "name": "Pectinesterase, catalytic",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": [
+        {
+          "identifier": "GO:0030599",
+          "name": "pectinesterase activity",
+          "category": {
+            "code": "F",
+            "name": "molecular_function"
+          }
+        },
+        {
+          "identifier": "GO:0042545",
+          "name": "cell wall modification",
+          "category": {
+            "code": "P",
+            "name": "biological_process"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "identifier": "IPR000071",
+    "name": "Immunodeficiency lentiviral matrix, N-terminal",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": [
+        {
+          "identifier": "GO:0005198",
+          "name": "structural molecule activity",
+          "category": {
+            "code": "F",
+            "name": "molecular_function"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "identifier": "IPR000072",
+    "name": "PDGF/VEGF domain",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": [
+        {
+          "identifier": "GO:0008083",
+          "name": "growth factor activity",
+          "category": {
+            "code": "F",
+            "name": "molecular_function"
+          }
+        },
+        {
+          "identifier": "GO:0016020",
+          "name": "membrane",
+          "category": {
+            "code": "C",
+            "name": "cellular_component"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "identifier": "IPR000073",
+    "name": "Alpha/beta hydrolase fold-1",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": null
+    }
+  },
+  {
+    "identifier": "IPR000081",
+    "name": "Peptidase C3, picornavirus core protein 2A",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": [
+        {
+          "identifier": "GO:0008233",
+          "name": "peptidase activity",
+          "category": {
+            "code": "F",
+            "name": "molecular_function"
+          }
+        },
+        {
+          "identifier": "GO:0006508",
+          "name": "proteolysis",
+          "category": {
+            "code": "P",
+            "name": "biological_process"
+          }
+        },
+        {
+          "identifier": "GO:0016032",
+          "name": "viral process",
+          "category": {
+            "code": "P",
+            "name": "biological_process"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "identifier": "IPR000082",
+    "name": "SEA domain",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": null
+    }
+  },
+  {
+    "identifier": "IPR000083",
+    "name": "Fibronectin, type I",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": [
+        {
+          "identifier": "GO:0005576",
+          "name": "extracellular region",
+          "category": {
+            "code": "C",
+            "name": "cellular_component"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "identifier": "IPR000084",
+    "name": "PE-PGRS family, N-terminal",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": null
+    }
+  },
+  {
+    "identifier": "IPR000086",
+    "name": "NUDIX hydrolase domain",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": null
+    }
+  },
+  {
+    "identifier": "IPR000089",
+    "name": "Biotin/lipoyl attachment",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": null
+    }
+  },
+  {
+    "identifier": "IPR000095",
+    "name": "CRIB domain",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": null
+    }
+  },
+  {
+    "identifier": "IPR000118",
+    "name": "Granulin",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": null
+    }
+  },
+  {
+    "identifier": "IPR000121",
+    "name": "PEP-utilising enzyme, C-terminal",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": [
+        {
+          "identifier": "GO:0016772",
+          "name": "transferase activity, transferring phosphorus-containing groups",
+          "category": {
+            "code": "F",
+            "name": "molecular_function"
+          }
+        },
+        {
+          "identifier": "GO:0016310",
+          "name": "phosphorylation",
+          "category": {
+            "code": "P",
+            "name": "biological_process"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "identifier": "IPR000156",
+    "name": "Ran binding domain",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": [
+        {
+          "identifier": "GO:0046907",
+          "name": "intracellular transport",
+          "category": {
+            "code": "P",
+            "name": "biological_process"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "identifier": "IPR000157",
+    "name": "Toll/interleukin-1 receptor homology (TIR) domain",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": [
+        {
+          "identifier": "GO:0007165",
+          "name": "signal transduction",
+          "category": {
+            "code": "P",
+            "name": "biological_process"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "identifier": "IPR000159",
+    "name": "Ras-associating domain",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": [
+        {
+          "identifier": "GO:0007165",
+          "name": "signal transduction",
+          "category": {
+            "code": "P",
+            "name": "biological_process"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "identifier": "IPR000160",
+    "name": "GGDEF domain",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": null
+    }
+  },
+  {
+    "identifier": "IPR000170",
+    "name": "High potential iron-sulphur protein",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": [
+        {
+          "identifier": "GO:0009055",
+          "name": "electron transfer activity",
+          "category": {
+            "code": "F",
+            "name": "molecular_function"
+          }
+        },
+        {
+          "identifier": "GO:0019646",
+          "name": "aerobic electron transport chain",
+          "category": {
+            "code": "P",
+            "name": "biological_process"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "identifier": "IPR000172",
+    "name": "Glucose-methanol-choline oxidoreductase, N-terminal",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": [
+        {
+          "identifier": "GO:0016614",
+          "name": "oxidoreductase activity, acting on CH-OH group of donors",
+          "category": {
+            "code": "F",
+            "name": "molecular_function"
+          }
+        },
+        {
+          "identifier": "GO:0050660",
+          "name": "flavin adenine dinucleotide binding",
+          "category": {
+            "code": "F",
+            "name": "molecular_function"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "identifier": "IPR000177",
+    "name": "Apple domain",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": [
+        {
+          "identifier": "GO:0005515",
+          "name": "protein binding",
+          "category": {
+            "code": "F",
+            "name": "molecular_function"
+          }
+        },
+        {
+          "identifier": "GO:0006508",
+          "name": "proteolysis",
+          "category": {
+            "code": "P",
+            "name": "biological_process"
+          }
+        },
+        {
+          "identifier": "GO:0005576",
+          "name": "extracellular region",
+          "category": {
+            "code": "C",
+            "name": "cellular_component"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "identifier": "IPR000182",
+    "name": "GNAT domain",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": [
+        {
+          "identifier": "GO:0016747",
+          "name": "acyltransferase activity, transferring groups other than amino-acyl groups",
+          "category": {
+            "code": "F",
+            "name": "molecular_function"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "identifier": "IPR000184",
+    "name": "Bacterial surface antigen (D15)",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": [
+        {
+          "identifier": "GO:0019867",
+          "name": "outer membrane",
+          "category": {
+            "code": "C",
+            "name": "cellular_component"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "identifier": "IPR000187",
+    "name": "Corticotropin-releasing factor",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": [
+        {
+          "identifier": "GO:0005179",
+          "name": "hormone activity",
+          "category": {
+            "code": "F",
+            "name": "molecular_function"
+          }
+        },
+        {
+          "identifier": "GO:0005576",
+          "name": "extracellular region",
+          "category": {
+            "code": "C",
+            "name": "cellular_component"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "identifier": "IPR000192",
+    "name": "Aminotransferase class V domain",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": null
+    }
+  },
+  {
+    "identifier": "IPR000194",
+    "name": "ATPase, F1/V1/A1 complex, alpha/beta subunit, nucleotide-binding domain",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": [
+        {
+          "identifier": "GO:0005524",
+          "name": "ATP binding",
+          "category": {
+            "code": "F",
+            "name": "molecular_function"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "identifier": "IPR000195",
+    "name": "Rab-GAP-TBC domain",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": null
+    }
+  },
+  {
+    "identifier": "IPR000196",
+    "name": "Large ribosomal subunit protein eL19 domain",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": [
+        {
+          "identifier": "GO:0003735",
+          "name": "structural constituent of ribosome",
+          "category": {
+            "code": "F",
+            "name": "molecular_function"
+          }
+        },
+        {
+          "identifier": "GO:0006412",
+          "name": "translation",
+          "category": {
+            "code": "P",
+            "name": "biological_process"
+          }
+        },
+        {
+          "identifier": "GO:0005840",
+          "name": "ribosome",
+          "category": {
+            "code": "C",
+            "name": "cellular_component"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "identifier": "IPR000197",
+    "name": "Zinc finger, TAZ-type",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": null
+    }
+  },
+  {
+    "identifier": "IPR000198",
+    "name": "Rho GTPase-activating protein domain",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": [
+        {
+          "identifier": "GO:0007165",
+          "name": "signal transduction",
+          "category": {
+            "code": "P",
+            "name": "biological_process"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "identifier": "IPR000199",
+    "name": "Peptidase C3A/C3B, picornaviral",
+    "entity_type": "enzyme",
+    "source_database": "InterPro",
+    "confidence_score": 0.9,
+    "evidence_strength": "computational",
+    "metadata": {
+      "type": "domain",
+      "source_db": "interpro",
+      "go_terms": [
+        {
+          "identifier": "GO:0004197",
+          "name": "cysteine-type endopeptidase activity",
+          "category": {
+            "code": "F",
+            "name": "molecular_function"
+          }
+        },
+        {
+          "identifier": "GO:0006508",
+          "name": "proteolysis",
+          "category": {
+            "code": "P",
+            "name": "biological_process"
+          }
+        }
+      ]
+    }
+  }
+]
