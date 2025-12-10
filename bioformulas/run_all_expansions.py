@@ -66,7 +66,7 @@ def main():
         try:
             count = conn.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
             counts[table] = count
-        except:
+        except Exception:
             counts[table] = 0
 
     log.info("")

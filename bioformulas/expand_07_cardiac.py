@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 """Expansion module 7: Cardiac and muscle models."""
 
-from expand_base import *
+from expand_base import (
+    DB_PATH, get_conn, get_source_id, get_category_id, add_category,
+    add_formula, add_ion_channel, add_synapse, add_enzyme, add_neuron,
+    add_plasticity, count_formulas, print_summary, log
+)
 
 def run():
     conn = get_conn()

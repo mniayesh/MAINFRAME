@@ -86,11 +86,11 @@ class EnergyAwareNeuron(nn.Module):
             # Regenerate ATP
             atp_regen = self.regen_rate * (self.atp_capacity - self.atp_pool)
             # Update
-            self.atp_pool = torch.clamp(
+            self.atp_pool.data.copy_(torch.clamp(
                 self.atp_pool - atp_consumed + atp_regen,
                 min=0.0,
                 max=self.atp_capacity
-            )
+            ))
 
         return firing
 
@@ -131,7 +131,7 @@ class DualChannelNeuron(nn.Module):
         # Slow pathway: accumulates over time
         slow_input = F.linear(x, self.slow_weight).mean(dim=0)  # Average over batch
         # Exponential moving average (like calcium dynamics)
-        self.slow_state = self.tau_slow * self.slow_state + (1 - self.tau_slow) * slow_input
+        self.slow_state.data.copy_(self.tau_slow * self.slow_state + (1 - self.tau_slow) * slow_input)
 
         # Slow state modulates fast signal
         # High slow state → higher gain (like calcium-dependent facilitation)
