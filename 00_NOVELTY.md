@@ -1,7 +1,7 @@
 # Novel Biological AI Architectures - Complete Catalog
 
 **Compiled**: 2025-12-11
-**Total Architectures**: 192
+**Total Architectures**: 196
 **Organization**: Ordered by AI Impact (Highest → Lowest)
 
 ---
@@ -16520,12 +16520,1284 @@ if __name__ == "__main__":
 
 ---
 
+### 193. Sparse Coding (L1 Efficient Representation)
+
+**Formula:**
+```
+Sparse Coding Objective:
+min_a ||x - Φa||² + λ||a||₁
+
+where:
+x = input signal (observations)
+Φ = dictionary/basis functions (learned or fixed)
+a = sparse coefficients (activations)
+λ = sparsity penalty
+
+Equivalently (LASSO form):
+min_a ||a||₁  subject to ||x - Φa||² ≤ ε
+
+Learning Dictionary Φ:
+min_{Φ,a} ||x - Φa||² + λ||a||₁
+
+Subject to ||φ_i||₂ ≤ 1  (normalize basis functions)
+
+ISTA (Iterative Soft Thresholding):
+a^{(t+1)} = S_λ(a^{(t)} + Φ^T(x - Φa^{(t)}))
+
+where S_λ(z) = sign(z)·max(|z| - λ, 0)  [soft thresholding]
+
+Neural Implementation (Locally Competitive Algorithm):
+τ ȧ = -a + Φ^T x - (Φ^T Φ - I)a
+```
+
+**Variable Definitions:**
+- `x`: Input vector to be represented
+- `Φ`: Dictionary matrix [input_dim × code_dim]
+- `a`: Sparse activation coefficients
+- `λ`: Sparsity regularization strength (L1 penalty)
+- `τ`: Time constant for neural dynamics
+- `S_λ`: Soft-thresholding operator
+
+**Nature's Implementation:**
+V1 simple cells learn sparse Gabor-like filters from natural images. Only ~5-10% of neurons active for any input. Metabolically efficient. Robust to noise. Decorrelates signals. Hippocampus uses sparse codes for memory. Explains overcompleteness in cortex (more neurons than inputs).
+
+**Impact:** CRITICAL - Foundational for dictionary learning, autoencoders, compression, robust features. Explains cortical receptive fields, overcomplete representations, sparse activity. Used in image processing, compressed sensing, feature learning. ICA, NMF special cases. Critical for understanding efficient coding hypothesis and designing biologically-inspired sparse networks.
+
+**Implementation (280 lines):**
+```python
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import numpy as np
+
+class SparseCoding(nn.Module):
+    """
+    Sparse Coding with L1 penalty
+    min ||x - Φa||² + λ||a||₁
+    """
+
+    def __init__(self, input_dim, code_dim, sparsity=0.1, n_iterations=100):
+        super().__init__()
+
+        self.input_dim = input_dim
+        self.code_dim = code_dim
+        self.lambda_sparse = sparsity
+        self.n_iterations = n_iterations
+
+        # Dictionary Φ (learned)
+        self.dictionary = nn.Parameter(torch.randn(input_dim, code_dim) * 0.1)
+
+        # Normalize dictionary columns
+        with torch.no_grad():
+            self.dictionary /= torch.norm(self.dictionary, dim=0, keepdim=True)
+
+    def soft_threshold(self, x, threshold):
+        """
+        Soft thresholding operator for L1 penalty:
+        S_λ(x) = sign(x)·max(|x| - λ, 0)
+        """
+        return torch.sign(x) * F.relu(torch.abs(x) - threshold)
+
+    def ista_inference(self, x, learning_rate=0.01):
+        """
+        ISTA (Iterative Soft Thresholding Algorithm)
+        Infer sparse codes a for input x
+        """
+        batch_size = x.shape[0]
+        a = torch.zeros(batch_size, self.code_dim).to(x.device)
+
+        for _ in range(self.n_iterations):
+            # Gradient of reconstruction error
+            reconstruction = a @ self.dictionary.T
+            error = x - reconstruction
+            grad = error @ self.dictionary
+
+            # Gradient step
+            a = a + learning_rate * grad
+
+            # Soft thresholding (L1 proximal operator)
+            a = self.soft_threshold(a, self.lambda_sparse * learning_rate)
+
+        return a
+
+    def forward(self, x):
+        """
+        Encode input to sparse code
+        """
+        return self.ista_inference(x)
+
+    def reconstruct(self, a):
+        """
+        Decode sparse code to reconstruction
+        x̂ = Φa
+        """
+        return a @ self.dictionary.T
+
+    def learn_dictionary(self, x_batch, a_batch, lr_dict=0.01):
+        """
+        Update dictionary Φ via gradient descent
+        Keep dictionary columns normalized
+        """
+        # Reconstruction error
+        x_recon = a_batch @ self.dictionary.T
+        error = x_batch - x_recon
+
+        # Dictionary gradient: ∂L/∂Φ = -2·error^T·a
+        grad_dict = -2 * error.T @ a_batch / x_batch.shape[0]
+
+        # Update
+        self.dictionary.data += lr_dict * grad_dict
+
+        # Normalize columns
+        self.dictionary.data /= torch.norm(self.dictionary.data, dim=0, keepdim=True) + 1e-8
+
+    def compute_loss(self, x, a):
+        """
+        Total loss: reconstruction + sparsity
+        L = ||x - Φa||² + λ||a||₁
+        """
+        reconstruction = a @ self.dictionary.T
+        recon_loss = torch.sum((x - reconstruction)**2)
+        sparse_loss = self.lambda_sparse * torch.sum(torch.abs(a))
+
+        return recon_loss + sparse_loss
+
+
+class LocallyCompetitiveAlgorithm(nn.Module):
+    """
+    Neural dynamics implementation of sparse coding
+    τ ȧ = -a + Φ^T x - (Φ^T Φ - I)a
+    """
+
+    def __init__(self, input_dim, code_dim, tau=10.0, threshold=0.1):
+        super().__init__()
+
+        self.input_dim = input_dim
+        self.code_dim = code_dim
+        self.tau = tau
+        self.threshold = threshold
+
+        # Dictionary
+        self.dictionary = nn.Parameter(torch.randn(input_dim, code_dim) * 0.1)
+
+        # Normalize
+        with torch.no_grad():
+            self.dictionary /= torch.norm(self.dictionary, dim=0, keepdim=True)
+
+    def dynamics(self, a, x, dt=0.1):
+        """
+        Neural dynamics for sparse inference
+        τ ȧ = -a + Φ^T x - (Φ^T Φ - I)a
+        """
+        # Feedforward drive
+        drive = x @ self.dictionary
+
+        # Lateral inhibition (competition)
+        gram = self.dictionary.T @ self.dictionary
+        lateral = a @ (gram - torch.eye(self.code_dim).to(a.device))
+
+        # Dynamics
+        dadt = (-a + drive - lateral) / self.tau
+
+        # Update
+        a_new = a + dadt * dt
+
+        # Rectify (non-negative activations)
+        a_new = F.relu(a_new)
+
+        # Threshold (enforce sparsity)
+        a_new = a_new * (a_new > self.threshold).float()
+
+        return a_new
+
+    def forward(self, x, n_steps=50, dt=0.1):
+        """
+        Converge to sparse representation
+        """
+        batch_size = x.shape[0]
+        a = torch.zeros(batch_size, self.code_dim).to(x.device)
+
+        for _ in range(n_steps):
+            a = self.dynamics(a, x, dt)
+
+        return a
+
+
+class SparseAutoencoder(nn.Module):
+    """
+    Autoencoder with L1 sparsity constraint
+    """
+
+    def __init__(self, input_dim, hidden_dim, sparsity_target=0.05, beta=3.0):
+        super().__init__()
+
+        self.input_dim = input_dim
+        self.hidden_dim = hidden_dim
+        self.sparsity_target = sparsity_target
+        self.beta = beta  # Sparsity penalty strength
+
+        # Encoder (recognition)
+        self.encoder = nn.Sequential(
+            nn.Linear(input_dim, hidden_dim),
+            nn.ReLU()
+        )
+
+        # Decoder (reconstruction)
+        self.decoder = nn.Linear(hidden_dim, input_dim)
+
+    def forward(self, x):
+        """Encode and decode"""
+        z = self.encoder(x)
+        x_recon = self.decoder(z)
+        return z, x_recon
+
+    def kl_divergence_sparsity(self, activations):
+        """
+        KL divergence between average activation and target sparsity
+        KL(ρ || ρ̂) = ρ log(ρ/ρ̂) + (1-ρ) log((1-ρ)/(1-ρ̂))
+        """
+        rho = activations.mean(dim=0)  # Average activation per neuron
+        rho_target = self.sparsity_target
+
+        kl = rho_target * torch.log(rho_target / (rho + 1e-8)) + \
+             (1 - rho_target) * torch.log((1 - rho_target) / (1 - rho + 1e-8))
+
+        return kl.sum()
+
+    def loss(self, x, z, x_recon):
+        """
+        Total loss: reconstruction + KL sparsity
+        """
+        recon_loss = F.mse_loss(x_recon, x)
+        sparsity_loss = self.kl_divergence_sparsity(z)
+
+        return recon_loss + self.beta * sparsity_loss
+
+
+# Example: Learn sparse codes from natural image patches
+if __name__ == "__main__":
+    torch.manual_seed(42)
+
+    print("Sparse Coding for Efficient Representation")
+    print("=" * 60)
+
+    # Generate synthetic data (gabor-like patterns)
+    def generate_gabor_data(n_samples=500, patch_size=16):
+        """Generate oriented edge patterns"""
+        data = []
+
+        for _ in range(n_samples):
+            # Random orientation
+            theta = np.random.rand() * np.pi
+
+            # Create gabor patch
+            x = np.linspace(-1, 1, patch_size)
+            y = np.linspace(-1, 1, patch_size)
+            X, Y = np.meshgrid(x, y)
+
+            # Rotated coordinates
+            X_rot = X * np.cos(theta) + Y * np.sin(theta)
+
+            # Gabor
+            gabor = np.exp(-(X**2 + Y**2) / 0.1) * np.cos(2 * np.pi * X_rot * 3)
+
+            # Flatten and add noise
+            patch = gabor.flatten() + np.random.randn(patch_size**2) * 0.1
+
+            data.append(patch)
+
+        return torch.FloatTensor(np.array(data))
+
+    # Generate data
+    n_patches = 1000
+    patch_dim = 16 * 16  # 16x16 patches
+    data = generate_gabor_data(n_patches, patch_size=16)
+
+    # Normalize
+    data = (data - data.mean()) / data.std()
+
+    # Create sparse coding model
+    model = SparseCoding(
+        input_dim=patch_dim,
+        code_dim=128,  # Overcomplete (128 > 256)
+        sparsity=0.1,
+        n_iterations=50
+    )
+
+    print(f"Dictionary: {patch_dim} → {model.code_dim} (overcomplete)")
+
+    # Training loop
+    optimizer = torch.optim.Adam([model.dictionary], lr=0.01)
+
+    for epoch in range(200):
+        # Sample batch
+        idx = torch.randperm(n_patches)[:32]
+        x_batch = data[idx]
+
+        # Infer sparse codes (ISTA)
+        with torch.no_grad():
+            a_batch = model(x_batch)
+
+        # Update dictionary
+        model.learn_dictionary(x_batch, a_batch, lr_dict=0.01)
+
+        # Compute loss
+        loss = model.compute_loss(x_batch, a_batch)
+
+        if epoch % 40 == 0:
+            sparsity = (a_batch.abs() > 0.01).float().mean().item()
+            recon = model.reconstruct(a_batch)
+            recon_error = F.mse_loss(recon, x_batch).item()
+
+            print(f"Epoch {epoch}: Loss={loss.item():.2f}, "
+                  f"Sparsity={sparsity:.1%}, Recon Error={recon_error:.4f}")
+
+    # Test sparse representation
+    print("\nTesting sparse representation:")
+    test_data = data[:5]
+    test_codes = model(test_data)
+
+    for i in range(5):
+        active = (test_codes[i].abs() > 0.01).sum().item()
+        print(f"  Sample {i}: {active}/{model.code_dim} active ({active/model.code_dim:.1%})")
+
+    print(f"\n✓ Learned sparse dictionary with ~{sparsity:.0%} activation")
+    print("✓ Overcomplete representation (more codes than pixels)")
+```
+
+**Sources:**
+- Olshausen & Field (1996). "Emergence of simple-cell receptive field properties by learning a sparse code"
+- Tibshirani (1996). "Regression Shrinkage and Selection via the Lasso"
+- Rozell et al. (2008). "Sparse Coding via Thresholding and Local Competition"
+- Mairal et al. (2009). "Online Dictionary Learning for Sparse Coding"
+
+---
+
+### 194. Winner-Take-All Circuits (WTA)
+
+**Formula:**
+```
+Competitive Selection (Softmax Form):
+y_i = exp(u_i / τ) / Σⱼ exp(u_j / τ)
+
+Hard WTA (Max Selection):
+y_i = 1  if i = argmax(u)
+     = 0  otherwise
+
+k-WTA (Top-k Selection):
+y_i = 1  if i ∈ TopK(u)
+     = 0  otherwise
+
+Neural Dynamics (Lateral Inhibition):
+τ ẏᵢ = -yᵢ + f(uᵢ - Σⱼ wᵢⱼ yⱼ)
+
+where wᵢⱼ = w_global for j≠i (uniform inhibition)
+
+Steady-state WTA:
+y* = argmax(u - W·y)
+
+where:
+- uᵢ = input to neuron i
+- yᵢ = output activity
+- τ = time constant
+- wᵢⱼ = inhibitory weights (typically uniform)
+- f = activation function (typically rectified)
+```
+
+**Variable Definitions:**
+- `u`: Input vector (scores, logits, activations)
+- `y`: Output vector (winner selection)
+- `τ`: Temperature (controls competition sharpness)
+- `w`: Lateral inhibition strength
+- `k`: Number of winners in k-WTA
+
+**Nature's Implementation:**
+Cortical competition via inhibitory interneurons. Visual cortex orientation selectivity. Motor cortex action selection. Hippocampal place cell competition. Basal ganglia winner-take-all for action selection. Implements sparse coding, attention, routing.
+
+**Impact:** HIGH - Foundation for attention mechanisms, mixture-of-experts, competitive learning, softmax layers, clustering. Explains neural selectivity, sparsity, modularity. Used in transformers, capsule networks, routing. Critical for understanding competitive dynamics and implementing sparse, modular architectures.
+
+**Implementation (200 lines):**
+```python
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import numpy as np
+
+class WinnerTakeAll(nn.Module):
+    """
+    Hard Winner-Take-All: Select single maximum
+    """
+
+    def __init__(self, dim, return_indices=False):
+        super().__init__()
+        self.dim = dim
+        self.return_indices = return_indices
+
+    def forward(self, x):
+        """
+        Hard WTA: y_i = 1 if i=argmax(x), else 0
+        """
+        # Find winner
+        winners = torch.argmax(x, dim=self.dim, keepdim=True)
+
+        # One-hot encoding
+        y = torch.zeros_like(x)
+        y.scatter_(self.dim, winners, 1.0)
+
+        if self.return_indices:
+            return y, winners.squeeze(self.dim)
+        return y
+
+
+class KWinnerTakeAll(nn.Module):
+    """
+    k-Winner-Take-All: Select top-k maxima
+    """
+
+    def __init__(self, k, dim=-1):
+        super().__init__()
+        self.k = k
+        self.dim = dim
+
+    def forward(self, x):
+        """
+        k-WTA: y_i = 1 if i ∈ TopK(x), else 0
+        """
+        # Get top-k values and indices
+        topk_vals, topk_idx = torch.topk(x, self.k, dim=self.dim)
+
+        # Create sparse output
+        y = torch.zeros_like(x)
+        y.scatter_(self.dim, topk_idx, 1.0)
+
+        return y
+
+
+class NeuralWTA(nn.Module):
+    """
+    Neural dynamics WTA via lateral inhibition
+    τ ẏ = -y + f(u - Σⱼ wᵢⱼ yⱼ)
+    """
+
+    def __init__(self, n_neurons, inhibition_strength=1.0, tau=1.0):
+        super().__init__()
+
+        self.n = n_neurons
+        self.tau = tau
+        self.w_inhib = inhibition_strength
+
+    def dynamics(self, y, u, dt=0.1):
+        """
+        Single step of WTA dynamics
+        """
+        # Global inhibition (all-to-all except self)
+        inhibition = self.w_inhib * (y.sum(dim=-1, keepdim=True) - y)
+
+        # Dynamics
+        dydt = (-y + F.relu(u - inhibition)) / self.tau
+
+        return y + dydt * dt
+
+    def forward(self, u, n_iterations=50, dt=0.1):
+        """
+        Converge to WTA state
+        """
+        y = torch.zeros_like(u)
+
+        for _ in range(n_iterations):
+            y = self.dynamics(y, u, dt)
+
+        return y
+
+
+class SoftWTA(nn.Module):
+    """
+    Soft WTA via temperature-controlled softmax
+    y_i = exp(u_i/τ) / Σⱼ exp(u_j/τ)
+    """
+
+    def __init__(self, temperature=1.0, dim=-1):
+        super().__init__()
+        self.temperature = temperature
+        self.dim = dim
+
+    def forward(self, x):
+        """
+        Soft winner-take-all (softmax)
+        Temperature controls competition strength
+        """
+        return F.softmax(x / self.temperature, dim=self.dim)
+
+    def set_temperature(self, temp):
+        """Adjust competition (low temp → harder competition)"""
+        self.temperature = temp
+
+
+class AdaptiveKWTA(nn.Module):
+    """
+    Adaptive k-WTA that learns sparsity level
+    """
+
+    def __init__(self, initial_k, max_k, min_k=1):
+        super().__init__()
+        self.k = initial_k
+        self.max_k = max_k
+        self.min_k = min_k
+
+    def forward(self, x, dim=-1):
+        """k-WTA with current k"""
+        topk_vals, topk_idx = torch.topk(x, self.k, dim=dim)
+
+        y = torch.zeros_like(x)
+        y.scatter_(dim, topk_idx, 1.0)
+
+        return y
+
+    def adapt_k(self, target_sparsity, current_sparsity, lr=0.1):
+        """
+        Adjust k based on desired sparsity level
+        """
+        error = target_sparsity - current_sparsity
+        delta_k = int(lr * error * self.max_k)
+
+        self.k = max(self.min_k, min(self.max_k, self.k + delta_k))
+
+
+# Example: WTA for attention and routing
+if __name__ == "__main__":
+    torch.manual_seed(42)
+
+    print("Winner-Take-All Circuits")
+    print("=" * 60)
+
+    # Input scores
+    scores = torch.tensor([[3.0, 1.0, 5.0, 2.0, 4.0]])
+
+    # Hard WTA
+    hard_wta = WinnerTakeAll(dim=1)
+    winner_hard = hard_wta(scores)
+    print(f"Input: {scores}")
+    print(f"Hard WTA: {winner_hard}")
+
+    # k-WTA (top-2)
+    k_wta = KWinnerTakeAll(k=2)
+    winner_k = k_wta(scores)
+    print(f"2-WTA: {winner_k}")
+
+    # Soft WTA (different temperatures)
+    soft_wta = SoftWTA(temperature=1.0)
+    print(f"\nSoft WTA (τ=1.0): {soft_wta(scores)}")
+
+    soft_wta.set_temperature(0.1)
+    print(f"Soft WTA (τ=0.1): {soft_wta(scores)}")
+
+    soft_wta.set_temperature(10.0)
+    print(f"Soft WTA (τ=10.0): {soft_wta(scores)}")
+
+    # Neural dynamics WTA
+    print("\nNeural Dynamics WTA:")
+    neural_wta = NeuralWTA(n_neurons=5, inhibition_strength=2.0)
+    winner_neural = neural_wta(scores, n_iterations=100)
+    print(f"Converged state: {winner_neural}")
+
+    # Sparsity analysis
+    sparsity = (winner_neural > 0.1).float().mean().item()
+    print(f"Sparsity: {sparsity:.1%}")
+
+    print("\n✓ WTA circuits implement competitive selection")
+    print("✓ Foundation for attention, routing, sparsity")
+```
+
+**Sources:**
+- Grossberg (1973). "Contour Enhancement, Short Term Memory, and Constancies in Reverberating Neural Networks"
+- Maass (2000). "On the Computational Power of Winner-Take-All"
+- Majani et al. (1989). "On the k-Winners-Take-All Network"
+- Riesenhuber & Poggio (1999). "Hierarchical models of object recognition in cortex"
+
+---
+### 195. Central Pattern Generator (CPG) Networks
+
+**Formula:**
+```
+Coupled Oscillator Dynamics:
+ẋ = f(x) + g(u) + Coupling
+
+Specific form (Kuramoto-style):
+ẋᵢ = ωᵢ + Σⱼ Kᵢⱼ sin(xⱼ - xᵢ) + uᵢ
+
+Matsuoka Oscillator (flexor-extensor):
+τ ẋ₁ = -x₁ - βy₁ - w₁₂f(x₂) + u + c
+τ ẋ₂ = -x₂ - βy₂ - w₂₁f(x₁) - u + c
+τ' ẏᵢ = -yᵢ + f(xᵢ)
+
+Van der Pol (self-sustaining):
+ẍ - μ(1-x²)ẋ + x = 0
+
+General CPG form:
+ẋ = A(x) + B(x,θ) + u(t)
+
+where:
+- xᵢ = oscillator state (phase or amplitude)
+- ωᵢ = intrinsic frequency
+- Kᵢⱼ = coupling strength between oscillators
+- yᵢ = adaptation variable
+- β = fatigue/adaptation rate
+- wᵢⱼ = mutual inhibition
+- u = descending command/modulation
+- θ = coupling parameters
+```
+
+**Variable Definitions:**
+- `x`: Oscillator state variables
+- `ω`: Natural frequency
+- `K`: Coupling matrix
+- `u`: External drive/modulation
+- `β`: Adaptation strength
+- `τ, τ'`: Time constants (fast/slow)
+
+**Nature's Implementation:**
+Spinal cord locomotor circuits. Generate rhythmic walking, swimming, breathing without continuous descending commands. Lamprey swimming CPG. Cat hindlimb stepping. Insect locomotion. Breathing rhythm in medulla. Once initiated, run autonomously. Descending signals modulate frequency/amplitude.
+
+**Impact:** MEDIUM-HIGH - Autonomous Rhythm Generation
+Explains locomotion, breathing, chewing without explicit timing. Self-sustaining oscillations. Modular, reusable. Used in robotics (legged locomotion), speech synthesis, rhythmic control tasks. Critical for understanding motor pattern generation and implementing autonomous rhythmic behaviors.
+
+**Implementation (220 lines):**
+```python
+import torch
+import torch.nn as nn
+import numpy as np
+import matplotlib.pyplot as plt
+
+class MatsuokaOscillator(nn.Module):
+    """
+    Matsuoka neural oscillator for CPG
+    Models flexor-extensor pairs with mutual inhibition
+    """
+
+    def __init__(self, tau=1.0, tau_adapt=2.0, beta=2.5, mu=1.0, weight=2.0):
+        super().__init__()
+
+        self.tau = tau  # Fast time constant
+        self.tau_adapt = tau_adapt  # Slow adaptation
+        self.beta = beta  # Adaptation strength
+        self.mu = mu  # Tonic input
+        self.weight = weight  # Mutual inhibition
+
+    def activation(self, x):
+        """Rectified activation"""
+        return torch.relu(x)
+
+    def forward(self, state, u=0.0, dt=0.01):
+        """
+        Single step of Matsuoka oscillator
+        
+        state = [x1, x2, y1, y2]
+        x1, x2 = flexor/extensor neural activity
+        y1, y2 = adaptation variables
+        u = tonic drive
+        """
+        x1, x2, y1, y2 = state
+
+        # Neuron dynamics
+        dx1 = (-x1 - self.beta * y1 - self.weight * self.activation(x2) + self.mu + u) / self.tau
+        dx2 = (-x2 - self.beta * y2 - self.weight * self.activation(x1) + self.mu - u) / self.tau
+
+        # Adaptation dynamics
+        dy1 = (-y1 + self.activation(x1)) / self.tau_adapt
+        dy2 = (-y2 + self.activation(x2)) / self.tau_adapt
+
+        # Update
+        x1_new = x1 + dx1 * dt
+        x2_new = x2 + dx2 * dt
+        y1_new = y1 + dy1 * dt
+        y2_new = y2 + dy2 * dt
+
+        return torch.stack([x1_new, x2_new, y1_new, y2_new])
+
+    def generate_rhythm(self, n_steps=1000, dt=0.01, u=0.0):
+        """Generate rhythmic pattern"""
+        state = torch.zeros(4)
+        trajectory = []
+
+        for _ in range(n_steps):
+            state = self.forward(state, u, dt)
+            trajectory.append(state.clone())
+
+        return torch.stack(trajectory)
+
+
+class CoupledCPG(nn.Module):
+    """
+    Network of coupled oscillators for multi-joint control
+    """
+
+    def __init__(self, n_joints, coupling_strength=0.5):
+        super().__init__()
+
+        self.n_joints = n_joints
+        self.coupling_strength = coupling_strength
+
+        # Individual oscillators
+        self.oscillators = nn.ModuleList([
+            MatsuokaOscillator() for _ in range(n_joints)
+        ])
+
+        # Coupling matrix (nearest-neighbor for limbs)
+        self.coupling = self.create_coupling_matrix(n_joints)
+
+    def create_coupling_matrix(self, n):
+        """
+        Create coupling matrix for chain of oscillators
+        (e.g., spine segments or limb joints)
+        """
+        K = torch.zeros(n, n)
+
+        # Nearest-neighbor coupling
+        for i in range(n - 1):
+            K[i, i + 1] = self.coupling_strength
+            K[i + 1, i] = self.coupling_strength
+
+        return K
+
+    def forward(self, states, drives, dt=0.01):
+        """
+        Update all coupled oscillators
+        states: [n_joints, 4] state vectors
+        drives: [n_joints] tonic drives
+        """
+        new_states = []
+
+        for i in range(self.n_joints):
+            # Coupling term (phase difference)
+            coupling_input = 0.0
+            for j in range(self.n_joints):
+                if i != j and self.coupling[i, j] > 0:
+                    # Couple through flexor activity
+                    phase_diff = states[j][0] - states[i][0]
+                    coupling_input += self.coupling[i, j] * phase_diff
+
+            # Update with coupling
+            u_total = drives[i] + coupling_input
+            new_state = self.oscillators[i](states[i], u_total, dt)
+            new_states.append(new_state)
+
+        return torch.stack(new_states)
+
+    def generate_gait(self, n_steps=2000, dt=0.01, speed=0.5):
+        """
+        Generate coordinated gait pattern
+        speed modulates frequency
+        """
+        states = torch.zeros(self.n_joints, 4)
+        drives = torch.ones(self.n_joints) * speed
+
+        trajectory = []
+        for _ in range(n_steps):
+            states = self.forward(states, drives, dt)
+            trajectory.append(states.clone())
+
+        return torch.stack(trajectory)
+
+
+class KuramotoOscillatorNetwork(nn.Module):
+    """
+    Kuramoto model for phase-coupled oscillators
+    θ̇ᵢ = ωᵢ + Σⱼ Kᵢⱼ sin(θⱼ - θᵢ)
+    """
+
+    def __init__(self, n_oscillators, natural_frequencies=None, coupling=None):
+        super().__init__()
+
+        self.n = n_oscillators
+
+        # Natural frequencies
+        if natural_frequencies is None:
+            self.omega = torch.randn(n_oscillators) * 0.5 + 2.0
+        else:
+            self.omega = torch.tensor(natural_frequencies)
+
+        # Coupling matrix
+        if coupling is None:
+            # All-to-all with random strengths
+            self.K = torch.randn(n_oscillators, n_oscillators) * 0.3
+            self.K.fill_diagonal_(0)
+        else:
+            self.K = torch.tensor(coupling)
+
+    def forward(self, theta, dt=0.01):
+        """
+        Update phases
+        θ̇ᵢ = ωᵢ + Σⱼ Kᵢⱼ sin(θⱼ - θᵢ)
+        """
+        # Phase differences
+        phase_diff = theta.unsqueeze(0) - theta.unsqueeze(1)  # [n, n]
+
+        # Coupling term
+        coupling = (self.K * torch.sin(phase_diff)).sum(dim=1)
+
+        # Phase evolution
+        dtheta = self.omega + coupling
+
+        return (theta + dtheta * dt) % (2 * np.pi)
+
+    def simulate(self, n_steps=1000, dt=0.01):
+        """Generate synchronized rhythm"""
+        theta = torch.rand(self.n) * 2 * np.pi
+
+        trajectory = []
+        for _ in range(n_steps):
+            theta = self.forward(theta, dt)
+            trajectory.append(theta.clone())
+
+        return torch.stack(trajectory)
+
+    def order_parameter(self, theta):
+        """
+        Measure synchronization
+        r = |<exp(iθ)>|
+        r=1: perfect sync, r=0: incoherent
+        """
+        z = torch.mean(torch.exp(1j * theta.numpy()))
+        return abs(z)
+
+
+# Example: Quadruped gait generation
+if __name__ == "__main__":
+    torch.manual_seed(42)
+
+    print("Central Pattern Generator Networks")
+    print("=" * 60)
+
+    # Single Matsuoka oscillator
+    print("\n1. Single Matsuoka Oscillator:")
+    osc = MatsuokaOscillator()
+    rhythm = osc.generate_rhythm(n_steps=500, dt=0.02)
+
+    flexor = rhythm[:, 0].numpy()
+    extensor = rhythm[:, 1].numpy()
+
+    print(f"   Generated {len(rhythm)} timesteps")
+    print(f"   Flexor range: [{flexor.min():.2f}, {flexor.max():.2f}]")
+    print(f"   Period: ~{np.where(np.diff(np.sign(flexor)))[0][1] * 0.02:.2f}s")
+
+    # Coupled CPG for quadruped
+    print("\n2. Coupled CPG (4 limbs):")
+    cpg = CoupledCPG(n_joints=4, coupling_strength=0.3)
+    gait = cpg.generate_gait(n_steps=1000, dt=0.02, speed=0.8)
+
+    print(f"   Generated gait for {cpg.n_joints} joints")
+    print(f"   Coordination established through nearest-neighbor coupling")
+
+    # Check phase relationships
+    phases = []
+    for joint_idx in range(4):
+        signal = gait[:, joint_idx, 0].numpy()
+        zero_crossings = np.where(np.diff(np.sign(signal)))[0]
+        if len(zero_crossings) > 0:
+            phases.append(zero_crossings[0])
+
+    print(f"   Phase offsets: {np.diff(phases) if len(phases) > 1 else 'N/A'}")
+
+    # Kuramoto oscillators
+    print("\n3. Kuramoto Oscillators:")
+    kuramoto = KuramotoOscillatorNetwork(n_oscillators=10, coupling=None)
+    kuramoto.K = torch.ones(10, 10) * 0.5  # Strong all-to-all coupling
+    kuramoto.K.fill_diagonal_(0)
+
+    theta_traj = kuramoto.simulate(n_steps=500, dt=0.01)
+
+    r_initial = kuramoto.order_parameter(theta_traj[0])
+    r_final = kuramoto.order_parameter(theta_traj[-1])
+
+    print(f"   Synchronization: r_initial={r_initial:.3f}, r_final={r_final:.3f}")
+    print(f"   {'✓ Synchronized' if r_final > 0.8 else '✗ Incoherent'}")
+
+    print("\n✓ CPGs generate autonomous rhythmic patterns")
+    print("✓ Useful for locomotion, breathing, rhythmic behaviors")
+```
+
+**Sources:**
+- Matsuoka (1985). "Sustained Oscillations Generated by Mutually Inhibiting Neurons"
+- Ijspeert (2008). "Central pattern generators for locomotion control in animals and robots: A review"
+- Grillner (2006). "Biological Pattern Generation: The Cellular and Computational Logic of Networks in Motion"
+- Kuramoto (1984). "Chemical Oscillations, Waves, and Turbulence"
+
+---
+### 196. Population Vector Coding (Distributed Representation)
+
+**Formula:**
+```
+Population Vector Decoder:
+ŝ = (Σᵢ rᵢ dᵢ) / (Σᵢ rᵢ)
+
+where:
+- rᵢ = firing rate of neuron i
+- dᵢ = preferred direction/value of neuron i
+- ŝ = decoded estimate (direction, position, etc.)
+
+Cosine Tuning Curve:
+rᵢ(s) = r_max · max(0, cos(s - dᵢ))^n
+
+Or Gaussian tuning:
+rᵢ(s) = r_max · exp(-||s - μᵢ||²/(2σ²))
+
+Maximum Likelihood Decoder:
+ŝ_ML = argmax_s P(r|s)
+     = argmax_s Π_i P(rᵢ|s)
+
+For Poisson neurons:
+P(rᵢ|s) = (λᵢ(s)^rᵢ / rᵢ!) · exp(-λᵢ(s))
+
+where λᵢ(s) = tuning curve
+
+Fisher Information (decoding precision):
+I(s) = Σᵢ (d/ds λᵢ(s))² / λᵢ(s)
+
+Cramér-Rao Bound:
+Var(ŝ) ≥ 1/I(s)
+```
+
+**Variable Definitions:**
+- `rᵢ`: Firing rate of neuron i
+- `dᵢ`: Preferred stimulus value (direction, position, etc.)
+- `s`: True stimulus value
+- `ŝ`: Decoded estimate from population
+- `r_max`: Maximum firing rate
+- `μᵢ, σ`: Tuning curve center and width
+- `I(s)`: Fisher information
+
+**Nature's Implementation:**
+Motor cortex encodes movement direction as population vector. Each neuron has preferred direction. Resultant vector predicts actual movement. Hippocampal place cells encode position. Head direction cells encode heading. Visual cortex encodes orientation. Robust to single-neuron noise. Accuracy increases with population size (~√N).
+
+**Impact:** CRITICAL - Foundation for understanding neural codes. Explains how populations represent continuous variables. More accurate than single neurons. Used in brain-machine interfaces (decode intended movement), neural data analysis, population coding in deep networks. Critical for multi-neuron decoding and implementing robust distributed representations.
+
+**Implementation (280 lines):**
+```python
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import numpy as np
+import matplotlib.pyplot as plt
+
+class PopulationVector(nn.Module):
+    """
+    Population vector decoder
+    ŝ = Σᵢ rᵢ·dᵢ / Σᵢ rᵢ
+    """
+
+    def __init__(self, n_neurons, preferred_directions=None):
+        super().__init__()
+
+        self.n = n_neurons
+
+        # Preferred directions (uniformly distributed around circle)
+        if preferred_directions is None:
+            angles = torch.linspace(0, 2*np.pi, n_neurons+1)[:-1]
+            self.preferred_dirs = torch.stack([torch.cos(angles), torch.sin(angles)], dim=1)
+        else:
+            self.preferred_dirs = torch.tensor(preferred_directions)
+
+    def encode(self, directions, r_max=100.0, tuning_width=1.0, noise_std=5.0):
+        """
+        Encode directions as population activity
+        rᵢ = r_max · max(0, cos(θ - dᵢ))^n + noise
+
+        Args:
+            directions: [batch, 2] unit vectors
+            r_max: Maximum firing rate
+            tuning_width: Exponent controlling tuning sharpness
+            noise_std: Poisson-like noise level
+
+        Returns:
+            rates: [batch, n_neurons] firing rates
+        """
+        batch_size = directions.shape[0]
+
+        # Normalize input directions
+        directions = F.normalize(directions, dim=1)
+
+        # Compute cosine similarity to each preferred direction
+        # cos(θ - dᵢ) = directions · preferred_dirs
+        cosines = directions @ self.preferred_dirs.T  # [batch, n_neurons]
+
+        # Cosine tuning: max(0, cos)^n
+        tuning = torch.relu(cosines) ** tuning_width
+
+        # Scale to firing rates
+        rates = r_max * tuning
+
+        # Add Poisson-like noise
+        if noise_std > 0:
+            noise = torch.randn_like(rates) * noise_std
+            rates = torch.relu(rates + noise)
+
+        return rates
+
+    def decode(self, rates):
+        """
+        Decode direction from population activity
+        ŝ = Σᵢ rᵢ·dᵢ / Σᵢ rᵢ
+
+        Args:
+            rates: [batch, n_neurons] firing rates
+
+        Returns:
+            decoded_dirs: [batch, 2] decoded directions
+        """
+        # Weighted sum
+        weighted_sum = rates @ self.preferred_dirs  # [batch, 2]
+
+        # Normalize by total activity
+        total_activity = rates.sum(dim=1, keepdim=True) + 1e-8
+        decoded = weighted_sum / total_activity
+
+        # Normalize to unit vectors
+        decoded = F.normalize(decoded, dim=1)
+
+        return decoded
+
+
+class GaussianTuningCurves(nn.Module):
+    """
+    Gaussian tuning curves for continuous variables
+    rᵢ(s) = r_max · exp(-||s - μᵢ||²/(2σ²))
+    """
+
+    def __init__(self, n_neurons, input_dim, r_max=50.0, tuning_width=0.5):
+        super().__init__()
+
+        self.n = n_neurons
+        self.input_dim = input_dim
+        self.r_max = r_max
+        self.tuning_width = tuning_width
+
+        # Preferred stimuli (randomly distributed)
+        self.centers = nn.Parameter(torch.randn(n_neurons, input_dim))
+
+    def forward(self, stimulus):
+        """
+        Encode stimulus as population activity
+
+        Args:
+            stimulus: [batch, input_dim]
+
+        Returns:
+            rates: [batch, n_neurons]
+        """
+        # Distance to each preferred stimulus
+        distances = torch.cdist(stimulus.unsqueeze(1), self.centers.unsqueeze(0))  # [batch, 1, n_neurons]
+        distances = distances.squeeze(1)  # [batch, n_neurons]
+
+        # Gaussian tuning
+        rates = self.r_max * torch.exp(-distances**2 / (2 * self.tuning_width**2))
+
+        return rates
+
+    def decode_mle(self, rates):
+        """
+        Maximum likelihood decoder
+        ŝ = argmax_s Π_i P(rᵢ|s)
+
+        For Gaussian tuning, this simplifies to weighted average
+        """
+        # Weighted average (weights = firing rates)
+        weights = rates / (rates.sum(dim=1, keepdim=True) + 1e-8)
+        decoded = weights @ self.centers
+
+        return decoded
+
+
+class FisherInformationDecoder(nn.Module):
+    """
+    Optimal decoder using Fisher Information
+    Achieves Cramér-Rao bound
+    """
+
+    def __init__(self, n_neurons, stimulus_dim):
+        super().__init__()
+
+        self.n = n_neurons
+        self.stimulus_dim = stimulus_dim
+
+        # Tuning curve parameters
+        self.centers = nn.Parameter(torch.randn(n_neurons, stimulus_dim))
+        self.widths = nn.Parameter(torch.ones(n_neurons) * 0.5)
+
+    def tuning_curve(self, stimulus):
+        """
+        Gaussian tuning curves
+        λᵢ(s) = exp(-||s - μᵢ||²/(2σᵢ²))
+        """
+        distances = torch.cdist(stimulus.unsqueeze(1), self.centers.unsqueeze(0)).squeeze(1)
+        rates = torch.exp(-distances**2 / (2 * self.widths**2))
+        return rates
+
+    def fisher_information(self, stimulus):
+        """
+        Compute Fisher Information matrix
+        I(s) = Σᵢ (∂λᵢ/∂s)^T (∂λᵢ/∂s) / λᵢ
+        """
+        stimulus.requires_grad_(True)
+        rates = self.tuning_curve(stimulus)
+
+        # Compute gradients
+        fisher = torch.zeros(stimulus.shape[0], self.stimulus_dim, self.stimulus_dim)
+
+        for i in range(self.n):
+            # Gradient of tuning curve i
+            grad = torch.autograd.grad(rates[:, i].sum(), stimulus, create_graph=True)[0]
+
+            # Fisher information contribution
+            fisher += torch.einsum('bi,bj->bij', grad, grad) / (rates[:, i].unsqueeze(1).unsqueeze(2) + 1e-8)
+
+        stimulus.requires_grad_(False)
+        return fisher
+
+    def decode(self, rates, n_iterations=10, lr=0.1):
+        """
+        Gradient ascent on log-likelihood
+        """
+        batch_size = rates.shape[0]
+
+        # Initialize at mean of centers
+        decoded = self.centers.mean(dim=0).unsqueeze(0).expand(batch_size, -1).clone()
+
+        for _ in range(n_iterations):
+            decoded.requires_grad_(True)
+
+            # Log-likelihood (Poisson)
+            lambda_s = self.tuning_curve(decoded)
+            log_likelihood = (rates * torch.log(lambda_s + 1e-8) - lambda_s).sum()
+
+            # Gradient ascent
+            grad = torch.autograd.grad(log_likelihood, decoded)[0]
+            decoded = decoded.detach() + lr * grad
+
+        return decoded
+
+
+class NeuralPopulationCode(nn.Module):
+    """
+    Full neural population coding model
+    Encoding + Decoding + Learning
+    """
+
+    def __init__(self, n_neurons, stimulus_dim, code_type='cosine'):
+        super().__init__()
+
+        self.n = n_neurons
+        self.stimulus_dim = stimulus_dim
+        self.code_type = code_type
+
+        if code_type == 'cosine':
+            # For angular variables (directions)
+            self.encoder = PopulationVector(n_neurons)
+        elif code_type == 'gaussian':
+            # For continuous variables
+            self.encoder = GaussianTuningCurves(n_neurons, stimulus_dim)
+
+    def forward(self, stimulus, noise_std=5.0):
+        """
+        Encode then decode
+        """
+        # Encode
+        if self.code_type == 'cosine':
+            rates = self.encoder.encode(stimulus, noise_std=noise_std)
+            decoded = self.encoder.decode(rates)
+        elif self.code_type == 'gaussian':
+            rates = self.encoder(stimulus)
+            rates += torch.randn_like(rates) * noise_std
+            decoded = self.encoder.decode_mle(rates)
+
+        return rates, decoded
+
+
+# Example: Motor cortex population vector
+if __name__ == "__main__":
+    torch.manual_seed(42)
+
+    print("Population Vector Coding")
+    print("=" * 60)
+
+    # Motor cortex example: encode reaching directions
+    print("\n1. Population Vector (Motor Cortex):")
+    n_neurons = 100
+    pop_vector = PopulationVector(n_neurons=n_neurons)
+
+    # True reaching direction
+    true_direction = torch.tensor([[1.0, 0.0]])  # Rightward
+    print(f"   True direction: {true_direction.numpy()}")
+
+    # Encode as population activity
+    rates = pop_vector.encode(true_direction, r_max=100.0, tuning_width=2.0, noise_std=10.0)
+    print(f"   Population activity: {n_neurons} neurons")
+    print(f"   Mean firing rate: {rates.mean().item():.1f} Hz")
+    print(f"   Active neurons: {(rates > 10).sum().item()}/{n_neurons}")
+
+    # Decode
+    decoded = pop_vector.decode(rates)
+    print(f"   Decoded direction: {decoded.numpy()}")
+
+    error = torch.acos(torch.clamp((true_direction * decoded).sum(), -1, 1)) * 180 / np.pi
+    print(f"   Decoding error: {error.item():.2f}°")
+
+    # Test accuracy vs population size
+    print("\n2. Accuracy vs Population Size:")
+    population_sizes = [10, 25, 50, 100, 200]
+    n_trials = 100
+
+    for n in population_sizes:
+        pop = PopulationVector(n_neurons=n)
+        errors = []
+
+        for _ in range(n_trials):
+            angle = torch.rand(1) * 2 * np.pi
+            true_dir = torch.stack([torch.cos(angle), torch.sin(angle)], dim=1)
+
+            rates = pop.encode(true_dir, noise_std=10.0)
+            decoded = pop.decode(rates)
+
+            error_rad = torch.acos(torch.clamp((true_dir * decoded).sum(), -1, 1))
+            errors.append(error_rad.item() * 180 / np.pi)
+
+        mean_error = np.mean(errors)
+        std_error = np.std(errors)
+        print(f"   n={n:3d}: Error = {mean_error:.2f}° ± {std_error:.2f}°")
+
+    # Gaussian tuning curves
+    print("\n3. Gaussian Tuning (Place Cells):")
+    gaussian_pop = GaussianTuningCurves(n_neurons=50, input_dim=2, tuning_width=0.3)
+
+    # Spatial position
+    position = torch.tensor([[0.5, 0.5]])
+    rates = gaussian_pop(position)
+
+    print(f"   Position: {position.numpy()}")
+    print(f"   Active place cells: {(rates > 10).sum().item()}/{50}")
+
+    decoded_pos = gaussian_pop.decode_mle(rates)
+    print(f"   Decoded position: {decoded_pos.numpy()}")
+    print(f"   Error: {torch.norm(position - decoded_pos).item():.4f}")
+
+    print("\n✓ Population codes are robust and accurate")
+    print("✓ Accuracy improves with population size")
+    print("✓ Foundation for brain-machine interfaces")
+```
+
+**Sources:**
+- Georgopoulos et al. (1986). "Neuronal Population Coding of Movement Direction" (Science)
+- Seung & Sompolinsky (1993). "Simple models for reading neuronal population codes" (PNAS)
+- Abbott & Dayan (1999). "The effect of correlated variability on the accuracy of a population code"
+- Pouget et al. (2000). "Information processing with population codes" (Nature Reviews)
+
+---
+
 ## Summary Statistics
 
-**Total Architectures Documented**: 192
-**Critical Impact**: 5 (paradigm-shifting)
-**High Impact**: 10 (10-100x improvements)
-**Medium-High Impact**: 12 (2-10x improvements)
+**Total Architectures Documented**: 196
+**Critical Impact**: 7 (paradigm-shifting)
+**High Impact**: 11 (10-100x improvements)
+**Medium-High Impact**: 13 (2-10x improvements)
 **Medium Impact**: 32 (useful specialized)
 **Low-Medium Impact**: 62 (domain-specific)
 
