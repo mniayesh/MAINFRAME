@@ -1,7 +1,7 @@
 # Novel Biological AI Architectures - Complete Catalog
 
 **Compiled**: 2025-12-11
-**Total Architectures**: 154
+**Total Architectures**: 175
 **Organization**: Ordered by AI Impact (Highest → Lowest)
 
 ---
@@ -7642,9 +7642,4119 @@ print(f"\nCorrelation with true latent: {corr:.3f}")
 **Source**: Jordan et al. (1999) Machine Learning; Blei et al. (2017) JASA; Kingma & Welling (2014) ICLR; Gao & Ganguli (2015) arXiv
 
 ---
+
+### Particle Filter (Sequential Monte Carlo)
+
+**Purpose**: Bayesian state estimation for nonlinear/non-Gaussian systems using weighted particles—handles arbitrary dynamics and observation models.
+
+**Formula**: Weight Update and Resampling
+```
+Particles: {x_t^{(i)}, w_t^{(i)}}_{i=1..N}
+
+Weight update:
+w_t^{(i)} ∝ w_{t-1}^{(i)} · p(y_t|x_t^{(i)}) · p(x_t^{(i)}|x_{t-1}^{(i)}) / q(x_t^{(i)}|x_{t-1}^{(i)}, y_t)
+
+Posterior approximation:
+p(x_t|y_{1:t}) ≈ Σ w_t^{(i)} δ(x_t - x_t^{(i)})
+                 i=1..N
+
+where:
+- x_t^{(i)} = particle i (state sample)
+- w_t^{(i)} = normalized weight
+- q = proposal distribution (often transition prior)
+- δ = Dirac delta
+- Resample when effective sample size < threshold
+```
+
+**Nature's Implementation**: Models probabilistic inference in cortex for complex sensory integration. Handles multimodal posteriors (bistable perception, ambiguous stimuli). Used for motor control with nonlinear dynamics, navigation with complex environments.
+
+**Impact**: **MEDIUM-HIGH - Nonlinear Filtering**
+Handles arbitrary nonlinearity and noise. No Gaussian/linearity assumptions. Asymptotically exact (N→∞). Critical for complex neural dynamics, BMI with nonlinear models, and understanding neural sampling representations.
+
+**Code Example**:
+```python
+class ParticleFilter:
+    """Sequential Monte Carlo for neural state estimation"""
+
+    def __init__(self, n_particles, state_dim, obs_dim):
+        self.N = n_particles
+        self.state_dim = state_dim
+        self.obs_dim = obs_dim
+
+        # Particles and weights
+        self.particles = np.random.randn(n_particles, state_dim)
+        self.weights = np.ones(n_particles) / n_particles
+
+    def predict(self, dynamics_fn, noise_std=0.1):
+        """
+        Propagate particles through dynamics
+        x_t = f(x_{t-1}) + w
+        """
+        for i in range(self.N):
+            self.particles[i] = dynamics_fn(self.particles[i]) + \
+                                np.random.randn(self.state_dim) * noise_std
+
+    def update(self, observation, likelihood_fn):
+        """
+        Update weights based on observation
+        w_t^{(i)} ∝ w_{t-1}^{(i)} · p(y_t | x_t^{(i)})
+        """
+        for i in range(self.N):
+            # Likelihood of observation given particle
+            self.weights[i] *= likelihood_fn(observation, self.particles[i])
+
+        # Normalize
+        self.weights /= (self.weights.sum() + 1e-10)
+
+    def resample(self):
+        """
+        Systematic resampling when degeneracy occurs
+        """
+        # Effective sample size
+        N_eff = 1.0 / np.sum(self.weights**2)
+
+        if N_eff < self.N / 2:
+            # Resample
+            indices = np.random.choice(
+                self.N,
+                size=self.N,
+                replace=True,
+                p=self.weights
+            )
+            self.particles = self.particles[indices]
+            self.weights = np.ones(self.N) / self.N
+
+    def estimate(self):
+        """Posterior mean estimate"""
+        return np.sum(self.particles * self.weights[:, None], axis=0)
+
+    def posterior_covariance(self):
+        """Posterior covariance"""
+        mean = self.estimate()
+        diff = self.particles - mean
+        cov = (diff.T * self.weights) @ diff
+        return cov
+
+    def filter(self, observations, dynamics_fn, likelihood_fn, noise_std=0.1):
+        """
+        Run particle filter on sequence
+        """
+        T = len(observations)
+        estimates = np.zeros((T, self.state_dim))
+
+        for t in range(T):
+            # Predict
+            self.predict(dynamics_fn, noise_std)
+
+            # Update
+            self.update(observations[t], likelihood_fn)
+
+            # Resample if needed
+            self.resample()
+
+            # Store estimate
+            estimates[t] = self.estimate()
+
+        return estimates
+
+
+# Example: Nonlinear neural dynamics tracking
+def neural_dynamics(x):
+    """Nonlinear recurrent dynamics"""
+    # x = [position, velocity]
+    A = np.array([[1, 0.1], [0, 0.9]])
+    x_new = A @ x + 0.1 * np.tanh(x)
+    return x_new
+
+def observation_likelihood(y_obs, x_state):
+    """
+    Poisson observation model
+    y ~ Poisson(exp(C·x))
+    """
+    C = np.array([[1, 0], [0, 1], [0.5, 0.5]])  # 3 neurons
+    rate = np.exp(C @ x_state)
+
+    # Poisson log-likelihood
+    ll = np.sum(y_obs * np.log(rate + 1e-10) - rate)
+    return np.exp(ll)  # Return likelihood
+
+# Simulate data
+T = 100
+true_states = np.zeros((T, 2))
+observations = np.zeros((T, 3))
+
+true_states[0] = [0, 0]
+for t in range(1, T):
+    true_states[t] = neural_dynamics(true_states[t-1]) + np.random.randn(2) * 0.1
+
+C = np.array([[1, 0], [0, 1], [0.5, 0.5]])
+for t in range(T):
+    rate = np.exp(C @ true_states[t])
+    observations[t] = np.random.poisson(rate)
+
+# Run particle filter
+pf = ParticleFilter(n_particles=1000, state_dim=2, obs_dim=3)
+estimates = pf.filter(observations, neural_dynamics, observation_likelihood, noise_std=0.1)
+
+# Error
+error = np.mean(np.linalg.norm(estimates - true_states, axis=1))
+print(f"Particle filter tracking error: {error:.3f}")
+```
+
+**Source**: Doucet et al. (2001) Sequential Monte Carlo; Djuric et al. (2003) IEEE; Brockwell et al. (2004) J Comp Neurosci
+
+---
+
+### Rauch-Tung-Striebel (RTS) Smoother
+
+**Purpose**: Optimal backward-pass smoothing for state-space models—refines state estimates using future observations.
+
+**Formula**: Backward Smoothing Recursion
+```
+Forward (Kalman): x_{t|t}, P_{t|t}
+
+Backward smoothing:
+x_{t|T} = x_{t|t} + C_t(x_{t+1|T} - x_{t+1|t})
+
+C_t = P_{t|t} A^T P_{t+1|t}^{-1}
+
+P_{t|T} = P_{t|t} + C_t(P_{t+1|T} - P_{t+1|t})C_t^T
+
+where:
+- x_{t|T} = smoothed state (uses all data y_{1:T})
+- x_{t|t} = filtered state (uses y_{1:t})
+- C_t = smoother gain
+- A = dynamics matrix
+- T = final time
+```
+
+**Nature's Implementation**: Post-hoc state reconstruction from neural recordings. Offline analysis of motor planning, decision variables. Reveals latent trajectories in preparatory activity. Used for analyzing trial structure after experiment completion.
+
+**Impact**: **MEDIUM - Offline Smoothing**
+Optimal under linear-Gaussian assumptions. Backward pass improves estimates. Critical for offline neural data analysis, trajectory reconstruction, and understanding preparatory dynamics. More accurate than filtering alone for post-hoc analysis.
+
+**Code Example**:
+```python
+class RTSSmoother:
+    """Rauch-Tung-Striebel smoother for state-space models"""
+
+    def __init__(self, state_dim, obs_dim):
+        self.n_state = state_dim
+        self.n_obs = obs_dim
+
+        # Model parameters (same as Kalman)
+        self.A = np.eye(state_dim)
+        self.C = np.random.randn(obs_dim, state_dim) * 0.1
+        self.Q = 0.1 * np.eye(state_dim)
+        self.R = np.eye(obs_dim)
+
+    def forward_filter(self, observations):
+        """
+        Forward Kalman filter pass
+        Returns filtered states and covariances
+        """
+        T = observations.shape[0]
+
+        # Storage
+        x_filt = np.zeros((T, self.n_state))
+        P_filt = np.zeros((T, self.n_state, self.n_state))
+        x_pred = np.zeros((T, self.n_state))
+        P_pred = np.zeros((T, self.n_state, self.n_state))
+
+        # Initialize
+        x_filt[0] = np.zeros(self.n_state)
+        P_filt[0] = np.eye(self.n_state)
+
+        for t in range(1, T):
+            # Predict
+            x_pred[t] = self.A @ x_filt[t-1]
+            P_pred[t] = self.A @ P_filt[t-1] @ self.A.T + self.Q
+
+            # Update
+            y_pred = self.C @ x_pred[t]
+            innovation = observations[t] - y_pred
+
+            S = self.C @ P_pred[t] @ self.C.T + self.R
+            K = P_pred[t] @ self.C.T @ np.linalg.inv(S)
+
+            x_filt[t] = x_pred[t] + K @ innovation
+            P_filt[t] = (np.eye(self.n_state) - K @ self.C) @ P_pred[t]
+
+        return x_filt, P_filt, x_pred, P_pred
+
+    def backward_smooth(self, x_filt, P_filt, x_pred, P_pred):
+        """
+        RTS backward smoothing pass
+        """
+        T = x_filt.shape[0]
+
+        # Storage
+        x_smooth = np.zeros_like(x_filt)
+        P_smooth = np.zeros_like(P_filt)
+
+        # Initialize with final filtered estimate
+        x_smooth[-1] = x_filt[-1]
+        P_smooth[-1] = P_filt[-1]
+
+        # Backward recursion
+        for t in range(T-2, -1, -1):
+            # Smoother gain
+            C_t = P_filt[t] @ self.A.T @ np.linalg.inv(P_pred[t+1])
+
+            # Smoothed estimate
+            x_smooth[t] = x_filt[t] + C_t @ (x_smooth[t+1] - x_pred[t+1])
+            P_smooth[t] = P_filt[t] + C_t @ (P_smooth[t+1] - P_pred[t+1]) @ C_t.T
+
+        return x_smooth, P_smooth
+
+    def smooth(self, observations):
+        """
+        Full RTS smoothing: forward + backward
+        """
+        # Forward filter
+        x_filt, P_filt, x_pred, P_pred = self.forward_filter(observations)
+
+        # Backward smooth
+        x_smooth, P_smooth = self.backward_smooth(x_filt, P_filt, x_pred, P_pred)
+
+        return x_smooth, P_smooth, x_filt, P_filt
+
+
+# Example: Motor trajectory reconstruction
+n_state = 4  # [x, y, vx, vy]
+n_obs = 10   # 10 neurons
+
+smoother = RTSSmoother(state_dim=n_state, obs_dim=n_obs)
+
+# Dynamics: constant velocity model
+smoother.A = np.array([
+    [1, 0, 0.1, 0],
+    [0, 1, 0, 0.1],
+    [0, 0, 1, 0],
+    [0, 0, 0, 1]
+])
+
+# Simulate reaching movement
+T = 100
+true_states = np.zeros((T, n_state))
+true_states[0] = [0, 0, 1, 1]  # Start at origin, moving diagonally
+
+for t in range(1, T):
+    true_states[t] = smoother.A @ true_states[t-1] + np.random.randn(n_state) * 0.05
+
+# Noisy observations
+observations = (smoother.C @ true_states.T).T + np.random.randn(T, n_obs) * 0.5
+
+# Smooth
+x_smooth, P_smooth, x_filt, P_filt = smoother.smooth(observations)
+
+# Compare filter vs smoother
+filter_error = np.mean(np.linalg.norm(x_filt - true_states, axis=1))
+smoother_error = np.mean(np.linalg.norm(x_smooth - true_states, axis=1))
+
+print(f"Filter error: {filter_error:.4f}")
+print(f"Smoother error: {smoother_error:.4f}")
+print(f"Improvement: {(filter_error - smoother_error) / filter_error * 100:.1f}%")
+
+# Uncertainty reduction
+print(f"Filter uncertainty (avg trace P): {np.mean([np.trace(P) for P in P_filt]):.4f}")
+print(f"Smoother uncertainty: {np.mean([np.trace(P) for P in P_smooth]):.4f}")
+```
+
+**Source**: Rauch et al. (1965) AIAA J; Shumway & Stoffer (1982) JASA; Paninski et al. (2010) Curr Op Neurobio
+
+---
+
+### Laplace Approximation (Neural Posterior)
+
+**Purpose**: Fast Gaussian approximation to posterior at MAP estimate—second-order Taylor expansion around mode.
+
+**Formula**: Quadratic Approximation
+```
+p(θ|D) ≈ N(θ̂, H^{-1})
+
+where:
+θ̂ = argmax p(θ|D)  [MAP estimate]
+    θ
+
+H = -∇²_θ log p(θ|D) |_{θ=θ̂}  [Hessian at mode]
+
+Marginal likelihood:
+p(D) ≈ p(D|θ̂)p(θ̂) · (2π)^{d/2} |H|^{-1/2}
+
+where:
+- d = parameter dimensionality
+- Assumes unimodal posterior
+```
+
+**Nature's Implementation**: Fast approximate Bayesian inference in cortex. Rapid perceptual decisions under uncertainty. Used for neural encoding model fitting, tuning curve estimation. Balances accuracy and speed.
+
+**Impact**: **MEDIUM - Fast Approximate Inference**
+Much faster than MCMC. Closed-form covariance. Useful for model selection (marginal likelihood). Fails for multimodal posteriors. Critical for rapid neural data analysis and online BMI calibration.
+
+**Code Example**:
+```python
+from scipy.optimize import minimize
+from scipy.linalg import inv
+
+class LaplaceApproximation:
+    """Laplace approximation for Bayesian inference"""
+
+    def __init__(self, log_prior_fn, log_likelihood_fn):
+        self.log_prior = log_prior_fn
+        self.log_likelihood = log_likelihood_fn
+
+        self.theta_map = None
+        self.hessian_inv = None
+
+    def log_posterior(self, theta, data):
+        """Unnormalized log posterior"""
+        return self.log_likelihood(theta, data) + self.log_prior(theta)
+
+    def fit(self, data, theta_init):
+        """
+        Find MAP estimate and Hessian
+        """
+        # Optimize for MAP
+        result = minimize(
+            lambda theta: -self.log_posterior(theta, data),
+            theta_init,
+            method='L-BFGS-B'
+        )
+
+        self.theta_map = result.x
+
+        # Compute Hessian numerically
+        self.hessian_inv = self._compute_hessian_inv(data)
+
+        return self.theta_map, self.hessian_inv
+
+    def _compute_hessian_inv(self, data, eps=1e-5):
+        """
+        Numerical Hessian via finite differences
+        H_ij = ∂²(-log p)/∂θᵢ∂θⱼ
+        """
+        d = len(self.theta_map)
+        H = np.zeros((d, d))
+
+        for i in range(d):
+            for j in range(d):
+                theta_pp = self.theta_map.copy()
+                theta_pm = self.theta_map.copy()
+                theta_mp = self.theta_map.copy()
+                theta_mm = self.theta_map.copy()
+
+                theta_pp[i] += eps
+                theta_pp[j] += eps
+
+                theta_pm[i] += eps
+                theta_pm[j] -= eps
+
+                theta_mp[i] -= eps
+                theta_mp[j] += eps
+
+                theta_mm[i] -= eps
+                theta_mm[j] -= eps
+
+                # Second derivative
+                H[i, j] = (
+                    self.log_posterior(theta_pp, data)
+                    - self.log_posterior(theta_pm, data)
+                    - self.log_posterior(theta_mp, data)
+                    + self.log_posterior(theta_mm, data)
+                ) / (4 * eps**2)
+
+        H = -H  # Negative log posterior
+
+        # Invert (posterior covariance)
+        try:
+            H_inv = inv(H)
+        except np.linalg.LinAlgError:
+            H_inv = inv(H + 1e-6 * np.eye(d))
+
+        return H_inv
+
+    def sample(self, n_samples=1000):
+        """Sample from Laplace approximation"""
+        return np.random.multivariate_normal(
+            self.theta_map,
+            self.hessian_inv,
+            size=n_samples
+        )
+
+    def marginal_likelihood(self, data):
+        """
+        Laplace approximation to marginal likelihood
+        p(D) ≈ p(D|θ̂)·p(θ̂)·(2π)^{d/2}·|H|^{-1/2}
+        """
+        d = len(self.theta_map)
+
+        log_ml = (
+            self.log_likelihood(self.theta_map, data)
+            + self.log_prior(self.theta_map)
+            + 0.5 * d * np.log(2 * np.pi)
+            + 0.5 * np.linalg.slogdet(self.hessian_inv)[1]
+        )
+
+        return log_ml
+
+
+# Example: Tuning curve inference
+def log_prior(theta):
+    """Gaussian prior on tuning parameters"""
+    # theta = [preferred_ori, tuning_width, baseline, gain]
+    prior_mean = np.array([90, 20, 5, 10])
+    prior_std = np.array([45, 10, 5, 5])
+
+    return -0.5 * np.sum(((theta - prior_mean) / prior_std)**2)
+
+def log_likelihood(theta, data):
+    """
+    Poisson tuning curve likelihood
+    data = [(orientation, spike_count), ...]
+    """
+    pref_ori, width, baseline, gain = theta
+
+    ll = 0
+    for ori, spikes in data:
+        # Von Mises tuning
+        rate = baseline + gain * np.exp(
+            (1/width**2) * np.cos(2 * np.pi * (ori - pref_ori) / 180)
+        )
+
+        # Poisson likelihood
+        ll += spikes * np.log(rate + 1e-10) - rate
+
+    return ll
+
+# Generate synthetic data
+true_params = np.array([90, 15, 3, 12])  # [pref, width, base, gain]
+orientations = np.linspace(0, 180, 20)
+data = []
+
+for ori in orientations:
+    rate = true_params[2] + true_params[3] * np.exp(
+        (1/true_params[1]**2) * np.cos(2 * np.pi * (ori - true_params[0]) / 180)
+    )
+    spikes = np.random.poisson(rate)
+    data.append((ori, spikes))
+
+# Laplace approximation
+laplace = LaplaceApproximation(log_prior, log_likelihood)
+theta_map, cov_post = laplace.fit(data, theta_init=np.array([100, 20, 5, 10]))
+
+print(f"True params: {true_params}")
+print(f"MAP estimate: {theta_map}")
+print(f"Posterior std: {np.sqrt(np.diag(cov_post))}")
+
+# Marginal likelihood (for model comparison)
+log_ml = laplace.marginal_likelihood(data)
+print(f"Log marginal likelihood: {log_ml:.2f}")
+
+# Sample from posterior
+samples = laplace.sample(n_samples=1000)
+print(f"Posterior samples shape: {samples.shape}")
+```
+
+**Source**: MacKay (1992) Neural Comp; Bishop (2006) PRML; Kass & Raftery (1995) JASA
+
+---
+
+### Continuous-Time Hidden Markov Model (CT-HMM)
+
+**Purpose**: Extend HMM to continuous time with exponential holding times—models asynchronous state transitions in neural activity.
+
+**Formula**: Generator Matrix Dynamics
+```
+State evolution:
+dP_t/dt = P_t · Q
+
+where:
+- P_t = [p_1(t), ..., p_K(t)] = state probabilities
+- Q = [q_ij] = generator matrix (rate matrix)
+- q_ii = -Σ_{j≠i} q_ij  (row sums to zero)
+
+Holding time in state i: T_i ~ Exp(-q_ii)
+
+Transition probability over Δt:
+P(z_{t+Δt} = j | z_t = i) = δ_ij + q_ij·Δt + O(Δt²)
+
+Forward algorithm:
+α(z_t) = p(z_t, y_{0:t}) = emission(t) · exp(Q·t) · α(z_{t-1})
+
+where:
+- exp(Q·t) = matrix exponential
+```
+
+**Nature's Implementation**: Models behavioral state transitions (foraging → resting), UP/DOWN state dynamics, sleep stage transitions. Asynchronous switching between cortical states. Exponential dwell times match neural timescales.
+
+**Impact**: **MEDIUM - Continuous State Dynamics**
+Handles irregular sampling. Natural for continuous neural recordings. Analytically tractable via matrix exponential. Critical for modeling asynchronous neural state switches and behavioral epoch segmentation.
+
+**Code Example**:
+```python
+from scipy.linalg import expm
+
+class ContinuousTimeHMM:
+    """CT-HMM for neural state inference"""
+
+    def __init__(self, n_states, n_features):
+        self.K = n_states
+        self.D = n_features
+
+        # Generator matrix Q (rate matrix)
+        self.Q = np.random.rand(n_states, n_states) * 0.5
+        # Ensure rows sum to zero
+        for i in range(n_states):
+            self.Q[i, i] = -np.sum(self.Q[i, :]) + self.Q[i, i]
+
+        # Emission distributions (Gaussian)
+        self.mu = np.random.randn(n_states, n_features)
+        self.Sigma = np.array([np.eye(n_features) for _ in range(n_states)])
+
+        # Initial distribution
+        self.pi = np.ones(n_states) / n_states
+
+    def transition_matrix(self, dt):
+        """
+        P(Δt) = exp(Q·Δt)
+        """
+        return expm(self.Q * dt)
+
+    def emission_prob(self, y, state):
+        """
+        p(y_t | z_t = k) for Gaussian emissions
+        """
+        from scipy.stats import multivariate_normal
+        return multivariate_normal.pdf(y, self.mu[state], self.Sigma[state])
+
+    def forward(self, observations, times):
+        """
+        Forward algorithm for CT-HMM
+        α(z_t) = p(z_t, y_{0:t})
+        """
+        T = len(observations)
+        alpha = np.zeros((T, self.K))
+
+        # Initialize
+        alpha[0] = self.pi * np.array([self.emission_prob(observations[0], k) for k in range(self.K)])
+        alpha[0] /= alpha[0].sum()
+
+        # Forward recursion
+        for t in range(1, T):
+            dt = times[t] - times[t-1]
+
+            # Transition matrix for this interval
+            P_dt = self.transition_matrix(dt)
+
+            # Emission probability
+            emission = np.array([self.emission_prob(observations[t], k) for k in range(self.K)])
+
+            # Forward update
+            alpha[t] = emission * (P_dt.T @ alpha[t-1])
+            alpha[t] /= alpha[t].sum()
+
+        return alpha
+
+    def viterbi(self, observations, times):
+        """
+        Viterbi decoding for CT-HMM
+        """
+        T = len(observations)
+        delta = np.zeros((T, self.K))
+        psi = np.zeros((T, self.K), dtype=int)
+
+        # Initialize
+        delta[0] = np.log(self.pi + 1e-10) + np.log([
+            self.emission_prob(observations[0], k) + 1e-10 for k in range(self.K)
+        ])
+
+        # Forward
+        for t in range(1, T):
+            dt = times[t] - times[t-1]
+            P_dt = self.transition_matrix(dt)
+
+            emission = np.array([self.emission_prob(observations[t], k) for k in range(self.K)])
+
+            for k in range(self.K):
+                prob = delta[t-1] + np.log(P_dt[:, k] + 1e-10)
+                psi[t, k] = np.argmax(prob)
+                delta[t, k] = np.max(prob) + np.log(emission[k] + 1e-10)
+
+        # Backtrack
+        states = np.zeros(T, dtype=int)
+        states[-1] = np.argmax(delta[-1])
+
+        for t in range(T-2, -1, -1):
+            states[t] = psi[t+1, states[t+1]]
+
+        return states
+
+    def sample_trajectory(self, T_total, dt=0.01):
+        """
+        Sample state trajectory and observations
+        """
+        times = [0]
+        states = [np.random.choice(self.K, p=self.pi)]
+        observations = [np.random.multivariate_normal(self.mu[states[0]], self.Sigma[states[0]])]
+
+        t = 0
+        while t < T_total:
+            current_state = states[-1]
+
+            # Holding time (exponential)
+            holding_rate = -self.Q[current_state, current_state]
+            holding_time = np.random.exponential(1.0 / holding_rate)
+
+            # Next state
+            transition_probs = self.Q[current_state, :].copy()
+            transition_probs[current_state] = 0
+            transition_probs /= transition_probs.sum()
+
+            next_state = np.random.choice(self.K, p=transition_probs)
+
+            t += holding_time
+            if t >= T_total:
+                break
+
+            times.append(t)
+            states.append(next_state)
+            observations.append(
+                np.random.multivariate_normal(self.mu[next_state], self.Sigma[next_state])
+            )
+
+        return np.array(times), np.array(states), np.array(observations)
+
+
+# Example: Sleep stage dynamics
+n_states = 3  # Wake, NREM, REM
+n_features = 5  # Neural features (LFP bands, etc.)
+
+ct_hmm = ContinuousTimeHMM(n_states, n_features)
+
+# Generator matrix (transition rates)
+ct_hmm.Q = np.array([
+    [-0.3, 0.2, 0.1],   # Wake → NREM, Wake → REM
+    [0.15, -0.25, 0.1],  # NREM → Wake, NREM → REM
+    [0.2, 0.05, -0.25]   # REM → Wake, REM → NREM
+])
+
+# Emission parameters (different neural signatures)
+ct_hmm.mu = np.array([
+    [1, 0, 0, 0, 0],    # Wake: high gamma
+    [0, 1, 0, 0, 0],    # NREM: high delta
+    [0, 0, 1, 0, 0]     # REM: theta/gamma
+])
+
+# Sample trajectory
+times, true_states, observations = ct_hmm.sample_trajectory(T_total=100, dt=0.1)
+
+# Decode
+decoded_states = ct_hmm.viterbi(observations, times)
+
+# Accuracy
+accuracy = np.mean(decoded_states == true_states)
+print(f"State decoding accuracy: {accuracy:.2%}")
+print(f"Number of state transitions: {np.sum(np.diff(true_states) != 0)}")
+print(f"Average holding time: {np.mean(np.diff(times)):.2f} time units")
+```
+
+**Source**: Hobolth & Jensen (2011) Stat Appl Genet Mol Biol; Liu et al. (2015) Biometrika; Munch et al. (2018) J Neurosci Methods
+
+---
+
+### Hawkes Process (Self-Exciting Point Process)
+
+**Purpose**: Model self-exciting spike trains with history-dependent intensity—captures bursting, refractory effects, and network excitation cascades.
+
+**Formula**: Self-Exciting Conditional Intensity
+```
+λ_i(t) = μ_i + Σ  Σ      α_{ij} exp(-β(t - t_k^{(j)}))
+               j  t_k^{(j)}<t
+
+where:
+- λ_i(t) = intensity of neuron i at time t
+- μ_i = baseline (exogenous) rate
+- α_{ij} = excitation from neuron j to i
+- β = decay rate of excitation
+- t_k^{(j)} = past spike times of neuron j
+
+Multivariate stability condition:
+ρ(Γ/β) < 1
+
+where Γ = [α_{ij}] and ρ = spectral radius
+
+Branching ratio (average offspring):
+n = ||Γ/β||
+
+Log-likelihood:
+L = Σ log λ_i(t_k^{(i)}) - ∫_0^T λ_i(t) dt
+    i,k
+```
+
+**Nature's Implementation**: Bursting dynamics in cortex, hippocampus. Network excitation cascades, avalanche dynamics. Refractory effects followed by facilitation. Used for modeling spike train correlations, synchrony, and population avalanches.
+
+**Impact**: **MEDIUM-HIGH - Self-Excitation Dynamics**
+Captures temporal dependencies beyond GLM. Models bursting and network cascades. Reveals excitatory coupling strength. Critical for understanding spike train statistics, avalanche dynamics, and circuit excitability.
+
+**Code Example**:
+```python
+class HawkesProcess:
+    """Multivariate Hawkes process for neural spike trains"""
+
+    def __init__(self, n_neurons):
+        self.n_neurons = n_neurons
+
+        # Parameters
+        self.mu = np.ones(n_neurons) * 0.5  # Baseline rates
+        self.alpha = np.random.rand(n_neurons, n_neurons) * 0.3  # Excitation matrix
+        np.fill_diagonal(self.alpha, 0.1)  # Self-excitation
+        self.beta = 2.0  # Decay rate
+
+    def intensity(self, neuron_idx, t, spike_history):
+        """
+        Compute λ_i(t) = μ_i + Σ_j Σ_k α_{ij} exp(-β(t-t_k^j))
+        spike_history: list of arrays, spike_history[j] = spike times of neuron j
+        """
+        intensity = self.mu[neuron_idx]
+
+        for j in range(self.n_neurons):
+            # Past spikes of neuron j
+            past_spikes = spike_history[j][spike_history[j] < t]
+
+            # Sum contributions
+            if len(past_spikes) > 0:
+                intensity += np.sum(
+                    self.alpha[neuron_idx, j] * np.exp(-self.beta * (t - past_spikes))
+                )
+
+        return intensity
+
+    def simulate(self, T, dt=0.001):
+        """
+        Simulate Hawkes process via thinning algorithm
+        """
+        spike_trains = [[] for _ in range(self.n_neurons)]
+
+        # Upper bound on intensity (for thinning)
+        lambda_max = self.mu + np.sum(self.alpha, axis=1)
+
+        for neuron_idx in range(self.n_neurons):
+            t = 0
+            while t < T:
+                # Propose spike from homogeneous Poisson
+                t += np.random.exponential(1.0 / lambda_max[neuron_idx])
+
+                if t >= T:
+                    break
+
+                # Accept/reject based on true intensity
+                lambda_t = self.intensity(neuron_idx, t, spike_trains)
+                u = np.random.rand()
+
+                if u * lambda_max[neuron_idx] <= lambda_t:
+                    spike_trains[neuron_idx].append(t)
+
+        # Convert to arrays
+        spike_trains = [np.array(st) for st in spike_trains]
+
+        return spike_trains
+
+    def log_likelihood(self, spike_trains, T):
+        """
+        Compute log-likelihood: L = Σ log λ(t_k) - ∫ λ(t) dt
+        """
+        ll = 0
+
+        for neuron_idx in range(self.n_neurons):
+            spikes = spike_trains[neuron_idx]
+
+            # Σ log λ(t_k)
+            for t_k in spikes:
+                lambda_k = self.intensity(neuron_idx, t_k, spike_trains)
+                ll += np.log(lambda_k + 1e-10)
+
+            # -∫ λ(t) dt
+            # For Hawkes: ∫ λ(t) dt = μ·T + Σ α/β · N_j
+            ll -= self.mu[neuron_idx] * T
+
+            for j in range(self.n_neurons):
+                N_j = len(spike_trains[j])
+                ll -= (self.alpha[neuron_idx, j] / self.beta) * N_j
+
+        return ll
+
+    def fit(self, spike_trains, T, n_iterations=50, lr=0.01):
+        """
+        Fit Hawkes parameters via gradient ascent
+        """
+        for iteration in range(n_iterations):
+            ll = self.log_likelihood(spike_trains, T)
+
+            # Gradient w.r.t. parameters (numerical)
+            eps = 1e-4
+
+            # Gradient μ
+            grad_mu = np.zeros(self.n_neurons)
+            for i in range(self.n_neurons):
+                self.mu[i] += eps
+                grad_mu[i] = (self.log_likelihood(spike_trains, T) - ll) / eps
+                self.mu[i] -= eps
+
+            # Gradient α
+            grad_alpha = np.zeros((self.n_neurons, self.n_neurons))
+            for i in range(self.n_neurons):
+                for j in range(self.n_neurons):
+                    self.alpha[i, j] += eps
+                    grad_alpha[i, j] = (self.log_likelihood(spike_trains, T) - ll) / eps
+                    self.alpha[i, j] -= eps
+
+            # Update
+            self.mu += lr * grad_mu
+            self.alpha += lr * grad_alpha
+
+            # Ensure positivity
+            self.mu = np.maximum(self.mu, 0.01)
+            self.alpha = np.maximum(self.alpha, 0)
+
+            if iteration % 10 == 0:
+                print(f"Iteration {iteration}, Log-likelihood: {ll:.4f}")
+
+    def branching_ratio(self):
+        """
+        Compute branching ratio: n = ||Γ/β||
+        Determines criticality (n ≈ 1 = critical, n > 1 = supercritical)
+        """
+        Gamma = self.alpha / self.beta
+        eigenvalues = np.linalg.eigvals(Gamma)
+        spectral_radius = np.max(np.abs(eigenvalues))
+
+        return spectral_radius
+
+    def stability_check(self):
+        """Check if process is stable: ρ(Γ/β) < 1"""
+        return self.branching_ratio() < 1
+
+
+# Example: Coupled excitatory neurons
+n_neurons = 5
+hawkes = HawkesProcess(n_neurons)
+
+# Set parameters
+hawkes.mu = np.ones(n_neurons) * 1.0  # Baseline 1 Hz
+hawkes.alpha = np.random.rand(n_neurons, n_neurons) * 0.2  # Weak coupling
+hawkes.beta = 3.0
+
+# Check stability
+print(f"Branching ratio: {hawkes.branching_ratio():.3f}")
+print(f"Stable: {hawkes.stability_check()}")
+
+# Simulate
+T = 100  # seconds
+spike_trains = hawkes.simulate(T, dt=0.001)
+
+# Statistics
+for i, st in enumerate(spike_trains):
+    print(f"Neuron {i}: {len(st)} spikes, rate = {len(st)/T:.2f} Hz")
+
+# Fit new model to data
+hawkes_fit = HawkesProcess(n_neurons)
+hawkes_fit.fit(spike_trains, T, n_iterations=30, lr=0.01)
+
+print(f"\nTrue baseline rates: {hawkes.mu}")
+print(f"Fitted baseline rates: {hawkes_fit.mu}")
+```
+
+**Source**: Hawkes (1971) Biometrika; Reynaud-Bouret & Schbath (2010) Adv Appl Prob; Pernice et al. (2011) J Stat Mech; Gerhard et al. (2017) Front Comp Neurosci
+
+---
+
+### Bayesian Filtering (General Continuous State)
+
+**Purpose**: Recursive Bayesian state estimation for arbitrary dynamics and observations—foundation for all filtering algorithms.
+
+**Formula**: Recursive Bayes Filter
+```
+Prediction (Chapman-Kolmogorov):
+p(x_t | y_{1:t-1}) = ∫ p(x_t | x_{t-1}) p(x_{t-1} | y_{1:t-1}) dx_{t-1}
+
+Update (Bayes rule):
+p(x_t | y_{1:t}) = p(y_t | x_t) p(x_t | y_{1:t-1}) / p(y_t | y_{1:t-1})
+
+Normalization:
+p(y_t | y_{1:t-1}) = ∫ p(y_t | x_t) p(x_t | y_{1:t-1}) dx_t
+
+where:
+- x_t = latent state at time t
+- y_t = observation at time t
+- p(x_t | x_{t-1}) = dynamics model
+- p(y_t | x_t) = observation model
+
+Special cases:
+- Kalman Filter: linear-Gaussian
+- Particle Filter: nonlinear-nonGaussian (MC approximation)
+- Extended KF: linearization
+```
+
+**Nature's Implementation**: General framework for sensorimotor integration, perceptual inference, state estimation. Cortical implementation via population codes, predictive coding. Used for motor control, navigation, multisensory integration.
+
+**Impact**: **HIGH - Universal State Estimation**
+Unifies all filtering algorithms. Optimal under Bayes' rule. Handles arbitrary models. Foundation for understanding neural inference. Critical for BMI, state estimation theory, and neural probabilistic computation.
+
+**Code Example**:
+```python
+class BayesianFilter:
+    """
+    General Bayesian filter (continuous state)
+    Implemented via grid approximation for arbitrary models
+    """
+
+    def __init__(self, state_min, state_max, n_grid):
+        """
+        state_min, state_max: bounds of state space
+        n_grid: grid resolution for each dimension
+        """
+        self.state_grid = np.linspace(state_min, state_max, n_grid)
+        self.n_grid = n_grid
+        self.dx = self.state_grid[1] - self.state_grid[0]
+
+        # Posterior belief: p(x_t | y_{1:t})
+        self.belief = np.ones(n_grid) / n_grid  # Uniform prior
+
+    def predict(self, dynamics_fn, noise_std=0.1):
+        """
+        Prediction step: p(x_t | y_{1:t-1}) = ∫ p(x_t|x_{t-1}) p(x_{t-1}|y_{1:t-1}) dx_{t-1}
+
+        dynamics_fn: x_t = f(x_{t-1})
+        Assumes Gaussian process noise
+        """
+        belief_pred = np.zeros(self.n_grid)
+
+        for i, x_t in enumerate(self.state_grid):
+            # For each possible current state x_t,
+            # integrate over previous states weighted by dynamics
+            for j, x_tm1 in enumerate(self.state_grid):
+                # p(x_t | x_{t-1}) = N(x_t | f(x_{t-1}), noise_std²)
+                x_pred = dynamics_fn(x_tm1)
+                transition_prob = np.exp(-(x_t - x_pred)**2 / (2 * noise_std**2))
+                transition_prob /= np.sqrt(2 * np.pi * noise_std**2)
+
+                belief_pred[i] += transition_prob * self.belief[j] * self.dx
+
+        self.belief = belief_pred / (belief_pred.sum() * self.dx)  # Normalize
+
+    def update(self, observation, likelihood_fn):
+        """
+        Update step: p(x_t|y_{1:t}) ∝ p(y_t|x_t) p(x_t|y_{1:t-1})
+
+        likelihood_fn: p(y_t | x_t)
+        """
+        # Compute likelihood for each grid point
+        likelihoods = np.array([likelihood_fn(observation, x) for x in self.state_grid])
+
+        # Bayes update
+        self.belief = likelihoods * self.belief
+
+        # Normalize
+        self.belief /= (self.belief.sum() * self.dx)
+
+    def estimate(self):
+        """Posterior mean estimate"""
+        return np.sum(self.state_grid * self.belief * self.dx)
+
+    def variance(self):
+        """Posterior variance"""
+        mean = self.estimate()
+        return np.sum((self.state_grid - mean)**2 * self.belief * self.dx)
+
+    def filter(self, observations, dynamics_fn, likelihood_fn, noise_std=0.1):
+        """
+        Run Bayesian filter on sequence
+        """
+        T = len(observations)
+        estimates = np.zeros(T)
+        variances = np.zeros(T)
+
+        for t in range(T):
+            # Predict
+            self.predict(dynamics_fn, noise_std)
+
+            # Update
+            self.update(observations[t], likelihood_fn)
+
+            # Store
+            estimates[t] = self.estimate()
+            variances[t] = self.variance()
+
+        return estimates, variances
+
+
+# Example: Nonlinear 1D dynamics with Poisson observations
+def nonlinear_dynamics(x):
+    """Nonlinear state transition: x_t = 0.9·x_{t-1} + tanh(x_{t-1})"""
+    return 0.9 * x + np.tanh(x)
+
+def poisson_likelihood(y_obs, x_state):
+    """
+    Poisson observation: y ~ Poisson(exp(x))
+    """
+    rate = np.exp(x_state)
+    if y_obs >= 0:
+        ll = y_obs * np.log(rate + 1e-10) - rate
+        return np.exp(ll) / np.math.factorial(int(y_obs))
+    else:
+        return 0
+
+# Simulate data
+T = 50
+true_states = np.zeros(T)
+observations = np.zeros(T)
+
+true_states[0] = 0
+for t in range(1, T):
+    true_states[t] = nonlinear_dynamics(true_states[t-1]) + np.random.randn() * 0.3
+
+for t in range(T):
+    rate = np.exp(true_states[t])
+    observations[t] = np.random.poisson(rate)
+
+# Bayesian filter
+bf = BayesianFilter(state_min=-3, state_max=3, n_grid=200)
+estimates, variances = bf.filter(observations, nonlinear_dynamics, poisson_likelihood, noise_std=0.3)
+
+# Error
+error = np.mean(np.abs(estimates - true_states))
+print(f"Filtering error: {error:.3f}")
+print(f"Average posterior std: {np.mean(np.sqrt(variances)):.3f}")
+
+# Compare to Kalman (will fail due to nonlinearity)
+from scipy.signal import lfilter
+b, a = [1], [1, -0.9]  # Linear approximation
+kalman_estimates = lfilter(b, a, observations)
+kalman_error = np.mean(np.abs(kalman_estimates - true_states))
+
+print(f"\nKalman (linear approx) error: {kalman_error:.3f}")
+print(f"Bayesian filter improvement: {(kalman_error - error) / kalman_error * 100:.1f}%")
+```
+
+**Source**: Jazwinski (1970) Stochastic Processes and Filtering Theory; Arulampalam et al. (2002) IEEE Trans Signal Processing; Doucet & Johansen (2009) Handbook of Nonlinear Filtering
+
+---
+
+### Hawkes Process (Self-Exciting Point Process)
+
+**Purpose**: Model self-exciting spike trains with history-dependent intensity—captures bursting, refractory effects, and network excitation cascades.
+
+**Formula**: Self-Exciting Conditional Intensity
+```
+λ_i(t) = μ_i + Σ  Σ      α_{ij} exp(-β(t - t_k^{(j)}))
+               j  t_k^{(j)}<t
+
+where:
+- λ_i(t) = intensity of neuron i at time t
+- μ_i = baseline (exogenous) rate
+- α_{ij} = excitation from neuron j to i
+- β = decay rate of excitation
+- t_k^{(j)} = past spike times of neuron j
+
+Multivariate stability condition:
+ρ(Γ/β) < 1
+
+where Γ = [α_{ij}] and ρ = spectral radius
+
+Branching ratio (average offspring):
+n = ||Γ/β||
+
+Log-likelihood:
+L = Σ log λ_i(t_k^{(i)}) - ∫_0^T λ_i(t) dt
+    i,k
+```
+
+**Nature's Implementation**: Bursting dynamics in cortex, hippocampus. Network excitation cascades, avalanche dynamics. Refractory effects followed by facilitation. Used for modeling spike train correlations, synchrony, and population avalanches.
+
+**Impact**: **MEDIUM-HIGH - Self-Excitation Dynamics**
+Captures temporal dependencies beyond GLM. Models bursting and network cascades. Reveals excitatory coupling strength. Critical for understanding spike train statistics, avalanche dynamics, and circuit excitability.
+
+**Code Example**:
+```python
+class HawkesProcess:
+    """Multivariate Hawkes process for neural spike trains"""
+
+    def __init__(self, n_neurons):
+        self.n_neurons = n_neurons
+
+        # Parameters
+        self.mu = np.ones(n_neurons) * 0.5  # Baseline rates
+        self.alpha = np.random.rand(n_neurons, n_neurons) * 0.3  # Excitation matrix
+        np.fill_diagonal(self.alpha, 0.1)  # Self-excitation
+        self.beta = 2.0  # Decay rate
+
+    def intensity(self, neuron_idx, t, spike_history):
+        """
+        Compute λ_i(t) = μ_i + Σ_j Σ_k α_{ij} exp(-β(t-t_k^j))
+        spike_history: list of arrays, spike_history[j] = spike times of neuron j
+        """
+        intensity = self.mu[neuron_idx]
+
+        for j in range(self.n_neurons):
+            # Past spikes of neuron j
+            past_spikes = spike_history[j][spike_history[j] < t]
+
+            # Sum contributions
+            if len(past_spikes) > 0:
+                intensity += np.sum(
+                    self.alpha[neuron_idx, j] * np.exp(-self.beta * (t - past_spikes))
+                )
+
+        return intensity
+
+    def simulate(self, T, dt=0.001):
+        """
+        Simulate Hawkes process via thinning algorithm
+        """
+        spike_trains = [[] for _ in range(self.n_neurons)]
+
+        # Upper bound on intensity (for thinning)
+        lambda_max = self.mu + np.sum(self.alpha, axis=1)
+
+        for neuron_idx in range(self.n_neurons):
+            t = 0
+            while t < T:
+                # Propose spike from homogeneous Poisson
+                t += np.random.exponential(1.0 / lambda_max[neuron_idx])
+
+                if t >= T:
+                    break
+
+                # Accept/reject based on true intensity
+                lambda_t = self.intensity(neuron_idx, t, spike_trains)
+                u = np.random.rand()
+
+                if u * lambda_max[neuron_idx] <= lambda_t:
+                    spike_trains[neuron_idx].append(t)
+
+        # Convert to arrays
+        spike_trains = [np.array(st) for st in spike_trains]
+
+        return spike_trains
+
+    def log_likelihood(self, spike_trains, T):
+        """
+        Compute log-likelihood: L = Σ log λ(t_k) - ∫ λ(t) dt
+        """
+        ll = 0
+
+        for neuron_idx in range(self.n_neurons):
+            spikes = spike_trains[neuron_idx]
+
+            # Σ log λ(t_k)
+            for t_k in spikes:
+                lambda_k = self.intensity(neuron_idx, t_k, spike_trains)
+                ll += np.log(lambda_k + 1e-10)
+
+            # -∫ λ(t) dt
+            # For Hawkes: ∫ λ(t) dt = μ·T + Σ α/β · N_j
+            ll -= self.mu[neuron_idx] * T
+
+            for j in range(self.n_neurons):
+                N_j = len(spike_trains[j])
+                ll -= (self.alpha[neuron_idx, j] / self.beta) * N_j
+
+        return ll
+
+    def fit(self, spike_trains, T, n_iterations=50, lr=0.01):
+        """
+        Fit Hawkes parameters via gradient ascent
+        """
+        for iteration in range(n_iterations):
+            ll = self.log_likelihood(spike_trains, T)
+
+            # Gradient w.r.t. parameters (numerical)
+            eps = 1e-4
+
+            # Gradient μ
+            grad_mu = np.zeros(self.n_neurons)
+            for i in range(self.n_neurons):
+                self.mu[i] += eps
+                grad_mu[i] = (self.log_likelihood(spike_trains, T) - ll) / eps
+                self.mu[i] -= eps
+
+            # Gradient α
+            grad_alpha = np.zeros((self.n_neurons, self.n_neurons))
+            for i in range(self.n_neurons):
+                for j in range(self.n_neurons):
+                    self.alpha[i, j] += eps
+                    grad_alpha[i, j] = (self.log_likelihood(spike_trains, T) - ll) / eps
+                    self.alpha[i, j] -= eps
+
+            # Update
+            self.mu += lr * grad_mu
+            self.alpha += lr * grad_alpha
+
+            # Ensure positivity
+            self.mu = np.maximum(self.mu, 0.01)
+            self.alpha = np.maximum(self.alpha, 0)
+
+            if iteration % 10 == 0:
+                print(f"Iteration {iteration}, Log-likelihood: {ll:.4f}")
+
+    def branching_ratio(self):
+        """
+        Compute branching ratio: n = ||Γ/β||
+        Determines criticality (n ≈ 1 = critical, n > 1 = supercritical)
+        """
+        Gamma = self.alpha / self.beta
+        eigenvalues = np.linalg.eigvals(Gamma)
+        spectral_radius = np.max(np.abs(eigenvalues))
+
+        return spectral_radius
+
+    def stability_check(self):
+        """Check if process is stable: ρ(Γ/β) < 1"""
+        return self.branching_ratio() < 1
+
+
+# Example: Coupled excitatory neurons
+n_neurons = 5
+hawkes = HawkesProcess(n_neurons)
+
+# Set parameters
+hawkes.mu = np.ones(n_neurons) * 1.0  # Baseline 1 Hz
+hawkes.alpha = np.random.rand(n_neurons, n_neurons) * 0.2  # Weak coupling
+hawkes.beta = 3.0
+
+# Check stability
+print(f"Branching ratio: {hawkes.branching_ratio():.3f}")
+print(f"Stable: {hawkes.stability_check()}")
+
+# Simulate
+T = 100  # seconds
+spike_trains = hawkes.simulate(T, dt=0.001)
+
+# Statistics
+for i, st in enumerate(spike_trains):
+    print(f"Neuron {i}: {len(st)} spikes, rate = {len(st)/T:.2f} Hz")
+
+# Fit new model to data
+hawkes_fit = HawkesProcess(n_neurons)
+hawkes_fit.fit(spike_trains, T, n_iterations=30, lr=0.01)
+
+print(f"\nTrue baseline rates: {hawkes.mu}")
+print(f"Fitted baseline rates: {hawkes_fit.mu}")
+```
+
+**Source**: Hawkes (1971) Biometrika; Reynaud-Bouret & Schbath (2010) Adv Appl Prob; Pernice et al. (2011) J Stat Mech; Gerhard et al. (2017) Front Comp Neurosci
+
+---
+
+### Bayesian Filtering (General Continuous State)
+
+**Purpose**: Recursive Bayesian state estimation for arbitrary dynamics and observations—foundation for all filtering algorithms.
+
+**Formula**: Recursive Bayes Filter
+```
+Prediction (Chapman-Kolmogorov):
+p(x_t | y_{1:t-1}) = ∫ p(x_t | x_{t-1}) p(x_{t-1} | y_{1:t-1}) dx_{t-1}
+
+Update (Bayes rule):
+p(x_t | y_{1:t}) = p(y_t | x_t) p(x_t | y_{1:t-1}) / p(y_t | y_{1:t-1})
+
+Normalization:
+p(y_t | y_{1:t-1}) = ∫ p(y_t | x_t) p(x_t | y_{1:t-1}) dx_t
+
+where:
+- x_t = latent state at time t
+- y_t = observation at time t
+- p(x_t | x_{t-1}) = dynamics model
+- p(y_t | x_t) = observation model
+
+Special cases:
+- Kalman Filter: linear-Gaussian
+- Particle Filter: nonlinear-nonGaussian (MC approximation)
+- Extended KF: linearization
+```
+
+**Nature's Implementation**: General framework for sensorimotor integration, perceptual inference, state estimation. Cortical implementation via population codes, predictive coding. Used for motor control, navigation, multisensory integration.
+
+**Impact**: **HIGH - Universal State Estimation**
+Unifies all filtering algorithms. Optimal under Bayes' rule. Handles arbitrary models. Foundation for understanding neural inference. Critical for BMI, state estimation theory, and neural probabilistic computation.
+
+**Code Example**:
+```python
+class BayesianFilter:
+    """
+    General Bayesian filter (continuous state)
+    Implemented via grid approximation for arbitrary models
+    """
+
+    def __init__(self, state_min, state_max, n_grid):
+        """
+        state_min, state_max: bounds of state space
+        n_grid: grid resolution for each dimension
+        """
+        self.state_grid = np.linspace(state_min, state_max, n_grid)
+        self.n_grid = n_grid
+        self.dx = self.state_grid[1] - self.state_grid[0]
+
+        # Posterior belief: p(x_t | y_{1:t})
+        self.belief = np.ones(n_grid) / n_grid  # Uniform prior
+
+    def predict(self, dynamics_fn, noise_std=0.1):
+        """
+        Prediction step: p(x_t | y_{1:t-1}) = ∫ p(x_t|x_{t-1}) p(x_{t-1}|y_{1:t-1}) dx_{t-1}
+
+        dynamics_fn: x_t = f(x_{t-1})
+        Assumes Gaussian process noise
+        """
+        belief_pred = np.zeros(self.n_grid)
+
+        for i, x_t in enumerate(self.state_grid):
+            # For each possible current state x_t,
+            # integrate over previous states weighted by dynamics
+            for j, x_tm1 in enumerate(self.state_grid):
+                # p(x_t | x_{t-1}) = N(x_t | f(x_{t-1}), noise_std²)
+                x_pred = dynamics_fn(x_tm1)
+                transition_prob = np.exp(-(x_t - x_pred)**2 / (2 * noise_std**2))
+                transition_prob /= np.sqrt(2 * np.pi * noise_std**2)
+
+                belief_pred[i] += transition_prob * self.belief[j] * self.dx
+
+        self.belief = belief_pred / (belief_pred.sum() * self.dx)  # Normalize
+
+    def update(self, observation, likelihood_fn):
+        """
+        Update step: p(x_t|y_{1:t}) ∝ p(y_t|x_t) p(x_t|y_{1:t-1})
+
+        likelihood_fn: p(y_t | x_t)
+        """
+        # Compute likelihood for each grid point
+        likelihoods = np.array([likelihood_fn(observation, x) for x in self.state_grid])
+
+        # Bayes update
+        self.belief = likelihoods * self.belief
+
+        # Normalize
+        self.belief /= (self.belief.sum() * self.dx)
+
+    def estimate(self):
+        """Posterior mean estimate"""
+        return np.sum(self.state_grid * self.belief * self.dx)
+
+    def variance(self):
+        """Posterior variance"""
+        mean = self.estimate()
+        return np.sum((self.state_grid - mean)**2 * self.belief * self.dx)
+
+    def filter(self, observations, dynamics_fn, likelihood_fn, noise_std=0.1):
+        """
+        Run Bayesian filter on sequence
+        """
+        T = len(observations)
+        estimates = np.zeros(T)
+        variances = np.zeros(T)
+
+        for t in range(T):
+            # Predict
+            self.predict(dynamics_fn, noise_std)
+
+            # Update
+            self.update(observations[t], likelihood_fn)
+
+            # Store
+            estimates[t] = self.estimate()
+            variances[t] = self.variance()
+
+        return estimates, variances
+
+
+# Example: Nonlinear 1D dynamics with Poisson observations
+def nonlinear_dynamics(x):
+    """Nonlinear state transition: x_t = 0.9·x_{t-1} + tanh(x_{t-1})"""
+    return 0.9 * x + np.tanh(x)
+
+def poisson_likelihood(y_obs, x_state):
+    """
+    Poisson observation: y ~ Poisson(exp(x))
+    """
+    rate = np.exp(x_state)
+    if y_obs >= 0:
+        ll = y_obs * np.log(rate + 1e-10) - rate
+        return np.exp(ll) / np.math.factorial(int(y_obs))
+    else:
+        return 0
+
+# Simulate data
+T = 50
+true_states = np.zeros(T)
+observations = np.zeros(T)
+
+true_states[0] = 0
+for t in range(1, T):
+    true_states[t] = nonlinear_dynamics(true_states[t-1]) + np.random.randn() * 0.3
+
+for t in range(T):
+    rate = np.exp(true_states[t])
+    observations[t] = np.random.poisson(rate)
+
+# Bayesian filter
+bf = BayesianFilter(state_min=-3, state_max=3, n_grid=200)
+estimates, variances = bf.filter(observations, nonlinear_dynamics, poisson_likelihood, noise_std=0.3)
+
+# Error
+error = np.mean(np.abs(estimates - true_states))
+print(f"Filtering error: {error:.3f}")
+print(f"Average posterior std: {np.mean(np.sqrt(variances)):.3f}")
+
+# Compare to Kalman (will fail due to nonlinearity)
+from scipy.signal import lfilter
+b, a = [1], [1, -0.9]  # Linear approximation
+kalman_estimates = lfilter(b, a, observations)
+kalman_error = np.mean(np.abs(kalman_estimates - true_states))
+
+print(f"\nKalman (linear approx) error: {kalman_error:.3f}")
+print(f"Bayesian filter improvement: {(kalman_error - error) / kalman_error * 100:.1f}%")
+```
+
+**Source**: Jazwinski (1970) Stochastic Processes and Filtering Theory; Arulampalam et al. (2002) IEEE Trans Signal Processing; Doucet & Johansen (2009) Handbook of Nonlinear Filtering
+
+---
+
+### Probabilistic Population Code (PPC)
+
+**Purpose**: Exponential family population coding for optimal Bayesian inference—neural activity directly represents posterior distributions.
+
+**Formula**: Log-Linear Population Code
+```
+p(s | r) ∝ exp(Σ r_i f_i(s))
+              i
+
+Equivalently:
+log p(s | r) = Σ r_i f_i(s) - A(r)
+                i
+
+where:
+- s = stimulus or latent variable
+- r = [r_1, ..., r_N] = population firing rates
+- f_i(s) = basis function for neuron i (often tuning curve)
+- A(r) = log partition function (normalization)
+
+Linear-Gaussian case:
+p(s | r) = N(s | μ(r), Σ(r))
+
+where population statistics directly encode mean and variance
+
+For optimal coding:
+f_i(s) = ∂/∂s log p(s) + noise term
+```
+
+**Nature's Implementation**: Distributed coding in sensory cortex (V1 orientation, MT motion), motor cortex (reaching direction), hippocampus (place cells). Population activity represents full posterior, not just point estimates. Handles uncertainty naturally.
+
+**Impact**: **MEDIUM-HIGH - Distributional Coding**
+Represents full distributions, not just point estimates. Optimal for Bayesian inference. Explains population variability. Handles uncertainty explicitly. Critical for understanding probabilistic computation in neural populations and distributed representations.
+
+**Code Example**:
+```python
+class ProbabilisticPopulationCode:
+    """Exponential family population code for Bayesian inference"""
+
+    def __init__(self, n_neurons, stimulus_range=(0, 180)):
+        self.n_neurons = n_neurons
+        self.stim_min, self.stim_max = stimulus_range
+
+        # Basis functions (tuning curves): f_i(s)
+        self.preferred = np.linspace(self.stim_min, self.stim_max, n_neurons)
+        self.tuning_width = 20.0
+
+    def basis_functions(self, stimulus):
+        """
+        f_i(s) = tuning curve (von Mises for circular variables)
+        """
+        f = np.zeros(self.n_neurons)
+        for i in range(self.n_neurons):
+            # Von Mises tuning
+            kappa = 1.0 / (self.tuning_width**2)
+            f[i] = np.exp(kappa * np.cos(2 * np.pi * (stimulus - self.preferred[i]) / 180))
+
+        return f
+
+    def encode(self, stimulus, gain=10.0):
+        """
+        Generate population response: r_i ~ Poisson(gain · f_i(s))
+        """
+        f = self.basis_functions(stimulus)
+        rates = gain * f
+        spikes = np.random.poisson(rates)
+
+        return spikes
+
+    def decode_posterior(self, spikes, stimulus_grid=None):
+        """
+        Compute posterior: p(s | r) ∝ exp(Σ r_i f_i(s))
+        """
+        if stimulus_grid is None:
+            stimulus_grid = np.linspace(self.stim_min, self.stim_max, 180)
+
+        log_posterior = np.zeros(len(stimulus_grid))
+
+        for j, s in enumerate(stimulus_grid):
+            f = self.basis_functions(s)
+            # log p(s | r) = Σ r_i f_i(s)
+            log_posterior[j] = np.dot(spikes, f)
+
+        # Normalize
+        log_posterior -= np.max(log_posterior)  # Numerical stability
+        posterior = np.exp(log_posterior)
+        posterior /= np.sum(posterior)
+
+        return stimulus_grid, posterior
+
+    def decode_map(self, spikes):
+        """Maximum a posteriori estimate"""
+        stim_grid, posterior = self.decode_posterior(spikes)
+        return stim_grid[np.argmax(posterior)]
+
+    def decode_mean(self, spikes):
+        """Posterior mean (minimum MSE estimator)"""
+        stim_grid, posterior = self.decode_posterior(spikes)
+        return np.sum(stim_grid * posterior)
+
+    def decode_variance(self, spikes):
+        """Posterior variance (uncertainty quantification)"""
+        stim_grid, posterior = self.decode_posterior(spikes)
+        mean = np.sum(stim_grid * posterior)
+        variance = np.sum((stim_grid - mean)**2 * posterior)
+        return variance
+
+    def linear_gaussian_approximation(self, spikes):
+        """
+        For high spike counts: p(s|r) ≈ N(μ, σ²)
+        μ = (Σ r_i preferred_i) / Σ r_i  (population vector)
+        σ² = Fisher information^{-1}
+        """
+        if spikes.sum() == 0:
+            return 90, 1000  # Uniform
+
+        # Posterior mean (circular mean for orientation)
+        angles_rad = 2 * np.pi * self.preferred / 180
+        mean_cos = np.sum(spikes * np.cos(angles_rad)) / spikes.sum()
+        mean_sin = np.sum(spikes * np.sin(angles_rad)) / spikes.sum()
+        mean_angle = np.arctan2(mean_sin, mean_cos) * 180 / (2 * np.pi)
+        if mean_angle < 0:
+            mean_angle += 180
+
+        # Posterior variance (inverse Fisher information)
+        # For Poisson: J = Σ (f'_i)²/f_i
+        # Approximate as 1/(total spike count)
+        variance = 1.0 / (spikes.sum() + 1e-10)
+
+        return mean_angle, variance
+
+
+# Example: Orientation coding in V1
+n_neurons = 50
+ppc = ProbabilisticPopulationCode(n_neurons, stimulus_range=(0, 180))
+
+# Encode stimulus
+true_stimulus = 90  # degrees
+spikes = ppc.encode(true_stimulus, gain=10)
+
+print(f"True stimulus: {true_stimulus}°")
+print(f"Total spikes: {spikes.sum()}")
+
+# Decode full posterior
+stim_grid, posterior = ppc.decode_posterior(spikes)
+
+# Point estimates
+map_estimate = ppc.decode_map(spikes)
+mean_estimate = ppc.decode_mean(spikes)
+variance = ppc.decode_variance(spikes)
+
+print(f"\nMAP estimate: {map_estimate:.1f}°")
+print(f"Posterior mean: {mean_estimate:.1f}°")
+print(f"Posterior std: {np.sqrt(variance):.1f}°")
+
+# Linear-Gaussian approximation
+lg_mean, lg_var = ppc.linear_gaussian_approximation(spikes)
+print(f"\nLinear-Gaussian approx: {lg_mean:.1f}° ± {np.sqrt(lg_var):.1f}°")
+
+# Test with ambiguous stimulus (low gain)
+spikes_ambiguous = ppc.encode(true_stimulus, gain=2)
+stim_grid_amb, posterior_amb = ppc.decode_posterior(spikes_ambiguous)
+variance_amb = ppc.decode_variance(spikes_ambiguous)
+
+print(f"\nAmbiguous stimulus (low gain):")
+print(f"Total spikes: {spikes_ambiguous.sum()}")
+print(f"Posterior std: {np.sqrt(variance_amb):.1f}° (high uncertainty)")
+```
+
+**Source**: Zemel et al. (1998) Neural Comp; Pouget et al. (2000) Nat Rev Neurosci; Ma et al. (2006) Nat Neurosci; Beck et al. (2008) Neuron
+
+---
+
+### Neural Tangent Kernel (NTK)
+
+**Purpose**: Infinite-width limit of neural networks—linearized dynamics, kernel regime, and feature learning characterization.
+
+**Formula**: Tangent Kernel
+```
+K(x, x') = ∇_θ f_θ(x) · ∇_θ f_θ(x')
+
+For infinite width: K^∞(x, x') = lim K(x, x')
+                                  width→∞
+
+Training dynamics in kernel regime:
+df_θ(x)/dt = -η Σ K(x, x_i)(f_θ(x_i) - y_i)
+                i
+
+Convergence to minimum:
+f_∞(x) = K(x, X)(K(X, X) + λI)^{-1} y
+
+where:
+- θ = network parameters
+- f_θ(x) = network output
+- η = learning rate
+- X = training inputs, y = training targets
+- K(X, X) = Gram matrix
+
+Deterministic at initialization:
+K^∞(x, x') depends only on architecture (depth, width, activation)
+```
+
+**Nature's Implementation**: Models feature learning vs kernel regime in biological networks. Explains when networks learn features (finite width) vs stay in linear regime (infinite width). Reveals representational capacity limits.
+
+**Impact**: **MEDIUM - Deep Learning Theory**
+Explains training dynamics. Connects neural networks to kernel methods. Reveals when feature learning occurs. Theoretical tool for understanding generalization. Critical for analyzing deep network capacity and biological plausibility of gradient descent.
+
+**Code Example**:
+```python
+class NeuralTangentKernel:
+    """Compute NTK for fully-connected networks"""
+
+    def __init__(self, architecture, activation='relu'):
+        """
+        architecture: [input_dim, hidden1, hidden2, ..., output_dim]
+        """
+        self.architecture = architecture
+        self.activation = activation
+
+    def kernel_at_init(self, x1, x2):
+        """
+        Compute NTK at initialization (infinite width limit)
+        For ReLU networks: recursive kernel formula
+        """
+        # Start with input kernel
+        Sigma_L = x1 @ x2.T / x1.shape[1]  # Normalized dot product
+        K_L = Sigma_L
+
+        for layer in range(1, len(self.architecture) - 1):
+            # Recursive NTK computation for ReLU
+            if self.activation == 'relu':
+                # Compute angles
+                norm1 = np.sqrt(np.diag(Sigma_L))
+                norm2 = np.sqrt(np.diag(Sigma_L))
+                norm_outer = np.outer(norm1, norm2)
+
+                cos_theta = Sigma_L / (norm_outer + 1e-10)
+                cos_theta = np.clip(cos_theta, -1, 1)
+                theta = np.arccos(cos_theta)
+
+                # ReLU NTK recursion
+                Sigma_Lplus1 = (norm_outer / (2 * np.pi)) * (
+                    np.sin(theta) + (np.pi - theta) * cos_theta
+                )
+
+                K_Lplus1 = (norm_outer / (2 * np.pi)) * (
+                    np.sin(theta) + (np.pi - theta) * cos_theta
+                ) + Sigma_L * (1 - theta / np.pi)
+
+                Sigma_L = Sigma_Lplus1
+                K_L = K_Lplus1
+
+        return K_L
+
+    def empirical_ntk(self, model, x1, x2):
+        """
+        Compute empirical NTK: K(x,x') = ∇_θf(x)·∇_θf(x')
+        For finite-width networks
+        """
+        # Get Jacobians
+        J1 = self._jacobian(model, x1)  # [batch1, output, n_params]
+        J2 = self._jacobian(model, x2)  # [batch2, output, n_params]
+
+        # NTK: J1 · J2^T summed over parameters
+        K = np.einsum('iop,jop->ij', J1, J2)
+
+        return K
+
+    def _jacobian(self, model, x):
+        """Compute Jacobian ∇_θ f_θ(x) for each input"""
+        import torch
+        from torch.func import jacrev, vmap
+
+        # Convert to torch
+        x_torch = torch.FloatTensor(x)
+
+        # Function that returns network output
+        def forward_fn(params, x_single):
+            # Flatten params and pass through model
+            # (This is pseudocode - actual implementation depends on model structure)
+            return model(x_single, params)
+
+        # Vectorized Jacobian
+        jacobian_fn = vmap(jacrev(forward_fn, argnums=0), in_dims=(None, 0))
+
+        # Get parameters
+        params = {name: p.detach() for name, p in model.named_parameters()}
+
+        J = jacobian_fn(params, x_torch)
+
+        return J.numpy()
+
+    def training_dynamics_kernel_regime(self, K_train, y_train, n_steps=1000, lr=0.01):
+        """
+        Simulate training dynamics in kernel regime:
+        df/dt = -η K(X,X)(f - y)
+        """
+        n = K_train.shape[0]
+        f = np.zeros(n)  # Initialize at zero
+
+        trajectory = [f.copy()]
+
+        for step in range(n_steps):
+            # Gradient: K(f - y)
+            grad = K_train @ (f - y_train)
+
+            # Update
+            f -= lr * grad
+
+            if step % 100 == 0:
+                trajectory.append(f.copy())
+
+        return np.array(trajectory)
+
+    def predict_kernel_limit(self, K_train, K_test_train, y_train, regularization=0.0):
+        """
+        Infinite-time prediction in kernel regime:
+        f_∞(x) = K(x, X_train) (K(X_train, X_train) + λI)^{-1} y
+        """
+        n = K_train.shape[0]
+        K_reg = K_train + regularization * np.eye(n)
+
+        # Solve linear system
+        alpha = np.linalg.solve(K_reg, y_train)
+
+        # Predict
+        f_test = K_test_train @ alpha
+
+        return f_test
+
+
+# Example: NTK for simple network
+arch = [10, 50, 50, 1]  # 2-hidden-layer network
+ntk = NeuralTangentKernel(arch, activation='relu')
+
+# Generate data
+n_train = 100
+n_test = 50
+X_train = np.random.randn(n_train, 10)
+X_test = np.random.randn(n_test, 10)
+y_train = np.sin(X_train[:, 0]) + 0.1 * np.random.randn(n_train)
+
+# Compute NTK at initialization (infinite width)
+K_train_train = ntk.kernel_at_init(X_train, X_train)
+K_test_train = ntk.kernel_at_init(X_test, X_train)
+
+print(f"NTK shape (train): {K_train_train.shape}")
+print(f"NTK eigenvalues: {np.linalg.eigvalsh(K_train_train)[-5:]}")
+
+# Predict in kernel regime (no feature learning)
+y_pred = ntk.predict_kernel_limit(K_train_train, K_test_train, y_train, regularization=0.01)
+
+# Training dynamics
+trajectory = ntk.training_dynamics_kernel_regime(K_train_train, y_train, n_steps=1000, lr=0.01)
+print(f"\nTraining loss trajectory: {[np.mean((f - y_train)**2) for f in trajectory]}")
+
+# Compare finite vs infinite width
+print(f"\nInfinite-width regime prediction MSE: {np.mean((y_pred - np.sin(X_test[:, 0]))**2):.4f}")
+```
+
+**Source**: Jacot et al. (2018) NeurIPS; Lee et al. (2019) ICLR; Arora et al. (2019) ICML; Yang (2020) NeurIPS
+
+---
+
+### Neural Manifold Dynamics
+
+**Purpose**: Model neural population activity as low-dimensional trajectories on manifolds—reveals dynamical structure underlying computation.
+
+**Formula**: Latent Dynamical System
+```
+Latent dynamics:
+ż = f(z) + η(t)
+
+Observation:
+x(t) = C z(t) + ε(t)
+
+where:
+- z ∈ ℝ^k = latent state (k << d)
+- x ∈ ℝ^d = neural population activity
+- f(z) = latent dynamics (can be linear or nonlinear)
+- C = [d × k] readout matrix
+- η, ε = dynamical and observation noise
+
+Linear case:
+ż = A z + Bu + η
+
+Nonlinear (polynomial):
+ż = Σ A_p (z^⊗p) + Bu + η
+    p
+
+Manifold characterization:
+- Dimensionality: intrinsic dimension k
+- Curvature: local geometry
+- Attractors: fixed points, limit cycles
+```
+
+**Nature's Implementation**: Motor cortex preparatory activity (reaching manifold), decision dynamics (decision manifold), working memory (persistent activity subspace). Cognitive variables encoded in low-D structure. Reveals computational role of population geometry.
+
+**Impact**: **MEDIUM-HIGH - Latent Dynamics**
+Reveals low-dimensional structure. Interpretable latent states. Separates signal from noise. Critical for understanding population computation, motor planning, decision-making, and cognitive state dynamics.
+
+**Code Example**:
+```python
+from sklearn.decomposition import PCA
+from scipy.integrate import odeint
+
+class NeuralManifold:
+    """Identify and analyze neural manifold dynamics"""
+
+    def __init__(self, latent_dim=3):
+        self.latent_dim = latent_dim
+
+        # Latent dynamics parameters
+        self.A = None  # Linear dynamics
+        self.C = None  # Readout matrix
+
+    def identify_manifold(self, neural_data, method='pca'):
+        """
+        Discover latent manifold from neural population data
+        neural_data: [n_timepoints, n_neurons]
+        """
+        if method == 'pca':
+            pca = PCA(n_components=self.latent_dim)
+            latent_trajectories = pca.fit_transform(neural_data)
+
+            self.C = pca.components_.T  # [n_neurons, k]
+            explained_var = pca.explained_variance_ratio_
+
+            print(f"Variance explained: {explained_var.sum():.2%}")
+
+            return latent_trajectories, explained_var
+
+    def fit_dynamics(self, latent_trajectories, dt=0.01):
+        """
+        Fit latent dynamics: ż = Az
+        via least squares on finite differences
+        """
+        # Compute finite differences
+        z_dot = np.diff(latent_trajectories, axis=0) / dt
+        z = latent_trajectories[:-1]
+
+        # Least squares: ż ≈ Az → A = (ż Z^T)(ZZ^T)^{-1}
+        self.A = z_dot.T @ z @ np.linalg.inv(z.T @ z + 1e-6 * np.eye(self.latent_dim))
+
+        return self.A
+
+    def simulate_dynamics(self, z0, T, dt=0.01):
+        """
+        Simulate latent dynamics: ż = Az
+        """
+        time = np.arange(0, T, dt)
+
+        def dynamics(z, t):
+            return self.A @ z
+
+        z_trajectory = odeint(dynamics, z0, time)
+
+        return time, z_trajectory
+
+    def reconstruct(self, latent_trajectory):
+        """
+        Reconstruct neural activity: x̂ = Cz
+        """
+        return latent_trajectory @ self.C.T
+
+    def find_fixed_points(self):
+        """
+        Find fixed points of linear dynamics: Az* = 0
+        For linear system: z* = 0 is only fixed point
+        """
+        eigenvalues, eigenvectors = np.linalg.eig(self.A)
+
+        print("Eigenvalues of dynamics:")
+        for i, ev in enumerate(eigenvalues):
+            stability = "stable" if np.real(ev) < 0 else "unstable"
+            print(f"  λ{i}: {ev:.3f} ({stability})")
+
+        return eigenvalues, eigenvectors
+
+    def tangent_space(self, z_point):
+        """
+        Compute tangent space to manifold at point z
+        Tangent vectors: columns of C
+        """
+        return self.C
+
+    def manifold_curvature(self, z_trajectory):
+        """
+        Estimate local curvature from trajectory
+        Curvature ≈ ||z̈|| / ||ż||²
+        """
+        z_dot = np.gradient(z_trajectory, axis=0)
+        z_ddot = np.gradient(z_dot, axis=0)
+
+        curvature = np.linalg.norm(z_ddot, axis=1) / (np.linalg.norm(z_dot, axis=1)**2 + 1e-10)
+
+        return curvature
+
+
+# Example: Motor cortex reaching manifold
+n_neurons = 100
+n_timepoints = 200
+latent_dim = 3
+
+# Simulate latent dynamics (spiral trajectory - preparatory activity)
+time = np.linspace(0, 2*np.pi, n_timepoints)
+z_true = np.column_stack([
+    np.cos(time) * np.exp(-time/10),
+    np.sin(time) * np.exp(-time/10),
+    time / (2*np.pi)
+])
+
+# Generate neural data: x = Cz + noise
+C_true = np.random.randn(n_neurons, latent_dim) * 0.5
+neural_data = z_true @ C_true.T + np.random.randn(n_timepoints, n_neurons) * 0.1
+
+# Identify manifold
+manifold = NeuralManifold(latent_dim=3)
+z_inferred, explained_var = manifold.identify_manifold(neural_data, method='pca')
+
+print(f"\nInferred latent trajectories shape: {z_inferred.shape}")
+
+# Fit dynamics
+A_inferred = manifold.fit_dynamics(z_inferred, dt=0.01)
+print(f"\nDynamics matrix A:\n{A_inferred}")
+
+# Find fixed points
+eigenvalues, eigenvectors = manifold.find_fixed_points()
+
+# Reconstruct neural activity
+neural_reconstructed = manifold.reconstruct(z_inferred)
+reconstruction_error = np.mean((neural_data - neural_reconstructed)**2)
+print(f"\nReconstruction error: {reconstruction_error:.4f}")
+
+# Manifold curvature
+curvature = manifold.manifold_curvature(z_inferred)
+print(f"Average curvature: {curvature.mean():.4f}")
+
+# Simulate from initial condition
+z0 = z_inferred[0]
+time_sim, z_sim = manifold.simulate_dynamics(z0, T=2, dt=0.01)
+print(f"\nSimulated trajectory shape: {z_sim.shape}")
+```
+
+**Source**: Cunningham & Yu (2014) Nat Neurosci; Gallego et al. (2017) Neuron; Vyas et al. (2020) Ann Rev Neurosci; Chaudhuri et al. (2019) Neuron
+
+---
+
+### Principal Component Analysis (PCA)
+
+**Purpose**: Classic linear dimensionality reduction via eigendecomposition—finds orthogonal directions of maximum variance.
+
+**Formula**: Covariance Eigendecomposition
+```
+Covariance matrix:
+C = (1/n) X^T X
+
+Eigenvalue problem:
+C w_i = λ_i w_i
+
+Principal components:
+Z = X W
+
+where:
+- X = [n × d] data matrix (centered)
+- C = [d × d] covariance matrix
+- w_i = i-th eigenvector (principal direction)
+- λ_i = i-th eigenvalue (variance along w_i)
+- W = [w_1, ..., w_k] = projection matrix
+- Z = [n × k] = reduced representation
+
+Reconstruction:
+X̂ = Z W^T
+
+Variance explained:
+R² = Σ_{i=1}^k λ_i / Σ_{i=1}^d λ_i
+```
+
+**Nature's Implementation**: Cortical dimensionality reduction, efficient coding. Sensory systems remove redundancy via PCA-like operations. Retinal processing, V1 simple cells approximate PCA of natural images. Online learning via Oja's rule.
+
+**Impact**: **HIGH - Foundational Dimensionality Reduction**
+Optimal under Gaussian assumptions. Interpretable components. Fast computation (SVD). Foundation for neural data analysis. Critical for understanding population structure, redundancy reduction, and efficient coding in sensory systems.
+
+**Code Example**:
+```python
+class PrincipalComponentAnalysis:
+    """Classic PCA via SVD"""
+
+    def __init__(self, n_components=None):
+        self.n_components = n_components
+
+        self.mean = None
+        self.components = None  # Principal directions (eigenvectors)
+        self.explained_variance = None
+        self.singular_values = None
+
+    def fit(self, X):
+        """
+        Fit PCA to data via SVD
+        X: [n_samples, n_features]
+        """
+        n_samples, n_features = X.shape
+
+        # Center data
+        self.mean = X.mean(axis=0)
+        X_centered = X - self.mean
+
+        # SVD: X = U S V^T
+        # Covariance: C = V S² V^T
+        U, s, Vt = np.linalg.svd(X_centered, full_matrices=False)
+
+        # Components (eigenvectors of covariance)
+        self.components = Vt[:self.n_components]  # [k × d]
+
+        # Explained variance (eigenvalues)
+        self.explained_variance = (s**2) / (n_samples - 1)
+        self.explained_variance = self.explained_variance[:self.n_components]
+
+        self.singular_values = s[:self.n_components]
+
+        return self
+
+    def transform(self, X):
+        """Project data onto principal components"""
+        X_centered = X - self.mean
+        Z = X_centered @ self.components.T
+        return Z
+
+    def fit_transform(self, X):
+        """Fit and transform in one step"""
+        self.fit(X)
+        return self.transform(X)
+
+    def inverse_transform(self, Z):
+        """Reconstruct from reduced representation"""
+        X_reconstructed = Z @ self.components + self.mean
+        return X_reconstructed
+
+    def explained_variance_ratio(self):
+        """Proportion of variance explained"""
+        return self.explained_variance / self.explained_variance.sum()
+
+    def reconstruction_error(self, X):
+        """MSE between original and reconstructed"""
+        Z = self.transform(X)
+        X_recon = self.inverse_transform(Z)
+        return np.mean((X - X_recon)**2)
+
+    def whitening_transform(self, X):
+        """
+        Whiten data: decorrelate and unit variance
+        Z_white = X_centered @ V @ S^{-1}
+        """
+        X_centered = X - self.mean
+        Z = X_centered @ self.components.T
+        Z_white = Z / np.sqrt(self.explained_variance)
+        return Z_white
+
+
+# Example: Neural population dimensionality
+n_neurons = 100
+n_timepoints = 500
+n_components = 10
+
+# Simulate correlated neural activity
+# True low-rank structure: X = Z·C^T + noise
+latent_dim = 5
+Z_true = np.random.randn(n_timepoints, latent_dim)
+C_true = np.random.randn(latent_dim, n_neurons)
+X = Z_true @ C_true + np.random.randn(n_timepoints, n_neurons) * 0.5
+
+# Fit PCA
+pca = PrincipalComponentAnalysis(n_components=n_components)
+Z = pca.fit_transform(X)
+
+print(f"Data shape: {X.shape}")
+print(f"Reduced shape: {Z.shape}")
+print(f"\nExplained variance ratio: {pca.explained_variance_ratio()}")
+print(f"Cumulative variance: {pca.explained_variance_ratio().cumsum()}")
+
+# Reconstruction
+X_recon = pca.inverse_transform(Z)
+recon_error = pca.reconstruction_error(X)
+print(f"\nReconstruction error: {recon_error:.4f}")
+
+# Intrinsic dimensionality (90% variance threshold)
+cumvar = pca.explained_variance_ratio().cumsum()
+intrinsic_dim = np.argmax(cumvar > 0.9) + 1
+print(f"Intrinsic dimensionality (90% var): {intrinsic_dim}")
+
+# Whitening
+Z_white = pca.whitening_transform(X)
+print(f"\nWhitened covariance:\n{np.cov(Z_white.T)[:3, :3]}")  # Should be ≈ identity
+
+# Compare to covariance eigendecomposition
+C = np.cov(X.T)
+eigenvalues, eigenvectors = np.linalg.eigh(C)
+eigenvalues = eigenvalues[::-1][:n_components]
+
+print(f"\nPCA eigenvalues: {pca.explained_variance}")
+print(f"Direct eigenvalues: {eigenvalues}")
+print(f"Match: {np.allclose(pca.explained_variance, eigenvalues)}")
+```
+
+**Source**: Pearson (1901) Philosophical Mag; Hotelling (1933) J Educational Psych; Jolliffe (2002) Book; Cunningham & Yu (2014) Nat Neurosci
+
+---
+
+### Mahalanobis Distance (Neural Population Metric)
+
+**Purpose**: Covariance-weighted distance metric for neural population states—accounts for correlations and variances.
+
+**Formula**: Quadratic Form Distance
+```
+D²(r_1, r_2) = (r_1 - r_2)^T Σ^{-1} (r_1 - r_2)
+
+where:
+- r_1, r_2 = neural population states
+- Σ = population covariance matrix
+- Σ^{-1} = precision matrix (inverse covariance)
+
+Probabilistic interpretation (Gaussian):
+D² = -2 log p(r_2 | r_1) + const
+
+For diagonal Σ = diag(σ_1², ..., σ_d²):
+D² = Σ (r_1^i - r_2^i)² / σ_i²
+     i
+
+Normalized distance:
+D = √((r_1 - r_2)^T Σ^{-1} (r_1 - r_2))
+```
+
+**Nature's Implementation**: Perceptual distance in sensory cortex. Decision boundaries in PFC. Similarity metric respecting population statistics. Explains perceptual discrimination thresholds and classification performance.
+
+**Impact**: **MEDIUM - Population Geometry**
+Accounts for noise correlations. Defines natural metric for population codes. Predicts discrimination performance. Critical for understanding population representations, perceptual metrics, and optimal decoding.
+
+**Code Example**:
+```python
+class MahalanobisDistance:
+    """Compute Mahalanobis distance for neural populations"""
+
+    def __init__(self):
+        self.covariance = None
+        self.precision = None
+        self.mean = None
+
+    def fit(self, data):
+        """
+        Estimate covariance from data
+        data: [n_samples, n_features]
+        """
+        self.mean = data.mean(axis=0)
+        self.covariance = np.cov(data.T)
+
+        # Precision matrix (regularized)
+        try:
+            self.precision = np.linalg.inv(self.covariance)
+        except np.linalg.LinAlgError:
+            # Regularize if singular
+            reg = 1e-6 * np.eye(self.covariance.shape[0])
+            self.precision = np.linalg.inv(self.covariance + reg)
+
+        return self
+
+    def distance(self, r1, r2):
+        """
+        Mahalanobis distance: D²(r1, r2) = (r1-r2)^T Σ^{-1} (r1-r2)
+        """
+        diff = r1 - r2
+        D_squared = diff @ self.precision @ diff
+        return np.sqrt(D_squared)
+
+    def distance_to_mean(self, r):
+        """Distance from population mean"""
+        return self.distance(r, self.mean)
+
+    def batch_distances(self, R1, R2):
+        """
+        Pairwise distances between sets of states
+        R1: [n1, d], R2: [n2, d]
+        Returns: [n1, n2]
+        """
+        n1, n2 = R1.shape[0], R2.shape[0]
+        distances = np.zeros((n1, n2))
+
+        for i in range(n1):
+            for j in range(n2):
+                distances[i, j] = self.distance(R1[i], R2[j])
+
+        return distances
+
+    def discrimination_threshold(self, r_ref, n_samples=1000):
+        """
+        Estimate discrimination threshold using Mahalanobis distance
+        JND ≈ 1 / √(Fisher information)
+        """
+        # Sample from noise distribution around r_ref
+        samples = np.random.multivariate_normal(
+            r_ref, self.covariance, size=n_samples
+        )
+
+        # Compute distances
+        distances = np.array([self.distance(r_ref, s) for s in samples])
+
+        # Threshold: median distance (50% discrimination)
+        threshold = np.median(distances)
+
+        return threshold
+
+    def classification_boundary(self, r1_mean, r2_mean):
+        """
+        Linear decision boundary between two populations
+        Hyperplane: (r - μ)^T Σ^{-1} (μ1 - μ2) = 0
+        where μ = (μ1 + μ2)/2
+        """
+        midpoint = (r1_mean + r2_mean) / 2
+        normal = self.precision @ (r1_mean - r2_mean)
+
+        return midpoint, normal
+
+
+# Example: Orientation discrimination in V1
+n_neurons = 50
+n_trials_per_ori = 100
+
+# Two orientations
+ori1 = 45  # degrees
+ori2 = 50  # degrees (5° difference)
+
+# Simulate population responses (von Mises tuning)
+preferred_oris = np.linspace(0, 180, n_neurons)
+kappa = 3
+
+def population_response(ori, n_trials):
+    """Generate population responses"""
+    tuning = np.exp(kappa * np.cos(2 * np.pi * (ori - preferred_oris) / 180))
+    rates = 10 * tuning
+
+    # Add correlated noise
+    base_noise = np.random.randn(n_trials, n_neurons) * 2
+    shared_noise = np.random.randn(n_trials, 1) * 1  # Shared fluctuations
+    responses = rates + base_noise + shared_noise
+
+    return responses
+
+# Generate data
+responses_ori1 = population_response(ori1, n_trials_per_ori)
+responses_ori2 = population_response(ori2, n_trials_per_ori)
+
+# Pooled covariance
+all_responses = np.vstack([responses_ori1, responses_ori2])
+mahal = MahalanobisDistance()
+mahal.fit(all_responses)
+
+# Mean responses
+mean_ori1 = responses_ori1.mean(axis=0)
+mean_ori2 = responses_ori2.mean(axis=0)
+
+# Mahalanobis vs Euclidean distance
+mahal_dist = mahal.distance(mean_ori1, mean_ori2)
+euclidean_dist = np.linalg.norm(mean_ori1 - mean_ori2)
+
+print(f"Mahalanobis distance: {mahal_dist:.3f}")
+print(f"Euclidean distance: {euclidean_dist:.3f}")
+print(f"Ratio: {mahal_dist / euclidean_dist:.3f}")
+
+# Discrimination performance
+# Compute distances for all trial pairs
+distances_within_ori1 = []
+distances_between = []
+
+for i in range(20):  # Sample subset
+    for j in range(20):
+        if i != j:
+            distances_within_ori1.append(
+                mahal.distance(responses_ori1[i], responses_ori1[j])
+            )
+        distances_between.append(
+            mahal.distance(responses_ori1[i], responses_ori2[j])
+        )
+
+print(f"\nWithin-class distance: {np.mean(distances_within_ori1):.3f}")
+print(f"Between-class distance: {np.mean(distances_between):.3f}")
+print(f"Discriminability (d'): {(np.mean(distances_between) - np.mean(distances_within_ori1)) / np.std(distances_within_ori1):.2f}")
+
+# Decision boundary
+midpoint, normal = mahal.classification_boundary(mean_ori1, mean_ori2)
+print(f"\nDecision boundary normal vector (first 5 neurons): {normal[:5]}")
+```
+
+**Source**: Mahalanobis (1936) Proceedings National Institute Sciences India; Averbeck et al. (2006) Nat Rev Neurosci; Cohen & Maunsell (2009) Nat Neurosci
+
+---
+
+### Dynamic Mode Decomposition (DMD)
+
+**Purpose**: Data-driven approximation of Koopman operator—extract spatiotemporal coherent structures from neural dynamics.
+
+**Formula**: Optimal Linear Approximation
+```
+Dynamics: x_{t+1} = A x_t
+
+Data matrices:
+X = [x_0, x_1, ..., x_{T-1}]
+Y = [x_1, x_2, ..., x_T]
+
+DMD operator:
+A = Y X^+  (where X^+ is pseudoinverse)
+
+Eigendecomposition:
+A Φ = Φ Λ
+
+DMD modes: Φ = [φ_1, ..., φ_r]
+DMD eigenvalues: Λ = diag(λ_1, ..., λ_r)
+
+Reconstruction:
+x_t = Σ b_i λ_i^t φ_i
+      i
+
+where:
+- φ_i = spatial mode (population pattern)
+- λ_i = temporal eigenvalue (growth/decay rate)
+- ω_i = imag(log(λ_i))/Δt = oscillation frequency
+- b_i = mode amplitude
+```
+
+**Nature's Implementation**: Identifies oscillatory modes in cortex (alpha, beta, gamma). Reveals traveling waves, synchrony patterns. Used for EEG, LFP, calcium imaging analysis. Discovers spatiotemporal neural motifs.
+
+**Impact**: **MEDIUM-HIGH - Data-Driven Dynamics**
+Model-free discovery of modes. Handles high-dimensional data. Reveals oscillations and traveling waves. Critical for analyzing large-scale neural recordings and discovering dynamical motifs.
+
+**Code Example**:
+```python
+class DynamicModeDecomposition:
+    """DMD for neural population dynamics"""
+
+    def __init__(self, rank=None):
+        self.rank = rank
+
+        self.A_dmd = None
+        self.modes = None  # Spatial patterns
+        self.eigenvalues = None  # Temporal eigenvalues
+        self.amplitudes = None
+
+    def fit(self, X, dt=1.0):
+        """
+        Compute DMD from data
+        X: [n_features, n_timepoints] (each column is a snapshot)
+        """
+        n_features, n_time = X.shape
+
+        # Data matrices
+        X_data = X[:, :-1]  # x_0, ..., x_{T-1}
+        Y_data = X[:, 1:]   # x_1, ..., x_T
+
+        # SVD of X for dimensionality reduction
+        U, s, Vt = np.linalg.svd(X_data, full_matrices=False)
+
+        if self.rank is not None:
+            U = U[:, :self.rank]
+            s = s[:self.rank]
+            Vt = Vt[:self.rank, :]
+
+        # DMD operator in reduced space
+        # Ã = U^T A U
+        # where A = Y X^+
+        A_tilde = U.T @ Y_data @ Vt.T @ np.diag(1/s)
+
+        # Eigendecomposition of Ã
+        eigenvalues, eigenvectors = np.linalg.eig(A_tilde)
+
+        # DMD modes (full space)
+        # Φ = Y V Σ^{-1} W
+        self.modes = Y_data @ Vt.T @ np.diag(1/s) @ eigenvectors
+
+        self.eigenvalues = eigenvalues
+
+        # Compute amplitudes (initial condition projection)
+        self.amplitudes = np.linalg.lstsq(self.modes, X[:, 0], rcond=None)[0]
+
+        self.dt = dt
+
+        return self
+
+    def reconstruct(self, t_index):
+        """
+        Reconstruct state at time t
+        x_t = Σ b_i λ_i^t φ_i
+        """
+        x_t = np.zeros(self.modes.shape[0], dtype=complex)
+
+        for i in range(len(self.eigenvalues)):
+            x_t += self.amplitudes[i] * (self.eigenvalues[i] ** t_index) * self.modes[:, i]
+
+        return np.real(x_t)
+
+    def get_frequencies(self):
+        """Extract oscillation frequencies from eigenvalues"""
+        # ω = imag(log(λ)) / Δt
+        frequencies = np.imag(np.log(self.eigenvalues)) / self.dt
+        return frequencies
+
+    def get_growth_rates(self):
+        """Extract growth/decay rates"""
+        # γ = real(log(λ)) / Δt
+        growth_rates = np.real(np.log(self.eigenvalues)) / self.dt
+        return growth_rates
+
+    def dominant_modes(self, n_modes=5):
+        """
+        Identify dominant modes (largest amplitudes)
+        """
+        mode_importance = np.abs(self.amplitudes) * np.abs(self.eigenvalues)
+        top_indices = np.argsort(mode_importance)[::-1][:n_modes]
+
+        return top_indices
+
+    def predict_future(self, n_steps):
+        """
+        Predict future states: x_{T+k} = A^k x_T
+        """
+        predictions = []
+        for t in range(n_steps):
+            x_pred = self.reconstruct(t)
+            predictions.append(x_pred)
+
+        return np.array(predictions).T
+
+
+# Example: Oscillatory neural population
+n_neurons = 50
+n_time = 200
+dt = 0.01
+
+# Generate synthetic data with oscillations
+time = np.arange(n_time) * dt
+
+# Mode 1: 10 Hz oscillation
+freq1 = 10  # Hz
+mode1 = np.random.randn(n_neurons)
+mode1 /= np.linalg.norm(mode1)
+signal1 = mode1[:, None] * np.sin(2 * np.pi * freq1 * time)
+
+# Mode 2: 20 Hz oscillation
+freq2 = 20
+mode2 = np.random.randn(n_neurons)
+mode2 /= np.linalg.norm(mode2)
+signal2 = 0.5 * mode2[:, None] * np.cos(2 * np.pi * freq2 * time)
+
+# Combined signal + noise
+X = signal1 + signal2 + 0.1 * np.random.randn(n_neurons, n_time)
+
+# Fit DMD
+dmd = DynamicModeDecomposition(rank=10)
+dmd.fit(X, dt=dt)
+
+# Extract frequencies
+frequencies = dmd.get_frequencies()
+growth_rates = dmd.get_growth_rates()
+
+print(f"DMD extracted frequencies (Hz):")
+for i, freq in enumerate(frequencies[:5]):
+    print(f"  Mode {i}: {freq:.2f} Hz (growth rate: {growth_rates[i]:.3f})")
+
+# Dominant modes
+dominant = dmd.dominant_modes(n_modes=3)
+print(f"\nDominant mode indices: {dominant}")
+print(f"True frequencies: {freq1:.1f} Hz, {freq2:.1f} Hz")
+
+# Reconstruction
+x_recon = np.array([dmd.reconstruct(t) for t in range(n_time)]).T
+recon_error = np.mean((X - x_recon)**2)
+print(f"\nReconstruction error: {recon_error:.4f}")
+
+# Predict future
+n_future = 50
+X_future = dmd.predict_future(n_future)
+print(f"Future prediction shape: {X_future.shape}")
+```
+
+**Source**: Schmid (2010) J Fluid Mech; Kutz et al. (2016) Book; Brunton et al. (2016) PNAS; Casorso et al. (2019) NeuroImage
+
+---
+
+### Koopman Operator (Nonlinear Dynamics Linearization)
+
+**Purpose**: Infinite-dimensional linear operator for nonlinear dynamics—enables spectral analysis of arbitrary dynamical systems.
+
+**Formula**: Composition Operator
+```
+Nonlinear dynamics: x_{t+1} = F(x_t)
+
+Koopman operator: K[g](x) = g(F(x))
+
+For observables g: ℝ^n → ℝ
+
+Eigenfunction: K[φ] = λ φ
+
+Spectral decomposition:
+g(x_t) = Σ λ^t φ_i(x_0) v_i(g)
+         i
+
+where:
+- φ_i = Koopman eigenfunction
+- λ_i = Koopman eigenvalue
+- v_i = Koopman mode
+
+DMD approximation:
+K ≈ A in span of data
+
+Approximation via basis:
+g ≈ Σ a_i ψ_i
+    i
+```
+
+**Nature's Implementation**: Models nonlinear population dynamics in linear framework. Enables prediction and control of complex neural patterns. Used for understanding limit cycles, chaos, transient dynamics in recurrent networks.
+
+**Impact**: **MEDIUM - Nonlinear Spectral Analysis**
+Linearizes nonlinear systems. Infinite-dimensional but practically approximable. Reveals eigenstructure of nonlinear dynamics. Critical for analyzing complex neural dynamics and control.
+
+**Code Example**:
+```python
+class KoopmanOperator:
+    """Koopman operator approximation via basis functions"""
+
+    def __init__(self, basis_type='polynomial', order=3):
+        self.basis_type = basis_type
+        self.order = order
+
+        self.K_matrix = None  # Koopman matrix approximation
+        self.eigenvalues = None
+        self.eigenfunctions = None
+
+    def basis_functions(self, x):
+        """
+        Construct basis functions ψ(x)
+        """
+        if self.basis_type == 'polynomial':
+            # Polynomial basis: [1, x, x², x³, ...]
+            basis = []
+            n_dim = x.shape[0] if x.ndim == 1 else x.shape[1]
+
+            # Monomials up to order
+            basis.append(np.ones(x.shape[0] if x.ndim > 1 else 1))
+
+            if n_dim == 1:
+                for p in range(1, self.order + 1):
+                    basis.append(x ** p)
+            else:
+                # Multivariate: x_i, x_i x_j, x_i²,...
+                for i in range(n_dim):
+                    basis.append(x[:, i] if x.ndim > 1 else x[i])
+
+                # Higher orders
+                for p in range(2, self.order + 1):
+                    for i in range(n_dim):
+                        basis.append((x[:, i] if x.ndim > 1 else x[i]) ** p)
+
+            return np.column_stack(basis) if len(basis) > 1 else basis[0][:, None]
+
+        elif self.basis_type == 'rbf':
+            # Radial basis functions (Gaussian kernels)
+            centers = np.linspace(x.min(), x.max(), self.order)
+            sigma = (x.max() - x.min()) / self.order
+
+            basis = []
+            for c in centers:
+                basis.append(np.exp(-((x - c)**2) / (2 * sigma**2)))
+
+            return np.column_stack(basis)
+
+    def fit(self, X, Y=None):
+        """
+        Fit Koopman operator from data
+        X: states at time t
+        Y: states at time t+1 (if None, assume Y = X[1:], X = X[:-1])
+        """
+        if Y is None:
+            Y = X[1:]
+            X = X[:-1]
+
+        # Lift to basis
+        Psi_X = self.basis_functions(X)  # [n_samples, n_basis]
+        Psi_Y = self.basis_functions(Y)
+
+        # Koopman matrix: K ≈ Ψ_Y Ψ_X^+
+        self.K_matrix = Psi_Y.T @ Psi_X @ np.linalg.pinv(Psi_X.T @ Psi_X)
+
+        # Eigendecomposition
+        self.eigenvalues, self.eigenfunctions = np.linalg.eig(self.K_matrix)
+
+        return self
+
+    def predict(self, x0, n_steps):
+        """
+        Predict future states using Koopman operator
+        """
+        predictions = [x0]
+
+        x_current = x0
+        for _ in range(n_steps):
+            # Lift to basis
+            psi = self.basis_functions(x_current.reshape(1, -1))
+
+            # Apply Koopman operator
+            psi_next = psi @ self.K_matrix.T
+
+            # Project back (approximate inverse)
+            # This is non-trivial for general basis - use regression
+            x_next = self._inverse_basis(psi_next)
+
+            predictions.append(x_next)
+            x_current = x_next
+
+        return np.array(predictions)
+
+    def _inverse_basis(self, psi):
+        """
+        Approximate inverse of basis (project back to state space)
+        For polynomial: extract linear coefficients
+        """
+        # Simplified: assume first few coefficients correspond to state
+        # This is basis-dependent
+        if self.basis_type == 'polynomial':
+            # For [1, x, x², ...], x is at index 1
+            return psi[0, 1] if psi.shape[1] > 1 else psi[0, 0]
+
+        return psi[0, 0]  # Placeholder
+
+    def spectral_analysis(self):
+        """
+        Analyze Koopman eigenvalues and eigenfunctions
+        """
+        # Sort by magnitude
+        idx = np.argsort(np.abs(self.eigenvalues))[::-1]
+
+        print("Koopman Eigenvalues:")
+        for i in idx[:5]:
+            ev = self.eigenvalues[i]
+            freq = np.imag(np.log(ev)) / (2 * np.pi) if np.abs(ev) > 1e-10 else 0
+            print(f"  λ{i}: {ev:.4f} (freq: {freq:.2f} Hz)")
+
+        return self.eigenvalues[idx], self.eigenfunctions[:, idx]
+
+
+# Example: Nonlinear oscillator (limit cycle)
+def van_der_pol(x, mu=1.0):
+    """Van der Pol oscillator: ẋ = y, ẏ = μ(1-x²)y - x"""
+    x1, x2 = x
+    dx1 = x2
+    dx2 = mu * (1 - x1**2) * x2 - x1
+    return np.array([x1 + 0.01 * dx1, x2 + 0.01 * dx2])
+
+# Generate trajectory
+n_steps = 500
+X_trajectory = np.zeros((n_steps, 2))
+X_trajectory[0] = [0.1, 0.1]
+
+for t in range(1, n_steps):
+    X_trajectory[t] = van_der_pol(X_trajectory[t-1], mu=1.0)
+
+# Fit Koopman
+koopman = KoopmanOperator(basis_type='polynomial', order=5)
+koopman.fit(X_trajectory)
+
+# Spectral analysis
+eigenvalues_sorted, eigenfunctions_sorted = koopman.spectral_analysis()
+
+# Prediction
+x0 = np.array([0.2, 0.2])
+n_predict = 100
+predictions = koopman.predict(x0, n_predict)
+
+# Compare to true trajectory
+true_trajectory = np.zeros((n_predict + 1, 2))
+true_trajectory[0] = x0
+for t in range(1, n_predict + 1):
+    true_trajectory[t] = van_der_pol(true_trajectory[t-1])
+
+# Error
+pred_error = np.mean(np.linalg.norm(predictions - true_trajectory, axis=1))
+print(f"\nPrediction error: {pred_error:.4f}")
+```
+
+**Source**: Koopman (1931) PNAS; Mezić (2005) Nonlinear Dyn; Williams et al. (2015) J Nonlinear Sci; Brunton et al. (2016) PNAS
+
+---
+
+### Lyapunov Exponent (Chaos Quantification)
+
+**Purpose**: Measure sensitivity to initial conditions—quantifies chaos, stability, and predictability horizon in neural dynamics.
+
+**Formula**: Exponential Divergence Rate
+```
+Perturbation growth:
+|δx(t)| ≈ |δx(0)| e^{λt}
+
+Lyapunov exponent:
+λ = lim   lim   (1/t) log |δx(t)| / |δx(0)|
+    t→∞  |δx0|→0
+
+For discrete maps: x_{t+1} = F(x_t)
+λ = lim (1/T) Σ log|J(x_t)|
+    T→∞      t=0..T-1
+
+where J = Jacobian of F
+
+Interpretation:
+- λ > 0: chaos (sensitive dependence)
+- λ = 0: neutrally stable (periodic)
+- λ < 0: stable (converges to fixed point)
+
+Largest Lyapunov exponent (LLE):
+λ_max = largest of all exponents
+
+Predictability horizon:
+t_pred ~ (1/λ_max) log(L/δ)
+
+where:
+- L = system size
+- δ = measurement precision
+```
+
+**Nature's Implementation**: Measures chaos in cortical dynamics. Predictability of neural trajectories. Relates to computational capacity (edge of chaos). Analyzed in EEG, spiking networks, recurrent dynamics. Criticality hypothesis suggests λ ≈ 0 for optimal computation.
+
+**Impact**: **MEDIUM - Chaos & Predictability**
+Quantifies deterministic chaos. Predicts forecast horizon. Reveals computational regime. Critical for understanding dynamical complexity in neural circuits and information processing capacity.
+
+**Code Example**:
+```python
+class LyapunovExponent:
+    """Compute largest Lyapunov exponent for dynamical systems"""
+
+    def __init__(self, dynamics_fn, jacobian_fn=None):
+        self.dynamics = dynamics_fn
+        self.jacobian = jacobian_fn
+
+    def _numerical_jacobian(self, x, eps=1e-6):
+        """Compute Jacobian via finite differences"""
+        n = len(x)
+        J = np.zeros((n, n))
+
+        fx = self.dynamics(x)
+
+        for i in range(n):
+            x_plus = x.copy()
+            x_plus[i] += eps
+            fx_plus = self.dynamics(x_plus)
+
+            J[:, i] = (fx_plus - fx) / eps
+
+        return J
+
+    def compute(self, x0, n_steps, dt=0.01, method='finitetime'):
+        """
+        Compute largest Lyapunov exponent
+        """
+        if method == 'finitetime':
+            return self._finite_time_lya(x0, n_steps, dt)
+        elif method == 'jacobian':
+            return self._jacobian_method(x0, n_steps)
+
+    def _finite_time_lya(self, x0, n_steps, dt=0.01):
+        """
+        Finite-time Lyapunov exponent via tangent space evolution
+        """
+        n_dim = len(x0)
+
+        # Initialize trajectory and tangent vector
+        x = x0.copy()
+        delta = np.random.randn(n_dim)
+        delta /= np.linalg.norm(delta)
+
+        delta_0 = 1e-8  # Initial perturbation size
+
+        lyapunov = 0
+
+        for t in range(n_steps):
+            # Perturbed trajectory
+            x_pert = x + delta_0 * delta
+
+            # Evolve both
+            x_next = self.dynamics(x)
+            x_pert_next = self.dynamics(x_pert)
+
+            # Perturbation evolution
+            delta_next = (x_pert_next - x_next) / delta_0
+
+            # Renormalize
+            delta_norm = np.linalg.norm(delta_next)
+            delta = delta_next / delta_norm
+
+            # Accumulate Lyapunov sum
+            lyapunov += np.log(delta_norm)
+
+            # Update
+            x = x_next
+
+        # Average
+        lyapunov /= (n_steps * dt)
+
+        return lyapunov
+
+    def _jacobian_method(self, x0, n_steps):
+        """
+        Lyapunov via Jacobian: λ = lim (1/T) Σ log|J(x_t)|
+        """
+        x = x0.copy()
+        lyapunov_sum = 0
+
+        for t in range(n_steps):
+            # Jacobian at current point
+            if self.jacobian is not None:
+                J = self.jacobian(x)
+            else:
+                J = self._numerical_jacobian(x)
+
+            # Largest singular value (spectral norm)
+            singular_values = np.linalg.svd(J, compute_uv=False)
+            lyapunov_sum += np.log(singular_values[0])
+
+            # Evolve
+            x = self.dynamics(x)
+
+        # Average
+        lyapunov = lyapunov_sum / n_steps
+
+        return lyapunov
+
+    def spectrum(self, x0, n_steps):
+        """
+        Compute full Lyapunov spectrum (all exponents)
+        """
+        n_dim = len(x0)
+
+        # Initialize orthonormal basis
+        Q = np.eye(n_dim)
+
+        lyapunov_sums = np.zeros(n_dim)
+
+        x = x0.copy()
+
+        for t in range(n_steps):
+            # Jacobian
+            if self.jacobian is not None:
+                J = self.jacobian(x)
+            else:
+                J = self._numerical_jacobian(x)
+
+            # Propagate tangent space
+            Q = J @ Q
+
+            # QR decomposition (Gram-Schmidt)
+            Q, R = np.linalg.qr(Q)
+
+            # Accumulate
+            lyapunov_sums += np.log(np.abs(np.diag(R)))
+
+            # Evolve
+            x = self.dynamics(x)
+
+        # Average
+        lyapunov_spectrum = lyapunov_sums / n_steps
+
+        return lyapunov_spectrum
+
+
+# Example: Chaotic neural network (Lorenz-like)
+def chaotic_rnn(x, sigma=10, rho=28, beta=8/3):
+    """Lorenz system (prototype for chaotic RNN)"""
+    x1, x2, x3 = x
+    dx1 = sigma * (x2 - x1)
+    dx2 = x1 * (rho - x3) - x2
+    dx3 = x1 * x2 - beta * x3
+
+    dt = 0.01
+    return x + dt * np.array([dx1, dx2, dx3])
+
+# Lyapunov exponent
+lya = LyapunovExponent(chaotic_rnn)
+
+x0 = np.array([1.0, 1.0, 1.0])
+n_steps = 5000
+
+# Largest Lyapunov exponent
+lambda_max = lya.compute(x0, n_steps, dt=0.01, method='finitetime')
+
+print(f"Largest Lyapunov exponent: {lambda_max:.4f}")
+if lambda_max > 0:
+    print("  → System is CHAOTIC")
+    # Predictability horizon
+    delta = 1e-6  # Measurement precision
+    L = 10  # System size
+    t_pred = (1 / lambda_max) * np.log(L / delta)
+    print(f"  Predictability horizon: {t_pred:.2f} time units")
+elif lambda_max < 0:
+    print("  → System is STABLE (fixed point)")
+else:
+    print("  → System is NEUTRALLY STABLE (periodic)")
+
+# Full spectrum
+spectrum = lya.spectrum(x0, n_steps=1000)
+print(f"\nLyapunov spectrum: {spectrum}")
+print(f"Sum (divergence): {spectrum.sum():.4f}")
+
+# Compare different initial conditions
+lambdas = []
+for i in range(5):
+    x0_random = np.random.randn(3)
+    lam = lya.compute(x0_random, 1000, method='finitetime')
+    lambdas.append(lam)
+
+print(f"\nLyapunov from different ICs: mean={np.mean(lambdas):.4f}, std={np.std(lambdas):.4f}")
+```
+
+**Source**: Lyapunov (1892) Doctoral dissertation; Eckmann & Ruelle (1985) Rev Mod Phys; Wolf et al. (1985) Physica D; Strogatz (2015) Book
+
+---
+
+### Linear Response Theory (Network Perturbation Analysis)
+
+**Purpose**: Characterize how neural networks respond to small perturbations—reveals functional connectivity and stability.
+
+**Formula**: Susceptibility Function
+```
+Perturbation: I_j(ω) (external input to neuron j)
+
+Response: δr_i(ω) (change in firing rate of neuron i)
+
+Linear response (susceptibility):
+χ_{ij}(ω) = ∂r_i(ω) / ∂I_j(ω)
+
+For spiking networks:
+χ_{ij}(ω) = (δ_{ij}/τ_i - W_{ij}) / (1 + iωτ_i) + ...
+
+Frequency-dependent gain:
+|χ(ω)| = network amplification at frequency ω
+
+Static (ω=0):
+χ_{ij}(0) = (I - W)^{-1}
+
+where:
+- W = weight matrix
+- τ_i = time constant
+- δ_{ij} = Kronecker delta
+
+Power spectrum:
+S_{ij}(ω) = χ_{ik}(ω) C_{kl} χ_{jl}^*(ω)
+
+where C = input covariance
+```
+
+**Nature's Implementation**: Predicts network response to stimuli, perturbations. Explains amplification, resonance in cortical circuits. Used to understand sensory gain, attentional modulation, oscillations. Reveals effective connectivity.
+
+**Impact**: **MEDIUM - Network Analysis**
+Links structure to function. Predicts response without simulation. Reveals resonances and instabilities. Critical for understanding circuit dynamics, control, and stimulus sensitivity.
+
+**Code Example**:
+```python
+class LinearResponseTheory:
+    """Compute linear response for neural networks"""
+
+    def __init__(self, W, tau):
+        """
+        W: [n × n] weight matrix
+        tau: [n] time constants (or scalar)
+        """
+        self.W = W
+        self.n = W.shape[0]
+
+        if np.isscalar(tau):
+            self.tau = np.ones(self.n) * tau
+        else:
+            self.tau = tau
+
+    def susceptibility_static(self):
+        """
+        Static susceptibility: χ(0) = (I - W)^{-1}
+        """
+        chi = np.linalg.inv(np.eye(self.n) - self.W)
+        return chi
+
+    def susceptibility_freq(self, omega):
+        """
+        Frequency-dependent susceptibility
+        χ(ω) = [I - W/(1 + iωτ)]^{-1} / (1 + iωτ)
+        """
+        # Diagonal time constant matrix
+        Tau = np.diag(self.tau)
+
+        # Frequency-dependent weight
+        W_omega = self.W / (1 + 1j * omega * self.tau[:, None])
+
+        # Invert
+        chi_omega = np.linalg.inv(np.eye(self.n) - W_omega)
+
+        # Scale by time constants
+        chi_omega = chi_omega / (1 + 1j * omega * self.tau[None, :])
+
+        return chi_omega
+
+    def response_amplitude(self, frequencies):
+        """
+        |χ(ω)| for range of frequencies
+        """
+        amplitudes = np.zeros((len(frequencies), self.n, self.n))
+
+        for i, omega in enumerate(frequencies):
+            chi = self.susceptibility_freq(omega)
+            amplitudes[i] = np.abs(chi)
+
+        return amplitudes
+
+    def resonance_peaks(self, freq_range=(0, 100), n_freq=1000):
+        """
+        Find resonance frequencies (peaks in |χ(ω)|)
+        """
+        frequencies = np.linspace(freq_range[0], freq_range[1], n_freq)
+        amplitudes = self.response_amplitude(frequencies)
+
+        # Average susceptibility
+        avg_amplitude = np.mean(amplitudes, axis=(1, 2))
+
+        # Find peaks
+        from scipy.signal import find_peaks
+        peaks, properties = find_peaks(avg_amplitude, height=avg_amplitude.mean())
+
+        resonance_freqs = frequencies[peaks]
+
+        return resonance_freqs, avg_amplitude
+
+    def power_spectrum(self, omega, input_covariance):
+        """
+        Output power spectrum: S(ω) = χ(ω) C χ(ω)^†
+        """
+        chi = self.susceptibility_freq(omega)
+        S = chi @ input_covariance @ chi.conj().T
+
+        return S
+
+    def effective_connectivity(self, perturbation_neuron, measured_neurons=None):
+        """
+        Effective connectivity via perturbation
+        χ_{ij}(0) = how much neuron i responds to input to neuron j
+        """
+        chi_static = self.susceptibility_static()
+
+        if measured_neurons is None:
+            measured_neurons = np.arange(self.n)
+
+        # Column = response of all neurons to perturbation of neuron j
+        connectivity = chi_static[measured_neurons, perturbation_neuron]
+
+        return connectivity
+
+
+# Example: Recurrent E-I network
+n_neurons = 50
+n_exc = 40
+n_inh = 10
+
+# Weight matrix (E-I network)
+W = np.zeros((n_neurons, n_neurons))
+
+# E→E: weak
+W[:n_exc, :n_exc] = np.random.rand(n_exc, n_exc) * 0.1
+
+# E→I: strong
+W[n_exc:, :n_exc] = np.random.rand(n_inh, n_exc) * 0.3
+
+# I→E: inhibitory
+W[:n_exc, n_exc:] = -np.random.rand(n_exc, n_inh) * 0.5
+
+# I→I: weak inhibition
+W[n_exc:, n_exc:] = -np.random.rand(n_inh, n_inh) * 0.1
+
+# Time constants
+tau = np.ones(n_neurons) * 10  # ms
+
+# Linear response
+lrt = LinearResponseTheory(W, tau)
+
+# Static susceptibility
+chi_0 = lrt.susceptibility_static()
+print(f"Static susceptibility shape: {chi_0.shape}")
+print(f"Mean static gain: {np.mean(np.abs(chi_0)):.3f}")
+
+# Resonance peaks
+resonances, amplitude_spectrum = lrt.resonance_peaks(freq_range=(0, 100), n_freq=500)
+print(f"\nResonance frequencies: {resonances} Hz")
+
+# Effective connectivity (perturb neuron 0)
+eff_conn = lrt.effective_connectivity(perturbation_neuron=0)
+print(f"\nEffective connectivity from neuron 0:")
+print(f"  Top 5 responders: {np.argsort(np.abs(eff_conn))[-5:]}")
+
+# Frequency response
+test_freq = 10  # Hz (gamma range)
+chi_10 = lrt.susceptibility_freq(test_freq)
+print(f"\nSusceptibility at {test_freq} Hz:")
+print(f"  Mean amplitude: {np.mean(np.abs(chi_10)):.3f}")
+
+# Input-output power spectrum
+input_cov = np.eye(n_neurons) * 0.01  # Uncorrelated input
+S_10 = lrt.power_spectrum(test_freq, input_cov)
+print(f"  Output power: {np.trace(np.abs(S_10)):.3f}")
+```
+
+**Source**: Kubo (1966) Rep Prog Phys; Lindner et al. (2005) Phys Rev E; Buice & Chow (2013) PLoS Comp Bio; Zhao & Macke (2023) NeurIPS
+
+---
+
+### Balanced Excitation-Inhibition Network
+
+**Purpose**: Asynchronous irregular activity via E-I balance—explains cortical spontaneous activity and response variability.
+
+**Formula**: Balance Condition
+```
+Mean inputs scale together:
+J_E I_E ∼ J_I I_I ∼ O(1)
+
+where:
+- J_E, J_I = E/I synaptic weights
+- I_E, I_I = E/I input counts
+- Scaling: J ∼ 1/√N, connectivity K ∼ √N
+
+Mean net input:
+E[I_total] = J_E · I_E - J_I · I_I ≈ 0
+
+Fluctuation-driven:
+σ(I) = √(J_E² I_E + J_I² I_I) ∼ O(1)
+
+Firing rates:
+r = φ(μ_total / σ_total)
+
+where φ = gain function
+
+Critical balance:
+μ_total ≪ σ_total  (fluctuation-driven regime)
+
+Timescale:
+τ_eff ∼ τ_membrane / √(K)  (fast fluctuations)
+```
+
+**Nature's Implementation**: Cortical spontaneous activity (asynchronous irregular state). Explains high variability (CV~1), low correlations, fast responses. Observed in V1, auditory cortex, PFC. Balances excitation and inhibition on ms timescales.
+
+**Impact**: **MEDIUM-HIGH - Cortical Operating Regime**
+Explains spontaneous activity statistics. Enables fast responses. Robust to perturbations. Critical for understanding cortical computation, variability, and dynamic range.
+
+**Code Example**:
+```python
+class BalancedNetwork:
+    """E-I balanced network simulation"""
+
+    def __init__(self, N_E=400, N_I=100, K=100):
+        """
+        N_E: number of excitatory neurons
+        N_I: number of inhibitory neurons
+        K: average connectivity (∼√N)
+        """
+        self.N_E = N_E
+        self.N_I = N_I
+        self.N = N_E + N_I
+        self.K = K
+
+        # Balanced scaling
+        self.J_E = 1.0 / np.sqrt(K)  # Exc weight
+        self.J_I = 1.5 / np.sqrt(K)  # Inh weight (stronger)
+
+        # Build connectivity
+        self.W = self._build_connectivity()
+
+        # Neuron parameters
+        self.tau = 10.0  # ms (membrane time constant)
+        self.V_th = 1.0  # Threshold
+        self.V_reset = 0.0
+
+    def _build_connectivity(self):
+        """
+        Build random sparse E-I network
+        """
+        W = np.zeros((self.N, self.N))
+
+        # E→E, E→I
+        for i in range(self.N):
+            # Select K random excitatory sources
+            exc_sources = np.random.choice(self.N_E, size=self.K, replace=False)
+            W[i, exc_sources] = self.J_E
+
+        # I→E, I→I
+        for i in range(self.N):
+            # Select K/4 random inhibitory sources
+            inh_sources = np.random.choice(range(self.N_E, self.N), size=int(self.K/4), replace=False)
+            W[i, inh_sources] = -self.J_I
+
+        return W
+
+    def check_balance(self):
+        """
+        Verify E-I balance: mean(E) ≈ mean(I)
+        """
+        # Mean excitatory input
+        mean_E = np.mean(self.W[:, :self.N_E].sum(axis=1))
+
+        # Mean inhibitory input (absolute value)
+        mean_I = np.mean(np.abs(self.W[:, self.N_E:].sum(axis=1)))
+
+        print(f"Mean excitatory input: {mean_E:.4f}")
+        print(f"Mean inhibitory input: {mean_I:.4f}")
+        print(f"Balance ratio: {mean_E / mean_I:.4f} (should be ≈1)")
+
+        # Net mean input
+        net_input = np.mean(self.W.sum(axis=1))
+        input_std = np.std(self.W.sum(axis=1))
+
+        print(f"Net mean input: {net_input:.4f}")
+        print(f"Input fluctuation (std): {input_std:.4f}")
+        print(f"Fluctuation-driven: {np.abs(net_input) < input_std}")
+
+        return mean_E, mean_I
+
+    def simulate(self, T=1000, dt=0.1, I_ext=0.5):
+        """
+        Simulate balanced network dynamics
+        """
+        n_steps = int(T / dt)
+
+        # State variables
+        V = np.random.rand(self.N) * self.V_th
+        spikes = np.zeros((n_steps, self.N))
+
+        for t in range(n_steps):
+            # Synaptic input
+            I_syn = self.W @ (V > 0).astype(float)  # Instantaneous
+
+            # External input
+            I_total = I_syn + I_ext + np.random.randn(self.N) * 0.1
+
+            # Integrate
+            dV = (-V + I_total) / self.tau * dt
+            V += dV
+
+            # Spike and reset
+            spiked = V > self.V_th
+            spikes[t] = spiked.astype(float)
+            V[spiked] = self.V_reset
+
+        return spikes
+
+    def analyze_activity(self, spikes, dt=0.1):
+        """
+        Analyze network activity statistics
+        """
+        # Firing rates
+        rates = spikes.mean(axis=0) / dt * 1000  # Hz
+
+        # CV (coefficient of variation)
+        ISIs = []
+        for neuron in range(self.N):
+            spike_times = np.where(spikes[:, neuron])[0] * dt
+            if len(spike_times) > 1:
+                isis = np.diff(spike_times)
+                ISIs.extend(isis)
+
+        CV = np.std(ISIs) / np.mean(ISIs) if len(ISIs) > 0 else 0
+
+        # Correlations
+        from scipy.stats import pearsonr
+        corrs = []
+        for i in range(min(20, self.N)):
+            for j in range(i+1, min(20, self.N)):
+                if spikes[:, i].sum() > 0 and spikes[:, j].sum() > 0:
+                    r, _ = pearsonr(spikes[:, i], spikes[:, j])
+                    corrs.append(r)
+
+        mean_corr = np.mean(corrs) if corrs else 0
+
+        print("\n=== Activity Statistics ===")
+        print(f"Mean firing rate: {rates.mean():.2f} Hz")
+        print(f"CV (irregularity): {CV:.2f} (asynchronous if ≈1)")
+        print(f"Mean pairwise correlation: {mean_corr:.4f} (low if ≪1)")
+
+        return rates, CV, mean_corr
+
+
+# Example: Balanced cortical network
+network = BalancedNetwork(N_E=400, N_I=100, K=100)
+
+# Check balance
+mean_E, mean_I = network.check_balance()
+
+# Simulate
+T = 1000  # ms
+spikes = network.simulate(T=T, dt=0.1, I_ext=0.5)
+
+# Analyze
+rates, CV, mean_corr = network.analyze_activity(spikes, dt=0.1)
+
+# Compare to unbalanced network (no inhibition)
+network_unbalanced = BalancedNetwork(N_E=400, N_I=100, K=100)
+network_unbalanced.J_I = 0  # Remove inhibition
+network_unbalanced.W = network_unbalanced._build_connectivity()
+
+spikes_unbalanced = network_unbalanced.simulate(T=T, dt=0.1, I_ext=0.5)
+rates_unbalanced, CV_unbalanced, corr_unbalanced = network_unbalanced.analyze_activity(spikes_unbalanced, dt=0.1)
+
+print(f"\n=== Comparison ===")
+print(f"Balanced: rate={rates.mean():.2f} Hz, CV={CV:.2f}, corr={mean_corr:.4f}")
+print(f"Unbalanced: rate={rates_unbalanced.mean():.2f} Hz, CV={CV_unbalanced:.2f}, corr={corr_unbalanced:.4f}")
+```
+
+**Source**: van Vreeswijk & Sompolinsky (1996) Science; Brunel (2000) J Comp Neurosci; Renart et al. (2010) Science; Denève & Machens (2016) Curr Op Neurobio
+
+---
+
+### Structural Identifiability (Parameter Inference Feasibility)
+
+**Purpose**: Determine if model parameters can be uniquely inferred from observations—theoretical prerequisite for parameter fitting.
+
+**Formula**: Identifiability Condition
+```
+Model: ẋ = f(x, θ), y = h(x, θ)
+
+Structurally identifiable if:
+θ₁ ≠ θ₂ ⟹ p(y | θ₁) ≠ p(y | θ₂)
+
+Rank condition:
+rank(∂f/∂θ) = dim(θ)
+
+For observations y₁:T:
+rank(∂[y₁, ..., y_T]/∂θ) = dim(θ)
+
+Local identifiability:
+Fisher Information matrix J(θ) is full rank
+
+Symbolic approach:
+Eliminate state variables x, check if θ uniquely determined
+
+Practical test:
+Simulate with different θ, check if outputs differ
+```
+
+**Nature's Implementation**: Determines which circuit parameters can be inferred from recordings. Guides experimental design (what to measure). Reveals fundamental limits of neural inference. Used for connectivity inference, parameter estimation validation.
+
+**Impact**: **MEDIUM - Inference Feasibility**
+Prevents futile parameter fitting. Guides experimental design. Reveals model redundancies. Critical for validating neural circuit inference and ensuring parameter estimation is well-posed.
+
+**Code Example**:
+```python
+class StructuralIdentifiability:
+    """Test structural identifiability of dynamical models"""
+
+    def __init__(self, dynamics_fn, observation_fn, n_params):
+        """
+        dynamics_fn: dx/dt = f(x, θ)
+        observation_fn: y = h(x, θ)
+        n_params: dimensionality of θ
+        """
+        self.dynamics = dynamics_fn
+        self.observation = observation_fn
+        self.n_params = n_params
+
+    def fisher_information_matrix(self, theta, x_trajectory, eps=1e-5):
+        """
+        Compute Fisher Information matrix: J_ij = E[∂log p/∂θᵢ · ∂log p/∂θⱼ]
+
+        For Gaussian observations: J ≈ (1/σ²) Σ_t (∂y_t/∂θ)(∂y_t/∂θ)ᵀ
+        """
+        T = len(x_trajectory)
+        J = np.zeros((self.n_params, self.n_params))
+
+        for t in range(T):
+            x_t = x_trajectory[t]
+
+            # Compute ∂y/∂θ numerically
+            dy_dtheta = np.zeros(self.n_params)
+
+            y_nominal = self.observation(x_t, theta)
+
+            for i in range(self.n_params):
+                theta_plus = theta.copy()
+                theta_plus[i] += eps
+
+                y_plus = self.observation(x_t, theta_plus)
+
+                dy_dtheta[i] = (y_plus - y_nominal) / eps
+
+            # Accumulate J = Σ (∂y/∂θ)(∂y/∂θ)ᵀ
+            J += np.outer(dy_dtheta, dy_dtheta)
+
+        return J / T
+
+    def test_identifiability(self, theta, x_trajectory):
+        """
+        Test if parameters are identifiable via Fisher Information rank
+        """
+        J = self.fisher_information_matrix(theta, x_trajectory)
+
+        # Eigenvalues
+        eigenvalues = np.linalg.eigvalsh(J)
+
+        # Condition number
+        cond = eigenvalues.max() / (eigenvalues.min() + 1e-10)
+
+        # Rank (counting non-zero eigenvalues)
+        rank = np.sum(eigenvalues > 1e-6 * eigenvalues.max())
+
+        print(f"Fisher Information Matrix:")
+        print(f"  Eigenvalues: {eigenvalues}")
+        print(f"  Condition number: {cond:.2e}")
+        print(f"  Rank: {rank} / {self.n_params}")
+
+        identifiable = (rank == self.n_params) and (cond < 1e10)
+
+        if identifiable:
+            print("  → Parameters are IDENTIFIABLE")
+        else:
+            print("  → Parameters are NOT identifiable (rank deficient or ill-conditioned)")
+
+        return identifiable, J
+
+    def sensitivity_analysis(self, theta, x_trajectory):
+        """
+        Analyze parameter sensitivity: which parameters are most identifiable
+        """
+        J = self.fisher_information_matrix(theta, x_trajectory)
+
+        # Parameter uncertainties (Cramér-Rao bound)
+        try:
+            J_inv = np.linalg.inv(J)
+            uncertainties = np.sqrt(np.diag(J_inv))
+        except np.linalg.LinAlgError:
+            uncertainties = np.full(self.n_params, np.inf)
+
+        print("\nParameter Sensitivities:")
+        for i in range(self.n_params):
+            print(f"  θ[{i}]: uncertainty = {uncertainties[i]:.4f}")
+
+        return uncertainties
+
+    def practical_identifiability_test(self, theta_true, theta_test, T=100, dt=0.1, noise_std=0.1):
+        """
+        Practical identifiability: simulate with different parameters,
+        check if outputs are distinguishable
+        """
+        # Simulate with true parameters
+        x0 = np.zeros(2)  # Assume 2D state
+        y_true = self._simulate_and_observe(x0, theta_true, T, dt)
+
+        # Simulate with test parameters
+        y_test = self._simulate_and_observe(x0, theta_test, T, dt)
+
+        # Add noise
+        y_true_noisy = y_true + np.random.randn(*y_true.shape) * noise_std
+        y_test_noisy = y_test + np.random.randn(*y_test.shape) * noise_std
+
+        # Statistical test: can we distinguish outputs?
+        # Use KL divergence or simple distance
+        distance = np.mean((y_true - y_test)**2)
+        noise_level = noise_std**2
+
+        # Signal-to-noise ratio
+        snr = distance / noise_level
+
+        print(f"\nPractical Identifiability Test:")
+        print(f"  Output distance: {distance:.4f}")
+        print(f"  Noise level: {noise_level:.4f}")
+        print(f"  SNR: {snr:.2f}")
+
+        if snr > 3:
+            print("  → Parameters are PRACTICALLY distinguishable")
+            return True
+        else:
+            print("  → Parameters are NOT distinguishable (output difference < noise)")
+            return False
+
+    def _simulate_and_observe(self, x0, theta, T, dt):
+        """Helper: simulate dynamics and generate observations"""
+        n_steps = int(T / dt)
+        x_trajectory = np.zeros((n_steps, len(x0)))
+        y_trajectory = np.zeros(n_steps)
+
+        x_trajectory[0] = x0
+
+        for t in range(1, n_steps):
+            # Euler integration
+            dx = self.dynamics(x_trajectory[t-1], theta) * dt
+            x_trajectory[t] = x_trajectory[t-1] + dx
+
+            y_trajectory[t] = self.observation(x_trajectory[t], theta)
+
+        return y_trajectory
+
+
+# Example: Neural circuit with synaptic weights
+def neural_circuit_dynamics(x, theta):
+    """
+    dx/dt = -x + W·φ(x) + I
+    θ = [W11, W12, W21, W22, I]
+    """
+    W11, W12, W21, W22, I_ext = theta
+
+    W = np.array([[W11, W12], [W21, W22]])
+    phi_x = np.tanh(x)  # Activation
+
+    dxdt = -x + W @ phi_x + I_ext
+
+    return dxdt
+
+def neural_observation(x, theta):
+    """
+    y = weighted sum of neural activity
+    """
+    return x[0] + 0.5 * x[1]  # Observe both neurons
+
+# Test identifiability
+n_params = 5
+identifiability = StructuralIdentifiability(
+    neural_circuit_dynamics,
+    neural_observation,
+    n_params
+)
+
+# True parameters
+theta_true = np.array([0.5, -0.3, 0.4, 0.2, 1.0])
+
+# Simulate trajectory
+x0 = np.array([0.1, 0.1])
+T = 100
+dt = 0.1
+n_steps = int(T / dt)
+
+x_traj = np.zeros((n_steps, 2))
+x_traj[0] = x0
+
+for t in range(1, n_steps):
+    dx = neural_circuit_dynamics(x_traj[t-1], theta_true) * dt
+    x_traj[t] = x_traj[t-1] + dx
+
+# Test identifiability
+identifiable, J = identifiability.test_identifiability(theta_true, x_traj)
+
+# Sensitivity analysis
+uncertainties = identifiability.sensitivity_analysis(theta_true, x_traj)
+
+# Practical test
+theta_test = theta_true + np.array([0.05, 0.0, 0.0, 0.0, 0.0])  # Perturb W11
+distinguishable = identifiability.practical_identifiability_test(
+    theta_true, theta_test, T=100, dt=0.1, noise_std=0.05
+)
+```
+
+**Source**: Bellman & Åström (1970) Math Biosci; Chis et al. (2011) BMC Syst Biol; Villaverde et al. (2016) PLOS Comp Bio; Gonçalves et al. (2020) eLife
+
+---
+
+### Bayesian Cramér-Rao Bound (Prior-Informed Lower Bound)
+
+**Purpose**: Tightest lower bound on posterior variance incorporating prior information—extends classical Cramér-Rao to Bayesian setting.
+
+**Formula**: Van Trees Inequality
+```
+Posterior covariance:
+Cov[θ | y] ≥ (J_D(θ) + J_P(θ))^{-1}
+
+where:
+J_D = data Fisher information (from likelihood)
+J_P = prior Fisher information (from prior)
+
+Data Fisher:
+J_D = -E[∂²log p(y|θ)/∂θ²]
+
+Prior Fisher:
+J_P = -E[∂²log p(θ)/∂θ²]
+
+Bayesian Information Matrix:
+J_Bayes = J_D + J_P
+
+Minimum MSE:
+E[(θ̂ - θ)²] ≥ tr[(J_D + J_P)^{-1}]
+
+For single parameter:
+Var(θ̂ | y) ≥ 1/(J_D(θ) + J_P(θ))
+```
+
+**Nature's Implementation**: Bounds uncertainty in neural encoding models. Explains how priors improve estimation (e.g., natural scene statistics). Quantifies information gain from data vs prior. Used for understanding perceptual uncertainty and sensory-motor integration.
+
+**Impact**: **MEDIUM - Bayesian Estimation Bounds**
+Tighter than classical Cramér-Rao. Quantifies prior contribution. Predicts estimation performance. Critical for understanding neural inference, optimal encoding, and role of priors in perception.
+
+**Code Example**:
+```python
+class BayesianCramerRaoBound:
+    """Compute Bayesian Cramér-Rao bound for parameter estimation"""
+
+    def __init__(self, log_prior_fn, log_likelihood_fn):
+        """
+        log_prior_fn: log p(θ)
+        log_likelihood_fn: log p(y | θ)
+        """
+        self.log_prior = log_prior_fn
+        self.log_likelihood = log_likelihood_fn
+
+    def fisher_data(self, theta, data, eps=1e-5):
+        """
+        Data Fisher information: J_D = -E[∂²log p(y|θ)/∂θ²]
+        """
+        n_params = len(theta)
+        J_D = np.zeros((n_params, n_params))
+
+        # Second derivative via finite differences
+        for i in range(n_params):
+            for j in range(n_params):
+                theta_pp = theta.copy()
+                theta_pm = theta.copy()
+                theta_mp = theta.copy()
+                theta_mm = theta.copy()
+
+                theta_pp[i] += eps
+                theta_pp[j] += eps
+
+                theta_pm[i] += eps
+                theta_pm[j] -= eps
+
+                theta_mp[i] -= eps
+                theta_mp[j] += eps
+
+                theta_mm[i] -= eps
+                theta_mm[j] -= eps
+
+                # ∂²log L/∂θᵢ∂θⱼ
+                d2_ll = (
+                    self.log_likelihood(data, theta_pp)
+                    - self.log_likelihood(data, theta_pm)
+                    - self.log_likelihood(data, theta_mp)
+                    + self.log_likelihood(data, theta_mm)
+                ) / (4 * eps**2)
+
+                J_D[i, j] = -d2_ll
+
+        return J_D
+
+    def fisher_prior(self, theta, eps=1e-5):
+        """
+        Prior Fisher information: J_P = -E[∂²log p(θ)/∂θ²]
+        """
+        n_params = len(theta)
+        J_P = np.zeros((n_params, n_params))
+
+        for i in range(n_params):
+            for j in range(n_params):
+                theta_pp = theta.copy()
+                theta_pm = theta.copy()
+                theta_mp = theta.copy()
+                theta_mm = theta.copy()
+
+                theta_pp[i] += eps
+                theta_pp[j] += eps
+
+                theta_pm[i] += eps
+                theta_pm[j] -= eps
+
+                theta_mp[i] -= eps
+                theta_mp[j] += eps
+
+                theta_mm[i] -= eps
+                theta_mm[j] -= eps
+
+                # ∂²log p(θ)/∂θᵢ∂θⱼ
+                d2_lp = (
+                    self.log_prior(theta_pp)
+                    - self.log_prior(theta_pm)
+                    - self.log_prior(theta_mp)
+                    + self.log_prior(theta_mm)
+                ) / (4 * eps**2)
+
+                J_P[i, j] = -d2_lp
+
+        return J_P
+
+    def bayesian_bound(self, theta, data):
+        """
+        Compute Bayesian CRB: Cov(θ̂) ≥ (J_D + J_P)^{-1}
+        """
+        J_D = self.fisher_data(theta, data)
+        J_P = self.fisher_prior(theta)
+
+        J_Bayes = J_D + J_P
+
+        # Invert for bound
+        try:
+            bound = np.linalg.inv(J_Bayes)
+        except np.linalg.LinAlgError:
+            bound = np.linalg.pinv(J_Bayes)
+
+        return bound, J_D, J_P
+
+    def compare_classical_bayesian(self, theta, data):
+        """
+        Compare classical CRB (no prior) vs Bayesian CRB
+        """
+        J_D = self.fisher_data(theta, data)
+        J_P = self.fisher_prior(theta)
+
+        # Classical bound (data only)
+        try:
+            classical_bound = np.linalg.inv(J_D)
+        except np.linalg.LinAlgError:
+            classical_bound = np.linalg.pinv(J_D)
+
+        # Bayesian bound (data + prior)
+        bayesian_bound = np.linalg.inv(J_D + J_P)
+
+        print("=== Cramér-Rao Bounds ===")
+        print(f"Classical (data only):")
+        print(f"  Variance bounds: {np.diag(classical_bound)}")
+        print(f"  Total uncertainty: {np.trace(classical_bound):.4f}")
+
+        print(f"\nBayesian (data + prior):")
+        print(f"  Variance bounds: {np.diag(bayesian_bound)}")
+        print(f"  Total uncertainty: {np.trace(bayesian_bound):.4f}")
+
+        # Improvement from prior
+        improvement = (np.trace(classical_bound) - np.trace(bayesian_bound)) / np.trace(classical_bound)
+        print(f"\nImprovement from prior: {improvement * 100:.1f}%")
+
+        return classical_bound, bayesian_bound
+
+
+# Example: Orientation tuning estimation
+def log_prior(theta):
+    """
+    Gaussian prior: p(θ) = N(θ | μ_0, Σ_0)
+    θ = [preferred_ori, tuning_width]
+    """
+    mu_0 = np.array([90, 20])  # Prior mean
+    Sigma_0 = np.diag([45**2, 10**2])  # Prior covariance
+
+    diff = theta - mu_0
+    return -0.5 * diff @ np.linalg.inv(Sigma_0) @ diff
+
+def log_likelihood(data, theta):
+    """
+    Poisson tuning curve: p(spikes | ori, θ)
+    """
+    pref_ori, width = theta
+
+    ll = 0
+    for ori, spikes in data:
+        # Von Mises tuning
+        rate = 5 + 10 * np.exp((1/width**2) * np.cos(2 * np.pi * (ori - pref_ori) / 180))
+
+        # Poisson
+        ll += spikes * np.log(rate + 1e-10) - rate
+
+    return ll
+
+# Generate data
+true_theta = np.array([90, 15])
+orientations = [0, 30, 60, 90, 120, 150, 180]
+data = []
+
+for ori in orientations:
+    rate = 5 + 10 * np.exp((1/true_theta[1]**2) * np.cos(2 * np.pi * (ori - true_theta[0]) / 180))
+    spikes = np.random.poisson(rate)
+    data.append((ori, spikes))
+
+# Compute bounds
+bcrb = BayesianCramerRaoBound(log_prior, log_likelihood)
+
+classical_bound, bayesian_bound = bcrb.compare_classical_bayesian(true_theta, data)
+
+# Information contributions
+_, J_D, J_P = bcrb.bayesian_bound(true_theta, data)
+
+print(f"\n=== Information Contributions ===")
+print(f"Data Fisher (J_D):")
+print(f"  {np.diag(J_D)}")
+print(f"Prior Fisher (J_P):")
+print(f"  {np.diag(J_P)}")
+print(f"Ratio (data/prior): {np.diag(J_D) / np.diag(J_P)}")
+```
+
+**Source**: Van Trees (1968) Detection, Estimation, and Modulation Theory; Tichavský et al. (1998) IEEE Trans Signal Processing; Lehmann & Casella (1998) Book
+
+---
+
+### Spectral Stability of Recurrent Networks
+
+**Purpose**: Stability condition for linear recurrent dynamics via spectral radius—determines convergence, oscillations, and chaos.
+
+**Formula**: Spectral Radius Condition
+```
+Linear dynamics: x_{t+1} = W x_t
+
+Stability: ρ(W) < 1
+
+where ρ(W) = max|λ_i(W)| = spectral radius
+
+Eigenvalue decomposition:
+W v_i = λ_i v_i
+
+Dynamics: x_t = Σ c_i λ_i^t v_i
+               i
+
+Convergence:
+|λ_i| < 1 → stable (exponential decay)
+|λ_i| = 1 → neutrally stable (oscillations)
+|λ_i| > 1 → unstable (exponential growth)
+
+For nonlinear: ż = F(z)
+Linearization: ρ(∂F/∂z) < 1 locally
+
+Edge of chaos: ρ(W) ≈ 1
+```
+
+**Nature's Implementation**: Determines stability of recurrent cortical dynamics. Edge of chaos hypothesis (ρ ≈ 1 for maximal computation). Explains spontaneous oscillations (complex eigenvalues near unit circle). Used for RNN design, reservoir computing.
+
+**Impact**: **MEDIUM-HIGH - Network Stability**
+Simple stability criterion. Predicts oscillations (complex eigenvalues). Guides network design. Critical for understanding recurrent dynamics, echo state networks, and computational capacity.
+
+**Code Example**:
+```python
+class SpectralStability:
+    """Analyze stability of recurrent neural networks via spectral radius"""
+
+    def __init__(self, W):
+        """
+        W: [n × n] weight matrix
+        """
+        self.W = W
+        self.n = W.shape[0]
+
+        # Compute eigenvalues
+        self.eigenvalues = None
+        self.eigenvectors = None
+        self.spectral_radius = None
+
+    def compute_spectrum(self):
+        """
+        Eigenvalue decomposition: W v = λ v
+        """
+        self.eigenvalues, self.eigenvectors = np.linalg.eig(self.W)
+
+        # Spectral radius
+        self.spectral_radius = np.max(np.abs(self.eigenvalues))
+
+        return self.eigenvalues, self.spectral_radius
+
+    def check_stability(self):
+        """
+        Check if dynamics are stable: ρ(W) < 1
+        """
+        if self.spectral_radius is None:
+            self.compute_spectrum()
+
+        print(f"Spectral radius: ρ(W) = {self.spectral_radius:.4f}")
+
+        if self.spectral_radius < 1:
+            print("  → Network is STABLE (ρ < 1)")
+            print("    Dynamics converge to fixed point")
+        elif self.spectral_radius == 1:
+            print("  → Network is NEUTRALLY STABLE (ρ = 1)")
+            print("    Persistent activity / oscillations")
+        else:
+            print("  → Network is UNSTABLE (ρ > 1)")
+            print("    Exponential growth / chaos")
+
+        return self.spectral_radius < 1
+
+    def timescales(self):
+        """
+        Extract timescales from eigenvalues: τ_i = -1/log|λ_i|
+        """
+        if self.eigenvalues is None:
+            self.compute_spectrum()
+
+        # Only for stable modes (|λ| < 1)
+        stable_eigs = self.eigenvalues[np.abs(self.eigenvalues) < 1]
+
+        if len(stable_eigs) == 0:
+            print("No stable modes")
+            return []
+
+        timescales = -1.0 / np.log(np.abs(stable_eigs) + 1e-10)
+
+        print(f"\nStable mode timescales:")
+        for i, tau in enumerate(sorted(timescales, reverse=True)[:5]):
+            print(f"  τ{i}: {tau:.2f} steps")
+
+        return timescales
+
+    def oscillation_frequencies(self):
+        """
+        Extract oscillation frequencies from complex eigenvalues
+        ω = arg(λ) / (2π)
+        """
+        if self.eigenvalues is None:
+            self.compute_spectrum()
+
+        # Complex eigenvalues (oscillatory modes)
+        complex_eigs = self.eigenvalues[np.abs(np.imag(self.eigenvalues)) > 1e-6]
+
+        if len(complex_eigs) == 0:
+            print("No oscillatory modes")
+            return []
+
+        frequencies = np.angle(complex_eigs) / (2 * np.pi)
+
+        print(f"\nOscillation frequencies:")
+        for i, freq in enumerate(sorted(np.abs(frequencies), reverse=True)[:5]):
+            print(f"  f{i}: {freq:.4f} cycles/step")
+
+        return frequencies
+
+    def dominant_modes(self, n_modes=5):
+        """
+        Identify dominant modes (largest |λ|)
+        """
+        if self.eigenvalues is None:
+            self.compute_spectrum()
+
+        # Sort by magnitude
+        idx = np.argsort(np.abs(self.eigenvalues))[::-1]
+
+        print(f"\nDominant {n_modes} modes:")
+        for i in range(min(n_modes, len(self.eigenvalues))):
+            ev = self.eigenvalues[idx[i]]
+            print(f"  λ{i}: {ev:.4f} (|λ| = {np.abs(ev):.4f})")
+
+        return self.eigenvalues[idx[:n_modes]], self.eigenvectors[:, idx[:n_modes]]
+
+    def edge_of_chaos_metric(self):
+        """
+        Quantify proximity to edge of chaos: |ρ(W) - 1|
+        """
+        if self.spectral_radius is None:
+            self.compute_spectrum()
+
+        distance_to_edge = np.abs(self.spectral_radius - 1)
+
+        print(f"\n=== Edge of Chaos ===")
+        print(f"Distance to edge: {distance_to_edge:.4f}")
+
+        if distance_to_edge < 0.1:
+            print("  → NEAR edge of chaos (maximal computation)")
+        elif self.spectral_radius < 1:
+            print("  → STABLE regime (ρ < 1)")
+        else:
+            print("  → CHAOTIC regime (ρ > 1)")
+
+        return distance_to_edge
+
+    def simulate_dynamics(self, x0, n_steps):
+        """
+        Simulate linear dynamics: x_t = W^t x_0
+        """
+        trajectory = np.zeros((n_steps, self.n))
+        trajectory[0] = x0
+
+        for t in range(1, n_steps):
+            trajectory[t] = self.W @ trajectory[t-1]
+
+        return trajectory
+
+    def predict_convergence(self, x0):
+        """
+        Predict long-term behavior using eigendecomposition
+        x_∞ = Σ c_i λ_i^∞ v_i
+        """
+        if self.eigenvalues is None:
+            self.compute_spectrum()
+
+        # Project initial condition onto eigenvectors
+        coefficients = np.linalg.lstsq(self.eigenvectors, x0, rcond=None)[0]
+
+        # Asymptotic contribution (λ^∞)
+        if self.spectral_radius < 1:
+            x_inf = np.zeros(self.n)  # All modes decay
+            print("Converges to zero (all eigenvalues < 1)")
+        else:
+            # Dominant mode
+            dominant_idx = np.argmax(np.abs(self.eigenvalues))
+            x_inf = coefficients[dominant_idx] * self.eigenvectors[:, dominant_idx]
+            print(f"Dominated by mode λ = {self.eigenvalues[dominant_idx]:.4f}")
+
+        return x_inf
+
+
+# Example: Recurrent network with different stability regimes
+n_neurons = 50
+
+# Stable network (ρ < 1)
+W_stable = np.random.randn(n_neurons, n_neurons) * 0.8 / np.sqrt(n_neurons)
+stability_stable = SpectralStability(W_stable)
+stability_stable.compute_spectrum()
+stability_stable.check_stability()
+stability_stable.timescales()
+stability_stable.edge_of_chaos_metric()
+
+print("\n" + "="*50)
+
+# Edge of chaos (ρ ≈ 1)
+W_edge = np.random.randn(n_neurons, n_neurons) / np.sqrt(n_neurons)
+W_edge /= np.max(np.abs(np.linalg.eigvals(W_edge)))  # Normalize to ρ = 1
+stability_edge = SpectralStability(W_edge)
+stability_edge.compute_spectrum()
+stability_edge.check_stability()
+stability_edge.oscillation_frequencies()
+stability_edge.edge_of_chaos_metric()
+
+print("\n" + "="*50)
+
+# Chaotic (ρ > 1)
+W_chaos = np.random.randn(n_neurons, n_neurons) * 1.5 / np.sqrt(n_neurons)
+stability_chaos = SpectralStability(W_chaos)
+stability_chaos.compute_spectrum()
+stability_chaos.check_stability()
+
+# Simulate dynamics
+x0 = np.random.randn(n_neurons) * 0.1
+
+print("\n=== Simulation ===")
+traj_stable = stability_stable.simulate_dynamics(x0, n_steps=100)
+traj_chaos = stability_chaos.simulate_dynamics(x0, n_steps=100)
+
+print(f"Stable network final norm: {np.linalg.norm(traj_stable[-1]):.4f}")
+print(f"Chaotic network final norm: {np.linalg.norm(traj_chaos[-1]):.4f}")
+```
+
+**Source**: Gerschgorin (1931) Izv Akad Nauk SSSR; Horn & Johnson (1985) Book; Sompolinsky et al. (1988) Phys Rev A; Sussillo & Abbott (2009) Neuron
+
+---
 ## Summary Statistics
 
-**Total Architectures Documented**: 154
+**Total Architectures Documented**: 175
 **Critical Impact**: 5 (paradigm-shifting)
 **High Impact**: 10 (10-100x improvements)
 **Medium-High Impact**: 12 (2-10x improvements)
