@@ -1481,3 +1481,709 @@ class OjaLayer(nn.Module):
 
 ---
 
+## MEDIUM IMPACT (Useful Specialized Components)
+
+These architectures excel in specific domains or scenarios.
+
+---
+
+### 24. Boltzmann Gated Activation
+
+**Purpose**: Voltage-gated channel kinetics for adaptive thresholds.
+
+**Formula**: Sigmoid with Learnable Parameters
+```
+y = σ((x - V_half) / k)
+
+where:
+- V_half = half-activation voltage (learnable threshold)
+- k = slope factor (learnable steepness)
+- σ = sigmoid function
+```
+
+**Nature's Implementation**: Voltage-gated ion channels (Na+, K+, Ca2+). Activation depends on membrane potential.
+
+**Impact**: **MEDIUM - Adaptive Thresholds**
+Each neuron learns its own activation threshold and slope. Better than fixed ReLU threshold of 0.
+
+**Code Example**:
+```python
+class BoltzmannActivation(nn.Module):
+    def __init__(self, dim):
+        super().__init__()
+        self.v_half = nn.Parameter(torch.zeros(dim))
+        self.k = nn.Parameter(torch.ones(dim))
+
+    def forward(self, x):
+        return torch.sigmoid((x - self.v_half) / (torch.abs(self.k) + 1e-8))
+```
+
+**Source**: bio_ai_components.py, Lines 72-102
+
+---
+
+### 25. Hodgkin-Huxley Alpha Function
+
+**Purpose**: Voltage-dependent gating variable dynamics.
+
+**Formula**: Rate Equations
+```
+α_m(V) = 0.1(V + 40) / (1 - exp(-(V + 40)/10))
+β_m(V) = 4 exp(-(V + 65)/18)
+
+dm/dt = α_m(V)(1 - m) - β_m(V)·m
+
+m_∞(V) = α_m/(α_m + β_m)
+τ_m(V) = 1/(α_m + β_m)
+```
+
+**Nature's Implementation**: Sodium channel activation in action potentials.
+
+**Impact**: **MEDIUM - Realistic Spiking**
+Accurate spike generation for spiking neural networks. Matches experimental data.
+
+**Code Example**:
+```python
+class HodgkinHuxleyGate(nn.Module):
+    def __init__(self, features):
+        super().__init__()
+        self.m = torch.zeros(features)
+
+    def alpha_m(self, V):
+        return 0.1 * (V + 40) / (1 - torch.exp(-(V + 40) / 10) + 1e-8)
+
+    def beta_m(self, V):
+        return 4 * torch.exp(-(V + 65) / 18)
+
+    def forward(self, V, dt=0.1):
+        alpha = self.alpha_m(V)
+        beta = self.beta_m(V)
+
+        dm = (alpha * (1 - self.m) - beta * self.m) * dt
+        self.m += dm
+
+        return self.m
+```
+
+**Source**: bio_ai_components.py, Lines 104-128
+
+---
+
+### 26. Ion Channel Gating (m³h Dynamics)
+
+**Purpose**: Multi-variable gating with inactivation—complex temporal dynamics.
+
+**Formula**: Activation × Inactivation
+```
+I = g_max · m³ · h · (V - E_rev)
+
+dm/dt = (m_∞(V) - m) / τ_m(V)
+dh/dt = (h_∞(V) - h) / τ_h(V)
+
+where:
+- m = activation gate (fast, power of 3)
+- h = inactivation gate (slow)
+- E_rev = reversal potential
+```
+
+**Nature's Implementation**: Na+ channels (m³h), K+ channels (n⁴), Ca2+ channels (m²h).
+
+**Impact**: **MEDIUM - Complex Dynamics**
+Captures spike generation, refractory period, adaptation. Rich temporal behavior from simple ODEs.
+
+**Code Example**:
+```python
+class IonChannelGate(nn.Module):
+    def __init__(self, dim, power_m=3):
+        super().__init__()
+        self.m = torch.zeros(1, dim)
+        self.h = torch.ones(1, dim)
+        self.power = power_m
+
+    def m_inf(self, V):
+        return torch.sigmoid((V + 40) / 10)
+
+    def h_inf(self, V):
+        return torch.sigmoid(-(V + 45) / 7)
+
+    def forward(self, V, dt=1.0):
+        batch_size = V.shape[0]
+
+        m = self.m.expand(batch_size, -1)
+        h = self.h.expand(batch_size, -1)
+
+        # Update gates
+        m = m + dt * ((self.m_inf(V) - m) / 5.0)
+        h = h + dt * ((self.h_inf(V) - h) / 50.0)
+
+        if self.training:
+            self.m = m.mean(0, keepdim=True).detach()
+            self.h = h.mean(0, keepdim=True).detach()
+
+        # Conductance
+        g = (m ** self.power) * h
+        return g
+```
+
+**Source**: bio_ai_components.py, Lines 130-209
+
+---
+
+### 27. GTPase Amplification Cycle
+
+**Purpose**: Catalytic amplification—one GEF activates many GTPases.
+
+**Formula**: GDP/GTP Exchange
+```
+d[Ras-GTP]/dt = k_GEF[GEF][Ras-GDP] - k_GAP[GAP][Ras-GTP]
+
+Amplification: 1 GEF → 100 Ras-GTP (before GAP deactivation)
+```
+
+**Nature's Implementation**: Ras, Rho, Rab, Ran, Arf families. 5,239 formulas in database.
+
+**Impact**: **MEDIUM - Feature Amplification**
+One strong signal catalytically amplifies related features. Persistent activation until GAP.
+
+**Code Example**:
+```python
+class GTPaseAmplifier(nn.Module):
+    def __init__(self, dim, k_GEF=5.0, k_GAP=0.5):
+        super().__init__()
+        self.signal_encoder = nn.Linear(dim, dim)
+        self.k_GEF = k_GEF
+        self.k_GAP = k_GAP
+        self.GTP_state = torch.zeros(1, dim)
+
+    def forward(self, x, dt=1.0):
+        batch_size = x.shape[0]
+        signal = torch.sigmoid(self.signal_encoder(x))
+
+        GTP = self.GTP_state.expand(batch_size, -1)
+
+        # GEF activation
+        activation = self.k_GEF * signal * (1 - GTP)
+
+        # GAP deactivation
+        deactivation = self.k_GAP * GTP
+
+        GTP = GTP + dt * (activation - deactivation)
+        GTP = torch.clamp(GTP, 0, 1)
+
+        if self.training:
+            self.GTP_state = GTP.mean(0, keepdim=True).detach()
+
+        return x * (1 + 10 * GTP)  # 10x amplification
+```
+
+**Source**: SIGNAL_AMPLIFICATION_REPORT.md, Lines 340-414
+
+---
+
+### 28. IP3 Receptor (Calcium-Induced Calcium Release)
+
+**Purpose**: Positive feedback amplification through CICR.
+
+**Formula**: De Young-Keizer Model
+```
+J_IP3R = v_max · m³ · h³ · (Ca_ER - Ca_cyt)
+
+m_∞ = ([IP3]/(K_IP3 + [IP3])) · ([Ca]/(K_act + [Ca]))
+dh/dt = (h_∞ - h)/τ_h
+
+where h_∞ = K_inh/(K_inh + [Ca])  [Ca-dependent inactivation]
+```
+
+**Nature's Implementation**: Intracellular calcium release. Creates calcium waves and oscillations.
+
+**Impact**: **MEDIUM - Oscillatory Amplification**
+Positive feedback creates waves. Biphasic response: Ca activates then inactivates.
+
+**Code Example**:
+```python
+class IP3Receptor(nn.Module):
+    def __init__(self, features):
+        super().__init__()
+        self.h = torch.ones(features)  # Inactivation gate
+        self.Ca_ER = 100.0  # ER calcium (high)
+
+    def m_inf(self, IP3, Ca):
+        ip3_term = IP3 / (0.13 + IP3)
+        ca_term = Ca / (0.08 + Ca)
+        return ip3_term * ca_term
+
+    def h_inf(self, Ca):
+        return 0.8 / (0.8 + Ca)
+
+    def forward(self, IP3, Ca_cyt, dt=1.0):
+        m = self.m_inf(IP3, Ca_cyt)
+
+        # Update inactivation
+        self.h += dt * (self.h_inf(Ca_cyt) - self.h) / 2.0
+
+        # Flux
+        J = 10.0 * (m ** 3) * (self.h ** 3) * (self.Ca_ER - Ca_cyt)
+
+        return J
+```
+
+**Source**: expand_04_signaling.py, Lines 158-174; SIGNAL_AMPLIFICATION_REPORT
+
+---
+
+### 29. SERCA Pump (Active Transport)
+
+**Purpose**: ATP-driven calcium pumping with saturation.
+
+**Formula**: Michaelis-Menten with Hill Cooperativity
+```
+J_SERCA = V_max · [Ca]²/(K_m² + [Ca]²)
+
+where n=2 (Hill coefficient for cooperativity)
+```
+
+**Nature's Implementation**: SR/ER Ca-ATPase. Restores ER calcium against gradient.
+
+**Impact**: **MEDIUM - Active Regulation**
+Counteracts release mechanisms. Creates oscillations when coupled with IP3R.
+
+**Code Example**:
+```python
+class SERCAPump(nn.Module):
+    def __init__(self, V_max=2.0, K_m=0.1):
+        super().__init__()
+        self.V_max = V_max
+        self.K_m = K_m
+
+    def forward(self, Ca_cyt):
+        return self.V_max * (Ca_cyt ** 2) / (self.K_m ** 2 + Ca_cyt ** 2)
+```
+
+**Source**: expand_04_signaling.py, Lines 182-186
+
+---
+
+### 30. Calmodulin Activation (Four Ca²⁺ Binding)
+
+**Purpose**: Cooperative calcium sensor—4 Ca²⁺ bind with high cooperativity.
+
+**Formula**: Hill Equation (n=4)
+```
+[CaM-Ca₄] = [CaM]_total · [Ca]⁴/(K_d⁴ + [Ca]⁴)
+
+where n=4 creates sharp threshold
+```
+
+**Nature's Implementation**: Calmodulin activates CaMKII, calcineurin, many others.
+
+**Impact**: **MEDIUM - Sharp Sensor**
+All-or-none calcium response. Threshold detector for plasticity.
+
+**Code Example**:
+```python
+class Calmodulin(nn.Module):
+    def __init__(self, K_d=0.5):
+        super().__init__()
+        self.K_d = K_d
+
+    def forward(self, Ca):
+        return (Ca ** 4) / (self.K_d ** 4 + Ca ** 4)
+```
+
+**Source**: expand_04_signaling.py, Lines 200-222
+
+---
+
+### 31. Synaptic Scaling (Homeostatic Plasticity)
+
+**Purpose**: Global weight scaling to maintain target firing rate.
+
+**Formula**: Multiplicative Scaling
+```
+dw/dt = α·(r_target - r_actual)·w
+
+or: w_new = w_old · (r_target / r_actual)
+
+where:
+- r = firing rate
+- α = scaling rate (slow, hours-days)
+```
+
+**Nature's Implementation**: Neurons scale all synapses to maintain homeostasis.
+
+**Impact**: **MEDIUM - Prevents Runaway**
+Stabilizes other plasticity rules. Prevents saturation or silence.
+
+**Code Example**:
+```python
+class SynapticScaling(nn.Module):
+    def __init__(self, target_rate=0.1, alpha=0.001):
+        super().__init__()
+        self.target_rate = target_rate
+        self.alpha = alpha
+
+    def scale_weights(self, weights, actual_rate):
+        scaling_factor = self.target_rate / (actual_rate + 1e-8)
+        scaling_factor = 1.0 + self.alpha * (scaling_factor - 1.0)
+        return weights * scaling_factor
+```
+
+**Source**: PLASTICITY_FORMULAS_COMPLETE.md, Lines 285-310
+
+---
+
+### 32. Theta Neuron (Phase Representation)
+
+**Purpose**: Neurons as phase oscillators on unit circle.
+
+**Formula**: Quadratic Integrate-and-Fire on Circle
+```
+dθ/dt = (1 - cos θ) + (1 + cos θ)·(η + I)
+
+where:
+- θ ∈ [0, 2π] = phase
+- η = excitability
+- I = input current
+- Spike when θ crosses π
+```
+
+**Nature's Implementation**: Simplification of QIF neuron. Analytically tractable.
+
+**Impact**: **MEDIUM - Phase Coding**
+Natural for coupled oscillator networks. Kuramoto-compatible.
+
+**Code Example**:
+```python
+class ThetaNeuron(nn.Module):
+    def __init__(self, n_neurons, eta=0.0):
+        super().__init__()
+        self.theta = torch.rand(n_neurons) * 2 * np.pi
+        self.eta = eta
+
+    def forward(self, I, dt=0.01):
+        dtheta = (1 - torch.cos(self.theta)) + (1 + torch.cos(self.theta)) * (self.eta + I)
+        self.theta = (self.theta + dt * dtheta) % (2 * np.pi)
+
+        # Spike when crossing π
+        spikes = ((self.theta > np.pi) & (self.theta < np.pi + dt * 10)).float()
+
+        return spikes, self.theta
+```
+
+**Source**: OSCILLATORY_PATTERNS_ANALYSIS.md, Lines 30-36
+
+---
+
+### 33. PING Gamma Oscillations (E-I Loop)
+
+**Purpose**: Pyramidal-Interneuron gamma rhythm (40-80 Hz) for attention.
+
+**Formula**: E→I→E Loop
+```
+τ_E·dE/dt = -E + S(w_EE·E - w_EI·I + I_ext)
+τ_I·dI/dt = -I + S(w_IE·E)
+
+with τ_I < τ_E, creates oscillation at f = 1/(τ_E + τ_I)
+```
+
+**Nature's Implementation**: Cortical gamma rhythms. Attention and working memory.
+
+**Impact**: **MEDIUM - Rhythmic Attention**
+Oscillatory gating of information. Synchrony binds features.
+
+**Code Example**:
+```python
+class PINGGamma(nn.Module):
+    def __init__(self, dim_e, dim_i=None):
+        super().__init__()
+        if dim_i is None:
+            dim_i = dim_e // 4
+
+        self.W_EE = nn.Linear(dim_e, dim_e)
+        self.W_EI = nn.Linear(dim_i, dim_e)
+        self.W_IE = nn.Linear(dim_e, dim_i)
+
+        self.tau_e = 10.0  # Slow
+        self.tau_i = 5.0   # Fast
+
+        self.E = torch.zeros(1, dim_e)
+        self.I = torch.zeros(1, dim_i)
+
+    def forward(self, x, dt=1.0, n_steps=5):
+        batch_size = x.shape[0]
+        E = self.E.expand(batch_size, -1).clone()
+        I = self.I.expand(batch_size, -1).clone()
+
+        for _ in range(n_steps):
+            E_input = self.W_EE(E) - self.W_EI(I) + x
+            I_input = self.W_IE(E)
+
+            dE = (-E + torch.tanh(E_input)) / self.tau_e
+            dI = (-I + torch.tanh(I_input)) / self.tau_i
+
+            E += dt * dE
+            I += dt * dI
+
+        if self.training:
+            self.E = E.mean(0, keepdim=True).detach()
+            self.I = I.mean(0, keepdim=True).detach()
+
+        return E
+```
+
+**Source**: OSCILLATORY_PATTERNS_ANALYSIS.md, Lines 130-168
+
+---
+
+### 34. Goodwin Circadian Oscillator
+
+**Purpose**: 24-hour rhythms from transcriptional feedback.
+
+**Formula**: Repressilator-like with Delay
+```
+dM/dt = v₁·K₁ⁿ/(K₁ⁿ + Pⁿ) - v₂·M/(K₂ + M)
+dP₀/dt = k₁·M - k₂·P₀
+dP₁/dt = k₂·P₀ - k₃·P₁
+...
+
+where:
+- M = mRNA
+- P = protein (delayed through intermediate forms)
+- n = 4-9 (high cooperativity)
+```
+
+**Nature's Implementation**: Circadian clocks in all organisms.
+
+**Impact**: **MEDIUM - Long-Timescale Modulation**
+Slow rhythms modulate fast processing. Homeostatic regulation.
+
+**Code Example**:
+```python
+class GoodwinOscillator(nn.Module):
+    def __init__(self, v1=1.0, K1=1.0, n=8):
+        super().__init__()
+        self.M = 0.5
+        self.P = 0.5
+        self.v1 = v1
+        self.K1 = K1
+        self.n = n
+
+    def forward(self, dt=0.1):
+        # Transcription (repressed by P)
+        dM = self.v1 * (self.K1 ** self.n) / (self.K1 ** self.n + self.P ** self.n + 1e-8)
+        dM -= 0.1 * self.M
+
+        # Translation
+        dP = 0.5 * self.M - 0.1 * self.P
+
+        self.M += dt * dM
+        self.P += dt * dP
+
+        return self.P  # Oscillates with ~24-unit period
+```
+
+**Source**: OSCILLATORY_PATTERNS_ANALYSIS.md, Lines 220-252
+
+---
+
+### 35. Izhikevich Bursting Neuron
+
+**Purpose**: Efficient spiking model with bursting dynamics.
+
+**Formula**: 2D System with Reset
+```
+dv/dt = 0.04v² + 5v + 140 - u + I
+du/dt = a(bv - u)
+
+if v ≥ 30: v ← c, u ← u + d
+
+Parameters for bursting: a=0.02, b=0.2, c=-55, d=4
+```
+
+**Nature's Implementation**: Layer 5 pyramidal neurons burst. Information coded in burst patterns.
+
+**Impact**: **MEDIUM - Rich Spiking Dynamics**
+Single model captures 20+ neuron types. Bursting for emphasis.
+
+**Code Example**:
+```python
+class IzhikevichNeuron(nn.Module):
+    def __init__(self, n_neurons, a=0.02, b=0.2, c=-55, d=4):
+        super().__init__()
+        self.v = torch.full((n_neurons,), -65.0)
+        self.u = torch.zeros(n_neurons)
+        self.a = a
+        self.b = b
+        self.c = c
+        self.d = d
+
+    def forward(self, I, dt=0.5):
+        # Dynamics
+        dv = (0.04 * self.v ** 2 + 5 * self.v + 140 - self.u + I) * dt
+        du = self.a * (self.b * self.v - self.u) * dt
+
+        self.v += dv
+        self.u += du
+
+        # Reset
+        fired = self.v >= 30
+        self.v[fired] = self.c
+        self.u[fired] += self.d
+
+        return fired.float()
+```
+
+**Source**: OSCILLATORY_PATTERNS_ANALYSIS.md, Lines 257-299
+
+---
+
+### 36. Morris-Lecar Model
+
+**Purpose**: 2D excitable system with limit cycles.
+
+**Formula**: Ca²⁺ and K⁺ Dynamics
+```
+C·dV/dt = I - g_Ca·m_∞(V)·(V - V_Ca) - g_K·w·(V - V_K) - g_L·(V - V_L)
+dw/dt = φ·(w_∞(V) - w)/τ_w(V)
+
+where:
+- m_∞(V) = fast Ca activation
+- w = slow K activation
+```
+
+**Nature's Implementation**: Barnacle muscle fiber. Generic excitable system.
+
+**Impact**: **MEDIUM - Type I/II Excitability**
+Bifurcation analysis of spiking. Rich dynamics.
+
+**Code Example**:
+```python
+class MorrisLecarNeuron(nn.Module):
+    def __init__(self, n_neurons):
+        super().__init__()
+        self.V = torch.full((n_neurons,), -60.0)
+        self.w = torch.zeros(n_neurons)
+
+    def m_inf(self, V):
+        return 0.5 * (1 + torch.tanh((V + 1) / 15))
+
+    def w_inf(self, V):
+        return 0.5 * (1 + torch.tanh((V - 10) / 10))
+
+    def forward(self, I, dt=0.1):
+        m = self.m_inf(self.V)
+
+        dV = (I - 4.4 * m * (self.V - 120) - 8 * self.w * (self.V + 84) - 2 * (self.V + 60)) / 20
+        dw = 0.02 * (self.w_inf(self.V) - self.w)
+
+        self.V += dV * dt
+        self.w += dw * dt
+
+        spikes = (self.V > 0).float()
+        return spikes
+```
+
+**Source**: OSCILLATORY_PATTERNS_ANALYSIS.md, Lines 300-307
+
+---
+
+### 37. Repressilator (Genetic Oscillator)
+
+**Purpose**: Three-gene mutual repression creates oscillations.
+
+**Formula**: Cyclic Inhibition
+```
+dm₁/dt = -m₁ + α/(1 + p₃ⁿ) + α₀
+dm₂/dt = -m₂ + α/(1 + p₁ⁿ) + α₀
+dm₃/dt = -m₃ + α/(1 + p₂ⁿ) + α₀
+
+Gene 1 ⊣ Gene 2 ⊣ Gene 3 ⊣ Gene 1 (cycle)
+```
+
+**Nature's Implementation**: Synthetic biology circuit. Demonstrates programmable oscillations.
+
+**Impact**: **MEDIUM - Cyclic Processing**
+Winner-take-all cycles. Temporal pattern generation.
+
+**Code Example**:
+```python
+class Repressilator(nn.Module):
+    def __init__(self, alpha=10.0, n=2.0):
+        super().__init__()
+        self.m = torch.ones(3) * 0.5
+        self.p = torch.ones(3) * 0.5
+        self.alpha = alpha
+        self.n = n
+
+    def forward(self, dt=0.1):
+        # Cyclic repression
+        dm = torch.zeros(3)
+        dm[0] = -self.m[0] + self.alpha / (1 + self.p[2] ** self.n + 1e-8) + 0.1
+        dm[1] = -self.m[1] + self.alpha / (1 + self.p[0] ** self.n + 1e-8) + 0.1
+        dm[2] = -self.m[2] + self.alpha / (1 + self.p[1] ** self.n + 1e-8) + 0.1
+
+        # Protein follows mRNA
+        dp = 0.5 * (self.m - self.p)
+
+        self.m += dt * dm
+        self.p += dt * dp
+
+        return self.p  # Oscillates
+```
+
+**Source**: OSCILLATORY_PATTERNS_ANALYSIS.md, Lines 312-333
+
+---
+
+### 38. Drift-Diffusion Decision Model
+
+**Purpose**: Evidence accumulation until threshold—explains reaction times.
+
+**Formula**: Noisy Integrator
+```
+dx/dt = μ·I + σ·ξ(t)
+
+Decision when x(t) crosses threshold ±θ
+
+Reaction time: t_decision
+```
+
+**Nature's Implementation**: Perceptual decision-making in cortex. LIP neurons accumulate evidence.
+
+**Impact**: **MEDIUM - Explainable Decisions**
+Produces reaction time distributions matching humans. Built-in speed-accuracy tradeoff.
+
+**Code Example**:
+```python
+class DriftDiffusionModel(nn.Module):
+    def __init__(self, n_choices=2, threshold=1.0, noise=0.1):
+        super().__init__()
+        self.n_choices = n_choices
+        self.threshold = threshold
+        self.noise = noise
+        self.accumulator = torch.zeros(n_choices)
+
+    def forward(self, evidence, dt=0.01):
+        # Drift
+        drift = evidence
+
+        # Diffusion
+        diffusion = self.noise * torch.randn_like(evidence)
+
+        # Update
+        self.accumulator += (drift + diffusion) * dt
+
+        # Check threshold
+        if self.accumulator.abs().max() >= self.threshold:
+            decision = self.accumulator.argmax()
+            rt = self.accumulator.abs().max() / (evidence.abs().max() + 1e-8)
+            self.accumulator.zero_()
+            return decision, rt
+
+        return None, None  # No decision yet
+```
+
+**Source**: BIOMIMETIC_AI_ARCHITECTURE.md, Lines 485-508; MECHANISM_TO_ARCHITECTURE_PATTERNS.md
+
+---
+
