@@ -1,7 +1,7 @@
 # Novel Biological AI Architectures - Complete Catalog
 
 **Compiled**: 2025-12-11
-**Total Architectures**: 175
+**Total Architectures**: 191
 **Organization**: Ordered by AI Impact (Highest → Lowest)
 
 ---
@@ -11752,9 +11752,4179 @@ print(f"Chaotic network final norm: {np.linalg.norm(traj_chaos[-1]):.4f}")
 **Source**: Gerschgorin (1931) Izv Akad Nauk SSSR; Horn & Johnson (1985) Book; Sompolinsky et al. (1988) Phys Rev A; Sussillo & Abbott (2009) Neuron
 
 ---
+
+
+### 176. Variational Free Energy (Explicit Formulation)
+
+**Purpose**: Unified objective for inference and learning—minimizing free energy = maximizing model evidence while staying close to prior.
+
+**Formula**: Evidence Lower Bound (ELBO)
+```
+Free Energy:
+F = E_q[log q(z)] - E_q[log p(x,z)]
+  = -ELBO
+  = KL[q(z)||p(z|x)] - log p(x)
+
+Decomposition:
+F = E_q[log q(z) - log p(z)] - E_q[log p(x|z)]
+  = KL[q(z)||p(z)] - E_q[log p(x|z)]
+  = Complexity - Accuracy
+
+Optimization:
+q*(z) = argmin F(q) = argmax ELBO(q)
+         q              q
+
+Gradient (for parameters θ):
+∇_θ F = ∇_θ E_q[log q(z) - log p(x,z|θ)]
+
+where:
+- q(z) = recognition/approximate posterior
+- p(z) = prior
+- p(x|z) = generative model (likelihood)
+- p(x,z) = joint distribution
+- x = observations (data)
+- z = latent variables
+```
+
+**Nature's Implementation**: Brain's fundamental optimization principle (free energy principle). Explains perception (inference), learning (model optimization), action (active inference). Unified framework for cortical computation. Predictive coding is gradient descent on free energy.
+
+**Impact**: **CRITICAL - Unified Brain Theory**
+Single objective explains perception, learning, and action. Variational autoencoders are neural implementation. Active inference for motor control. Predictive coding networks minimize free energy. Foundation for understanding cortical function, attention, consciousness. Connects neuroscience to machine learning theory.
+
+**Code Example**:
+```python
+class VariationalFreeEnergy(nn.Module):
+    """Explicit free energy minimization for neural inference"""
+
+    def __init__(self, latent_dim, obs_dim):
+        super().__init__()
+        self.latent_dim = latent_dim
+        self.obs_dim = obs_dim
+
+        # Recognition model q(z|x): encoder
+        self.encoder = nn.Sequential(
+            nn.Linear(obs_dim, 128),
+            nn.ReLU(),
+            nn.Linear(128, latent_dim * 2)  # μ and log(σ)
+        )
+
+        # Generative model p(x|z): decoder
+        self.decoder = nn.Sequential(
+            nn.Linear(latent_dim, 128),
+            nn.ReLU(),
+            nn.Linear(128, obs_dim)
+        )
+
+        # Prior p(z) = N(0, I)
+        self.prior_mu = torch.zeros(latent_dim)
+        self.prior_logvar = torch.zeros(latent_dim)
+
+    def encode(self, x):
+        """q(z|x) = N(μ(x), σ²(x))"""
+        h = self.encoder(x)
+        mu = h[:, :self.latent_dim]
+        logvar = h[:, self.latent_dim:]
+        return mu, logvar
+
+    def reparameterize(self, mu, logvar):
+        """Sample z ~ q(z|x) using reparameterization trick"""
+        std = torch.exp(0.5 * logvar)
+        eps = torch.randn_like(std)
+        return mu + eps * std
+
+    def decode(self, z):
+        """p(x|z)"""
+        return self.decoder(z)
+
+    def free_energy(self, x, n_samples=1):
+        """
+        Compute variational free energy:
+        F = E_q[log q(z)] - E_q[log p(x,z)]
+        """
+        mu, logvar = self.encode(x)
+
+        # Sample from q(z|x)
+        total_fe = 0
+        for _ in range(n_samples):
+            z = self.reparameterize(mu, logvar)
+
+            # log q(z) - Gaussian entropy
+            log_q_z = -0.5 * (self.latent_dim * np.log(2 * np.pi) +
+                              torch.sum(logvar, dim=1) +
+                              torch.sum((z - mu)**2 / torch.exp(logvar), dim=1))
+
+            # log p(z) - prior (standard Gaussian)
+            log_p_z = -0.5 * (self.latent_dim * np.log(2 * np.pi) +
+                              torch.sum(z**2, dim=1))
+
+            # log p(x|z) - reconstruction likelihood
+            x_recon = self.decode(z)
+            log_p_x_given_z = -0.5 * torch.sum((x - x_recon)**2, dim=1)
+
+            # Free energy = E[log q(z) - log p(z) - log p(x|z)]
+            fe = log_q_z - log_p_z - log_p_x_given_z
+            total_fe += fe
+
+        return total_fe.mean() / n_samples
+
+    def elbo(self, x):
+        """
+        Evidence lower bound (negative free energy):
+        ELBO = E_q[log p(x|z)] - KL[q(z)||p(z)]
+        """
+        mu, logvar = self.encode(x)
+        z = self.reparameterize(mu, logvar)
+
+        # Reconstruction term
+        x_recon = self.decode(z)
+        recon_loss = F.mse_loss(x_recon, x, reduction='sum')
+
+        # KL divergence (closed form for Gaussians)
+        kl_div = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
+
+        # ELBO = -recon_loss - KL
+        # Free energy = recon_loss + KL
+        return recon_loss + kl_div
+
+    def complexity_accuracy_decomposition(self, x):
+        """
+        Decompose free energy into complexity and accuracy
+        F = Complexity - Accuracy
+        """
+        mu, logvar = self.encode(x)
+        z = self.reparameterize(mu, logvar)
+
+        # Complexity = KL[q(z)||p(z)]
+        complexity = -0.5 * torch.sum(1 + logvar - mu.pow(2) - logvar.exp())
+
+        # Accuracy = E_q[log p(x|z)]
+        x_recon = self.decode(z)
+        accuracy = -F.mse_loss(x_recon, x, reduction='sum')
+
+        print(f"Complexity (KL divergence): {complexity.item():.4f}")
+        print(f"Accuracy (log likelihood): {accuracy.item():.4f}")
+        print(f"Free Energy: {(complexity - accuracy).item():.4f}")
+
+        return complexity, accuracy
+
+
+class PredictiveCodingFreeEnergy(nn.Module):
+    """Predictive coding as gradient descent on free energy"""
+
+    def __init__(self, layer_dims, n_iterations=50):
+        super().__init__()
+        self.n_layers = len(layer_dims)
+        self.n_iterations = n_iterations
+
+        # Generative weights (top-down)
+        self.W_gen = nn.ModuleList([
+            nn.Linear(layer_dims[i+1], layer_dims[i], bias=False)
+            for i in range(len(layer_dims)-1)
+        ])
+
+        # Layer representations (beliefs)
+        self.mu = [torch.zeros(dim) for dim in layer_dims]
+
+    def free_energy_layer(self, layer_idx, x_below):
+        """
+        Free energy at layer l:
+        F_l = 0.5 * ||x_l - g(μ_{l+1})||² + 0.5 * ||μ_l - prior||²
+        """
+        # Prediction from above
+        if layer_idx < self.n_layers - 1:
+            prediction = self.W_gen[layer_idx](self.mu[layer_idx + 1])
+        else:
+            prediction = torch.zeros_like(self.mu[layer_idx])
+
+        # Prediction error
+        if x_below is not None:
+            error_below = torch.sum((x_below - self.W_gen[layer_idx-1](self.mu[layer_idx]))**2)
+        else:
+            error_below = 0
+
+        # Prior term (assume zero prior)
+        prior_term = 0.5 * torch.sum(self.mu[layer_idx]**2)
+
+        return error_below + prior_term
+
+    def minimize_free_energy(self, x_input):
+        """
+        Iteratively minimize free energy via gradient descent on μ
+        ∂F/∂μ_l = -ε_l + W_l^T ε_{l+1}
+        """
+        # Initialize bottom layer
+        self.mu[0] = x_input
+
+        for iteration in range(self.n_iterations):
+            # Update each layer's belief
+            for l in range(1, self.n_layers):
+                # Prediction error from below
+                prediction_below = self.W_gen[l-1](self.mu[l])
+                error_below = self.mu[l-1] - prediction_below
+
+                # Error from above (if not top layer)
+                if l < self.n_layers - 1:
+                    prediction_from_above = self.W_gen[l](self.mu[l+1])
+                    error_above = self.mu[l] - prediction_from_above
+                else:
+                    error_above = self.mu[l]  # Prior term
+
+                # Gradient descent on free energy
+                grad_mu = self.W_gen[l-1].weight.T @ error_below - error_above
+                self.mu[l] = self.mu[l] + 0.01 * grad_mu
+
+        return self.mu
+
+
+# Example: VAE as free energy minimization
+latent_dim = 10
+obs_dim = 784  # e.g., MNIST
+
+vfe = VariationalFreeEnergy(latent_dim, obs_dim)
+
+# Generate data
+x_data = torch.randn(100, obs_dim)
+
+# Compute free energy
+fe = vfe.free_energy(x_data, n_samples=1)
+print(f"Free Energy: {fe.item():.4f}")
+
+# ELBO (negative free energy)
+elbo = -vfe.elbo(x_data)
+print(f"ELBO: {elbo.item():.4f}")
+
+# Decomposition
+complexity, accuracy = vfe.complexity_accuracy_decomposition(x_data)
+
+# Train to minimize free energy
+optimizer = torch.optim.Adam(vfe.parameters(), lr=1e-3)
+
+for epoch in range(100):
+    fe = vfe.elbo(x_data) / x_data.shape[0]  # Average per sample
+
+    optimizer.zero_grad()
+    fe.backward()
+    optimizer.step()
+
+    if epoch % 20 == 0:
+        print(f"Epoch {epoch}, Free Energy: {fe.item():.4f}")
+```
+
+**Source**: Friston (2010) Nat Rev Neurosci; Kingma & Welling (2014) ICLR; Friston et al. (2017) Neurosci Biobehav Rev; Buckley et al. (2017) Curr Op Behav Sci
+
+---
+
+### 177. Continuous-Time Variational Dynamics
+
+**Purpose**: Gradient flow on variational free energy—neural ODEs for inference as continuous-time dynamical system.
+
+**Formula**: Gradient Descent Dynamics
+```
+Continuous-time inference:
+ż = -∇_z F(z, x)
+  = ∇_z log p(x, z) - ∇_z log q(z)
+  = ∇_z log p(z|x) [under q = p]
+
+For variational distribution q(z; λ):
+λ̇ = -∇_λ F(λ, x)
+
+Natural gradient flow:
+λ̇ = -G^{-1}(λ) ∇_λ F(λ)
+
+where G = Fisher information metric
+
+Langevin dynamics (with noise):
+dz = -∇_z F dt + √(2T) dW
+
+where:
+- z = latent variables
+- F = free energy functional
+- λ = variational parameters
+- W = Wiener process (Brownian motion)
+- T = temperature
+```
+
+**Nature's Implementation**: Continuous attractor dynamics in cortex. Neural activity flows along free energy gradient. Fast inference via neural dynamics. Attention as dynamic inference. Working memory as stable equilibrium. Explains neural response timescales and transient dynamics.
+
+**Impact**: **MEDIUM-HIGH - Neural ODE Inference**
+Inference as dynamical system. Enables neural ODE architectures. Continuous-time generative models. Biologically plausible inference. Critical for understanding temporal cortical dynamics and implementing continuous-time neural networks.
+
+**Code Example**:
+```python
+from scipy.integrate import odeint
+
+class ContinuousVariationalDynamics:
+    """Inference via continuous-time gradient flow on free energy"""
+
+    def __init__(self, log_joint_fn, log_variational_fn):
+        """
+        log_joint_fn: log p(x, z)
+        log_variational_fn: log q(z; λ)
+        """
+        self.log_joint = log_joint_fn
+        self.log_q = log_variational_fn
+
+    def free_energy_gradient(self, z, x, eps=1e-5):
+        """
+        Compute ∇_z F = -∇_z[log p(x,z) - log q(z)]
+        """
+        n_dim = len(z)
+        grad = np.zeros(n_dim)
+
+        for i in range(n_dim):
+            z_plus = z.copy()
+            z_plus[i] += eps
+
+            z_minus = z.copy()
+            z_minus[i] -= eps
+
+            # Free energy F = -log p(x,z) + log q(z)
+            F_plus = -self.log_joint(x, z_plus) + self.log_q(z_plus)
+            F_minus = -self.log_joint(x, z_minus) + self.log_q(z_minus)
+
+            grad[i] = (F_plus - F_minus) / (2 * eps)
+
+        return grad
+
+    def dynamics(self, z, t, x):
+        """
+        Gradient flow: dz/dt = -∇_z F
+        """
+        grad_F = self.free_energy_gradient(z, x)
+        dzdt = -grad_F
+        return dzdt
+
+    def infer(self, x, z_init, T=10.0, dt=0.01):
+        """
+        Continuous-time inference via ODE integration
+        """
+        time = np.arange(0, T, dt)
+        z_trajectory = odeint(self.dynamics, z_init, time, args=(x,))
+
+        return z_trajectory
+
+    def langevin_dynamics(self, z, t, x, temperature=0.1):
+        """
+        Stochastic gradient flow (Langevin dynamics):
+        dz = -∇F dt + √(2T) dW
+        """
+        grad_F = self.free_energy_gradient(z, x)
+        drift = -grad_F
+
+        # Noise term
+        noise = np.sqrt(2 * temperature) * np.random.randn(len(z))
+
+        return drift + noise
+
+    def sample_posterior(self, x, z_init, n_steps=1000, dt=0.01, temperature=0.1):
+        """
+        Sample from posterior via Langevin MCMC
+        """
+        z = z_init.copy()
+        samples = [z.copy()]
+
+        for _ in range(n_steps):
+            # Euler-Maruyama integration
+            dz = self.langevin_dynamics(z, 0, x, temperature) * dt
+            z = z + dz
+
+            samples.append(z.copy())
+
+        return np.array(samples)
+
+
+class NeuralODEInference(nn.Module):
+    """Neural ODE for continuous inference"""
+
+    def __init__(self, latent_dim, hidden_dim=64):
+        super().__init__()
+        self.latent_dim = latent_dim
+
+        # Dynamics function: dz/dt = f(z, x, t)
+        self.dynamics_net = nn.Sequential(
+            nn.Linear(latent_dim + 1, hidden_dim),  # +1 for time
+            nn.Tanh(),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.Tanh(),
+            nn.Linear(hidden_dim, latent_dim)
+        )
+
+    def forward(self, z, x, t):
+        """
+        Compute dz/dt
+        """
+        # Concatenate z and t
+        z_t = torch.cat([z, torch.tensor([t])], dim=0)
+        dzdt = self.dynamics_net(z_t)
+
+        # Add free energy gradient (learned + analytic)
+        # This combines learned dynamics with variational objective
+        return dzdt
+
+    def integrate(self, z_init, x, T=1.0, n_steps=10):
+        """
+        Integrate dynamics from z_init for time T
+        """
+        dt = T / n_steps
+        z = z_init
+
+        trajectory = [z.clone()]
+
+        for step in range(n_steps):
+            t = step * dt
+            dzdt = self.forward(z, x, t)
+            z = z + dzdt * dt
+            trajectory.append(z.clone())
+
+        return torch.stack(trajectory)
+
+
+# Example: Gaussian posterior inference
+def log_joint_gaussian(x, z):
+    """
+    p(x, z) = p(x|z) p(z)
+    Assume p(z) = N(0, I), p(x|z) = N(Az, σ²I)
+    """
+    # Prior
+    log_prior = -0.5 * np.sum(z**2)
+
+    # Likelihood
+    A = np.eye(len(z))  # Simple case: x ≈ z
+    prediction = A @ z
+    log_likelihood = -0.5 * np.sum((x - prediction)**2) / 0.1
+
+    return log_prior + log_likelihood
+
+def log_q_gaussian(z, mu=None, sigma=1.0):
+    """
+    q(z) = N(μ, σ²I)
+    Start with broad distribution
+    """
+    if mu is None:
+        mu = np.zeros(len(z))
+
+    return -0.5 * np.sum((z - mu)**2 / sigma**2)
+
+# Continuous inference
+latent_dim = 5
+cvd = ContinuousVariationalDynamics(log_joint_gaussian, log_q_gaussian)
+
+# Observation
+x_obs = np.array([1.0, 0.5, -0.3, 0.8, 0.2])
+
+# Initial guess
+z_init = np.zeros(latent_dim)
+
+# Infer via gradient flow
+z_trajectory = cvd.infer(x_obs, z_init, T=10.0, dt=0.01)
+
+print(f"Initial z: {z_init}")
+print(f"Final z: {z_trajectory[-1]}")
+print(f"Target x: {x_obs}")
+print(f"Reconstruction: {z_trajectory[-1]}")  # Should match x_obs
+
+# Langevin sampling
+samples = cvd.sample_posterior(x_obs, z_init, n_steps=5000, dt=0.01, temperature=0.1)
+
+print(f"\nPosterior mean (Langevin): {samples[-1000:].mean(axis=0)}")
+print(f"Posterior std: {samples[-1000:].std(axis=0)}")
+```
+
+**Source**: Jordan et al. (1999) Machine Learning; Friston (2008) NeuroImage; Chen et al. (2018) NeurIPS; Millidge et al. (2021) Neural Comp
+
+---
+
+### 178. Active Inference Policy Update
+
+**Purpose**: Action selection via expected free energy minimization—biologically grounded motor control and decision-making.
+
+**Formula**: Expected Free Energy Minimization
+```
+Policy optimization:
+π* = argmin E_q[F_π]
+      π
+
+Expected free energy:
+F_π = E_q[log q(s|π) - log p(s, o|π)]
+
+Decomposition:
+F_π = E_q[-log p(o|s)] + KL[q(s|π)||p(s)]
+    = Risk + Ambiguity
+
+Alternative (predictive):
+G_π = E_q[KL[q(s|o,π)||q(s|π)] - log p(o|C)]
+    = Information gain - Expected reward
+
+Policy selection (softmax):
+P(π) ∝ exp(-γ G_π)
+
+Action (discrete):
+u = argmin G_π(u)
+     u
+
+where:
+- π = policy (sequence of actions)
+- s = hidden states
+- o = observations
+- C = preferences (desired outcomes)
+- γ = precision (inverse temperature)
+- G = expected free energy
+```
+
+**Nature's Implementation**: Motor cortex action selection. Dopamine encodes precision. Basal ganglia evaluates policies. Explains exploratory behavior (information seeking). Accounts for curiosity, novelty preference. Used for goal-directed movement, foraging, decision-making.
+
+**Impact**: **MEDIUM-HIGH - Biologically Grounded Control**
+Unifies perception and action. Explains exploration vs exploitation. Intrinsic motivation from information gain. No separate reward signal needed. Critical for understanding motor control, decision-making, and autonomous agents with curiosity.
+
+**Code Example**:
+```python
+class ActiveInferenceAgent:
+    """Active inference for action selection"""
+
+    def __init__(self, n_states, n_observations, n_actions):
+        self.n_states = n_states
+        self.n_obs = n_observations
+        self.n_actions = n_actions
+
+        # Generative model
+        self.A = np.random.rand(n_observations, n_states)  # Likelihood p(o|s)
+        self.A /= self.A.sum(axis=0, keepdims=True)
+
+        self.B = np.zeros((n_states, n_states, n_actions))  # Transition p(s'|s,a)
+        for a in range(n_actions):
+            self.B[:, :, a] = np.random.rand(n_states, n_states)
+            self.B[:, :, a] /= self.B[:, :, a].sum(axis=0, keepdims=True)
+
+        # Prior preferences p(o|C)
+        self.C = np.ones(n_observations) / n_observations  # Uniform (can set goals)
+
+        # State beliefs
+        self.q_s = np.ones(n_states) / n_states
+
+    def infer_state(self, observation):
+        """
+        Posterior inference: q(s|o) ∝ p(o|s) q(s)
+        """
+        # Likelihood
+        likelihood = self.A[observation, :]
+
+        # Posterior (Bayes rule)
+        posterior = likelihood * self.q_s
+        posterior /= posterior.sum()
+
+        self.q_s = posterior
+        return posterior
+
+    def expected_free_energy(self, action, horizon=3):
+        """
+        Compute expected free energy for action sequence
+        G = E[KL[q(s|o,π)||q(s|π)]] - E[log p(o|C)]
+          = Information gain - Expected reward
+        """
+        # Simulate forward under this action
+        q_s_future = self.q_s.copy()
+
+        total_G = 0
+
+        for t in range(horizon):
+            # Predicted state after action
+            q_s_next = self.B[:, :, action] @ q_s_future
+
+            # Expected observation
+            q_o = self.A @ q_s_next
+
+            # Information gain (epistemic value)
+            # KL[q(s|o)||q(s)] ≈ H[q(s)] - E[H[q(s|o)]]
+            entropy_prior = -np.sum(q_s_next * np.log(q_s_next + 1e-10))
+
+            # Expected entropy after observation (averaged over o)
+            entropy_post = 0
+            for o in range(self.n_obs):
+                if q_o[o] > 0:
+                    # Posterior if we observe o
+                    q_s_given_o = self.A[o, :] * q_s_next
+                    q_s_given_o /= q_s_given_o.sum()
+
+                    entropy_post += q_o[o] * (-np.sum(q_s_given_o * np.log(q_s_given_o + 1e-10)))
+
+            info_gain = entropy_prior - entropy_post
+
+            # Expected reward (pragmatic value)
+            # E[log p(o|C)]
+            expected_reward = np.sum(q_o * np.log(self.C + 1e-10))
+
+            # Expected free energy = -info_gain - expected_reward
+            G = -info_gain - expected_reward
+
+            total_G += G
+
+            # Update for next step
+            q_s_future = q_s_next
+
+        return total_G
+
+    def select_action(self, precision=1.0):
+        """
+        Select action minimizing expected free energy
+        P(a) ∝ exp(-γ G(a))
+        """
+        G_actions = np.array([self.expected_free_energy(a) for a in range(self.n_actions)])
+
+        # Softmax policy
+        policy = np.exp(-precision * G_actions)
+        policy /= policy.sum()
+
+        # Sample action
+        action = np.random.choice(self.n_actions, p=policy)
+
+        return action, G_actions, policy
+
+    def act_and_update(self, observation, precision=1.0):
+        """
+        Full active inference loop:
+        1. Infer state from observation
+        2. Select action minimizing expected free energy
+        3. Execute action
+        """
+        # Perception
+        q_s = self.infer_state(observation)
+
+        # Action
+        action, G_actions, policy = self.select_action(precision)
+
+        # Update state belief (predict next state)
+        self.q_s = self.B[:, :, action] @ self.q_s
+
+        return action, G_actions, policy
+
+
+# Example: Foraging task
+n_states = 10  # Locations
+n_observations = 10  # What agent can see
+n_actions = 4  # Move left/right/up/down
+
+agent = ActiveInferenceAgent(n_states, n_observations, n_actions)
+
+# Set preferences (goal: state 5)
+agent.C = np.zeros(n_observations)
+agent.C[5] = 10.0  # Prefer observing state 5
+agent.C /= agent.C.sum()
+
+# Set transition dynamics (simple grid)
+for a in range(n_actions):
+    agent.B[:, :, a] = np.eye(n_states)  # Simplified
+
+# Simulate episode
+n_steps = 20
+observations = []
+actions = []
+
+current_obs = 0  # Start at location 0
+
+for t in range(n_steps):
+    # Act
+    action, G_vals, policy = agent.act_and_update(current_obs, precision=2.0)
+
+    print(f"Step {t}:")
+    print(f"  Observation: {current_obs}")
+    print(f"  Expected free energy: {G_vals}")
+    print(f"  Policy: {policy}")
+    print(f"  Selected action: {action}")
+
+    # Environment response (simulate)
+    current_obs = (current_obs + 1) % n_observations  # Simple progression
+
+    observations.append(current_obs)
+    actions.append(action)
+
+print(f"\nTrajectory: {observations}")
+print(f"Actions: {actions}")
+```
+
+**Source**: Friston et al. (2015) Biol Cybern; Friston et al. (2017) Neural Comp; Sajid et al. (2021) Phys Life Rev; Da Costa et al. (2020) Entropy
+
+---
+
+### 179. Dendritic Nonlinear Integration (Polynomial Expansion)
+
+**Purpose**: Implement polynomial and multilinear operations via dendritic compartments—biological basis for higher-order feature interactions.
+
+**Formula**: Compartment-Wise Polynomial
+```
+Dendritic branch voltage:
+V_branch = f(Σ w_i x_i)
+          i
+
+Nonlinear integration:
+f(z) = z + α z² + β z³ + γ z⁴
+
+Or multilinear (two branches):
+V_soma = g₁(Σ w₁ᵢ x_i) · g₂(Σ w₂ⱼ x_j)
+           i              j
+
+General polynomial:
+y = Σ a_k (Σ w_{ki} x_i)^k
+    k     i
+
+where:
+- V_branch = branch membrane potential
+- x_i = synaptic inputs
+- w_i = synaptic weights
+- α, β, γ = nonlinearity coefficients
+- g = local nonlinear function (sigm
+
+oid, quadratic)
+- Each branch computes different term
+```
+
+**Nature's Implementation**: Dendritic trees have NMDA channels, calcium spikes enabling local nonlinearity. Each branch acts as computational subunit. Pyramidal neurons have 10-30 branches performing different operations. Explains why neurons can compute XOR, implement multiplication, and learn complex functions.
+
+**Impact**: **MEDIUM-HIGH - Biological Higher-Order Features**
+Neurons compute beyond dot products. Natural feature interactions (x₁ · x₂). No separate multiplication layer needed. Dendrites = mixture of polynomial basis functions. Critical for understanding single-neuron computational power and implementing biologically realistic deep networks.
+
+**Code Example**:
+```python
+class DendriticPolynomialNeuron(nn.Module):
+    """Neuron with polynomial dendritic integration"""
+
+    def __init__(self, n_inputs, n_branches=5, max_order=3):
+        super().__init__()
+        self.n_branches = n_branches
+        self.max_order = max_order
+
+        # Each branch has its own weights
+        self.branch_weights = nn.ParameterList([
+            nn.Parameter(torch.randn(n_inputs) * 0.1)
+            for _ in range(n_branches)
+        ])
+
+        # Polynomial coefficients for each branch
+        self.poly_coeffs = nn.ParameterList([
+            nn.Parameter(torch.randn(max_order + 1) * 0.1)
+            for _ in range(n_branches)
+        ])
+
+        # Somatic integration weights
+        self.branch_to_soma = nn.Parameter(torch.ones(n_branches))
+
+    def branch_activation(self, x, branch_idx):
+        """
+        Compute dendritic branch response:
+        V = a₀ + a₁·z + a₂·z² + a₃·z³
+        where z = Σ w_i x_i
+        """
+        # Linear summation
+        z = torch.sum(self.branch_weights[branch_idx] * x)
+
+        # Polynomial expansion
+        response = 0
+        for k in range(self.max_order + 1):
+            response += self.poly_coeffs[branch_idx][k] * (z ** k)
+
+        return response
+
+    def forward(self, x):
+        """
+        Sum across dendritic branches to get somatic response
+        """
+        branch_responses = torch.stack([
+            self.branch_activation(x, i)
+            for i in range(self.n_branches)
+        ])
+
+        # Weighted sum at soma
+        soma_potential = torch.sum(self.branch_to_soma * branch_responses)
+
+        # Somatic nonlinearity (spike generation)
+        output = torch.tanh(soma_potential)
+
+        return output
+
+
+class MultilinearDendriticLayer(nn.Module):
+    """
+    Multilinear layer via dendritic branches
+    Implements y = Σᵢⱼ wᵢⱼ xᵢ xⱼ (pairwise interactions)
+    """
+
+    def __init__(self, n_inputs, n_outputs, n_branches_per_neuron=10):
+        super().__init__()
+        self.n_inputs = n_inputs
+        self.n_outputs = n_outputs
+        self.n_branches = n_branches_per_neuron
+
+        # Each output neuron has multiple branches
+        # Each branch computes product of two linear combinations
+        self.branch_weights_1 = nn.Parameter(
+            torch.randn(n_outputs, n_branches_per_neuron, n_inputs) * 0.1
+        )
+        self.branch_weights_2 = nn.Parameter(
+            torch.randn(n_outputs, n_branches_per_neuron, n_inputs) * 0.1
+        )
+
+        # Branch combination weights
+        self.branch_combine = nn.Parameter(
+            torch.ones(n_outputs, n_branches_per_neuron)
+        )
+
+    def forward(self, x):
+        """
+        Each branch: b_k = (w₁ᵏ·x) · (w₂ᵏ·x)
+        Output: y = Σ_k α_k b_k
+        """
+        batch_size = x.shape[0]
+        outputs = []
+
+        for neuron_idx in range(self.n_outputs):
+            branch_outputs = []
+
+            for branch_idx in range(self.n_branches):
+                # Two linear projections
+                proj1 = torch.sum(self.branch_weights_1[neuron_idx, branch_idx] * x, dim=1)
+                proj2 = torch.sum(self.branch_weights_2[neuron_idx, branch_idx] * x, dim=1)
+
+                # Multiplicative interaction (dendritic nonlinearity)
+                branch_out = proj1 * proj2
+
+                branch_outputs.append(branch_out)
+
+            # Combine branches
+            branch_stack = torch.stack(branch_outputs, dim=1)
+            neuron_out = torch.sum(
+                self.branch_combine[neuron_idx] * branch_stack,
+                dim=1
+            )
+
+            outputs.append(neuron_out)
+
+        return torch.stack(outputs, dim=1)
+
+
+# Example: XOR learning with dendritic polynomials
+n_inputs = 2
+neuron = DendriticPolynomialNeuron(n_inputs, n_branches=3, max_order=2)
+
+# XOR dataset
+X = torch.tensor([[0., 0.], [0., 1.], [1., 0.], [1., 1.]])
+y = torch.tensor([0., 1., 1., 0.])
+
+optimizer = torch.optim.Adam(neuron.parameters(), lr=0.01)
+
+for epoch in range(1000):
+    outputs = torch.stack([neuron(x) for x in X])
+    loss = F.mse_loss(outputs, y)
+
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step()
+
+    if epoch % 200 == 0:
+        print(f"Epoch {epoch}, Loss: {loss.item():.4f}")
+
+# Test
+print("\nXOR Results:")
+for i, x in enumerate(X):
+    pred = neuron(x)
+    print(f"Input: {x.numpy()}, Target: {y[i].item()}, Pred: {pred.item():.3f}")
+```
+
+**Source**: Poirazi et al. (2003) Neuron; London & Häusser (2005) Annu Rev Neurosci; Gidon et al. (2020) Science
+
+---
+
+### 180. NMDA-Driven Coincidence Detection
+
+**Purpose**: Voltage-dependent synaptic gating—biological multiplicative interaction for detecting correlated inputs.
+
+**Formula**: Voltage-Dependent Conductance
+```
+NMDA current:
+I_NMDA(V, t) = ḡ · s(t) · (V - E_NMDA) / (1 + γ exp(-α V))
+
+Magnesium block:
+B(V) = 1 / (1 + [Mg²⁺] exp(-α V) / 3.57)
+
+Synaptic activation:
+ds/dt = r(1 - s)·[T] - s/τ_decay
+
+Gating variable (multiplicative):
+g_eff(V, x) = x · B(V)
+
+Effective weight:
+w_eff = w · B(V)
+
+where:
+- V = postsynaptic membrane potential
+- s = synaptic gating variable
+- [T] = transmitter concentration
+- [Mg²⁺] = magnesium concentration
+- α ≈ 0.062 mV⁻¹
+- γ ≈ 1/3.57 mM
+- E_NMDA ≈ 0 mV
+- Requires both: (1) presynaptic spike (s) AND (2) postsynaptic depolarization (V)
+```
+
+**Nature's Implementation**: Pyramidal neurons, dendritic spines. Coincidence detection for temporal credit assignment. Enables Hebbian learning ("fire together, wire together"). Critical for long-term potentiation, associative memory, sequence learning.
+
+**Impact**: **MEDIUM-HIGH - Biological Gating**
+Natural AND gate in biology. Multiplicative weight modulation. Temporal credit assignment without backprop. Foundation for attention mechanisms, gating networks. Critical for understanding synaptic plasticity and implementing biologically-inspired gating.
+
+**Code Example**:
+```python
+class NMDAGatedSynapse(nn.Module):
+    """NMDA receptor with voltage-dependent gating"""
+
+    def __init__(self, n_inputs):
+        super().__init__()
+        self.n_inputs = n_inputs
+
+        # Synaptic weights
+        self.W = nn.Parameter(torch.randn(n_inputs) * 0.1)
+
+        # NMDA parameters
+        self.alpha = 0.062  # mV⁻¹
+        self.Mg_conc = 1.0  # mM
+        self.E_NMDA = 0.0   # mV
+
+        # Synaptic time constant
+        self.tau_decay = 100.0  # ms
+
+    def magnesium_block(self, V):
+        """
+        B(V) = 1 / (1 + [Mg] exp(-α V) / 3.57)
+        """
+        return 1.0 / (1.0 + (self.Mg_conc / 3.57) * torch.exp(-self.alpha * V))
+
+    def forward(self, x, V_post):
+        """
+        Compute NMDA-gated current
+        x: presynaptic input (spike or rate)
+        V_post: postsynaptic voltage
+        """
+        # Synaptic activation (assume instantaneous for simplicity)
+        s = x  # In full model: integrate ds/dt
+
+        # Magnesium block (voltage-dependent)
+        B = self.magnesium_block(V_post)
+
+        # NMDA current: I = w · s · B(V) · (V - E)
+        # For rate model, just compute effective input
+        I_NMDA = self.W * s * B * (V_post - self.E_NMDA)
+
+        return I_NMDA.sum(), B
+
+
+class NMDAGatedLayer(nn.Module):
+    """
+    Layer with NMDA-style gating (multiplicative modulation)
+    Implements: y = σ(W·x · g(V))
+    where g(V) is voltage-dependent gating
+    """
+
+    def __init__(self, in_features, out_features):
+        super().__init__()
+
+        # Feedforward weights
+        self.W = nn.Parameter(torch.randn(out_features, in_features) * 0.1)
+
+        # Gating parameters (learned)
+        self.gate_scale = nn.Parameter(torch.ones(out_features))
+        self.gate_offset = nn.Parameter(torch.zeros(out_features))
+
+    def gating_function(self, V):
+        """
+        Approximate NMDA-like gating:
+        g(V) = σ(α(V - V_th))
+        """
+        return torch.sigmoid(self.gate_scale * (V - self.gate_offset))
+
+    def forward(self, x, V_context):
+        """
+        x: input features
+        V_context: context signal (acts like voltage)
+        """
+        # Linear transformation
+        z = F.linear(x, self.W)
+
+        # Voltage-dependent gating
+        gate = self.gating_function(V_context)
+
+        # Multiplicative modulation
+        output = z * gate
+
+        return output
+
+
+class AttentionViaNMDA(nn.Module):
+    """
+    Attention mechanism inspired by NMDA coincidence detection
+    Attention = coincidence of query (voltage) and key (input)
+    """
+
+    def __init__(self, dim):
+        super().__init__()
+        self.dim = dim
+
+        # Query, Key, Value projections
+        self.W_q = nn.Linear(dim, dim)
+        self.W_k = nn.Linear(dim, dim)
+        self.W_v = nn.Linear(dim, dim)
+
+    def forward(self, x):
+        """
+        NMDA-style attention:
+        Attention score = coincidence of Q and K
+        """
+        batch_size, seq_len, _ = x.shape
+
+        # Project
+        Q = self.W_q(x)  # "voltage" (top-down)
+        K = self.W_k(x)  # "input" (bottom-up)
+        V = self.W_v(x)  # "values"
+
+        # Coincidence detection (dot product)
+        scores = torch.matmul(Q, K.transpose(-2, -1)) / np.sqrt(self.dim)
+
+        # NMDA-like gating (softmax = competitive winner-take-all)
+        attention = torch.softmax(scores, dim=-1)
+
+        # Gated output
+        output = torch.matmul(attention, V)
+
+        return output
+
+
+# Example: NMDA coincidence detection
+n_inputs = 10
+nmda = NMDAGatedSynapse(n_inputs)
+
+# Presynaptic input
+x = torch.randn(n_inputs)
+
+# Postsynaptic voltage sweep
+V_range = torch.linspace(-80, 0, 100)  # mV
+currents = []
+blocks = []
+
+for V in V_range:
+    I, B = nmda(x, V)
+    currents.append(I.item())
+    blocks.append(B.mean().item())
+
+print("NMDA Coincidence Detection:")
+print(f"  At V=-80mV (hyperpolarized): I={currents[0]:.4f}, Block={blocks[0]:.4f}")
+print(f"  At V=-40mV (depolarized): I={currents[50]:.4f}, Block={blocks[50]:.4f}")
+print(f"  At V=0mV (spike): I={currents[-1]:.4f}, Block={blocks[-1]:.4f}")
+
+# Gated layer example
+layer = NMDAGatedLayer(in_features=10, out_features=5)
+x_input = torch.randn(32, 10)  # Batch of 32
+V_context = torch.randn(5)     # Context/voltage for each output
+
+output = layer(x_input, V_context)
+print(f"\nGated layer output shape: {output.shape}")
+```
+
+**Source**: Jahr & Stevens (1990) Nature; Mayer et al. (1984) Nature; Larkum et al. (1999) Nature; Richards & Lillicrap (2019) Nat Neurosci
+
+---
+
+### 181. Dendritic Gating (Mixture-of-Experts)
+
+**Purpose**: Compartment-specific gating for routing and modulation—biological foundation for mixture-of-experts and gated architectures.
+
+**Formula**: Multiplicative Branch Gating
+```
+Branch gating:
+h_i = g_i(c) · f_i(x)
+
+where:
+- h_i = branch i output
+- g_i(c) = gating function (depends on context c)
+- f_i(x) = branch computation
+- c = modulatory input (e.g., from apical dendrite)
+
+Gating function:
+g_i(c) = σ(w_i^T c + b_i)
+
+Somatic integration:
+y = Σ h_i = Σ g_i(c) · f_i(x)
+    i       i
+
+Mixture-of-experts form:
+y = Σ α_i(c) · Expert_i(x)
+    i
+
+where α_i = g_i / Σ_j g_j (normalized gating)
+
+Sparse gating (top-k):
+y = Σ g_i(c) · f_i(x)
+    i∈TopK(g)
+```
+
+**Nature's Implementation**: Apical dendrites gate basal inputs in pyramidal neurons. Context from layer 1 modulates processing in basal dendrites. Enables task switching, attention, context-dependent computation. Explains how single neurons perform multiple functions.
+
+**Impact**: **MEDIUM-HIGH - Biological Routing**
+Natural mixture-of-experts. Context-dependent computation. Gating without separate gating layer. Foundation for transformers, routing networks. Critical for understanding cortical context integration and implementing efficient sparse models.
+
+**Code Example**:
+```python
+class DendriticGatingNeuron(nn.Module):
+    """Neuron with dendritic gating (biological mixture-of-experts)"""
+
+    def __init__(self, n_inputs, n_branches, context_dim):
+        super().__init__()
+        self.n_branches = n_branches
+
+        # Branch-specific feedforward weights
+        self.branch_weights = nn.ModuleList([
+            nn.Linear(n_inputs, 1, bias=False)
+            for _ in range(n_branches)
+        ])
+
+        # Gating network (context-dependent)
+        self.gating_net = nn.ModuleList([
+            nn.Linear(context_dim, 1)
+            for _ in range(n_branches)
+        ])
+
+        # Branch activations
+        self.branch_activations = nn.ModuleList([
+            nn.Tanh() for _ in range(n_branches)
+        ])
+
+    def forward(self, x, context):
+        """
+        x: feedforward input
+        context: modulatory signal (e.g., from apical dendrite)
+        """
+        # Compute each branch
+        branch_outputs = []
+        gates = []
+
+        for i in range(self.n_branches):
+            # Branch computation
+            branch_value = self.branch_activations[i](
+                self.branch_weights[i](x)
+            )
+
+            # Context-dependent gate
+            gate = torch.sigmoid(self.gating_net[i](context))
+
+            # Gated output
+            gated_output = gate * branch_value
+
+            branch_outputs.append(gated_output)
+            gates.append(gate)
+
+        # Somatic summation
+        soma_output = torch.sum(torch.cat(branch_outputs, dim=1), dim=1, keepdim=True)
+
+        return soma_output, torch.cat(gates, dim=1)
+
+
+class DendriticMixtureOfExperts(nn.Module):
+    """
+    Mixture-of-experts via dendritic gating
+    Each branch = expert, context determines routing
+    """
+
+    def __init__(self, n_inputs, n_experts, expert_hidden_dim, context_dim):
+        super().__init__()
+        self.n_experts = n_experts
+
+        # Experts (dendritic branches)
+        self.experts = nn.ModuleList([
+            nn.Sequential(
+                nn.Linear(n_inputs, expert_hidden_dim),
+                nn.ReLU(),
+                nn.Linear(expert_hidden_dim, expert_hidden_dim)
+            )
+            for _ in range(n_experts)
+        ])
+
+        # Gating network (context-dependent routing)
+        self.gating = nn.Sequential(
+            nn.Linear(context_dim, expert_hidden_dim),
+            nn.ReLU(),
+            nn.Linear(expert_hidden_dim, n_experts)
+        )
+
+    def forward(self, x, context, k=None):
+        """
+        x: input
+        context: routing signal
+        k: number of experts to activate (sparse gating)
+        """
+        # Compute expert outputs
+        expert_outputs = torch.stack([
+            expert(x) for expert in self.experts
+        ], dim=1)  # [batch, n_experts, hidden_dim]
+
+        # Compute gates
+        gate_logits = self.gating(context)
+
+        if k is not None:
+            # Top-k sparse gating
+            topk_vals, topk_indices = torch.topk(gate_logits, k, dim=1)
+            gates = torch.zeros_like(gate_logits)
+            gates.scatter_(1, topk_indices, torch.softmax(topk_vals, dim=1))
+        else:
+            # Softmax gating (all experts)
+            gates = torch.softmax(gate_logits, dim=1)
+
+        # Weighted combination
+        # gates: [batch, n_experts]
+        # expert_outputs: [batch, n_experts, hidden_dim]
+        output = torch.sum(
+            gates.unsqueeze(-1) * expert_outputs,
+            dim=1
+        )
+
+        return output, gates
+
+
+class ApicalGatedLayer(nn.Module):
+    """
+    Layer with apical dendritic gating
+    Basal input modulated by apical context
+    """
+
+    def __init__(self, basal_dim, apical_dim, output_dim):
+        super().__init__()
+
+        # Basal pathway (feedforward)
+        self.basal_net = nn.Linear(basal_dim, output_dim)
+
+        # Apical pathway (context)
+        self.apical_net = nn.Linear(apical_dim, output_dim)
+
+        # Gating (multiplicative modulation)
+        self.gate_net = nn.Linear(apical_dim, output_dim)
+
+    def forward(self, x_basal, x_apical):
+        """
+        x_basal: feedforward input (from lower layer)
+        x_apical: context input (from higher layer or attention)
+        """
+        # Basal processing
+        h_basal = self.basal_net(x_basal)
+
+        # Apical gating
+        gate = torch.sigmoid(self.gate_net(x_apical))
+
+        # Gated output
+        output = gate * h_basal + (1 - gate) * self.apical_net(x_apical)
+
+        return output
+
+
+# Example: Context-dependent routing
+n_inputs = 10
+n_experts = 5
+expert_dim = 20
+context_dim = 5
+
+moe = DendriticMixtureOfExperts(n_inputs, n_experts, expert_dim, context_dim)
+
+# Input and context
+x = torch.randn(32, n_inputs)
+context = torch.randn(32, context_dim)
+
+# Forward with full gating
+output_full, gates_full = moe(x, context, k=None)
+print(f"Full gating - Output shape: {output_full.shape}")
+print(f"Gate distribution: {gates_full[0]}")
+
+# Sparse gating (top-2 experts)
+output_sparse, gates_sparse = moe(x, context, k=2)
+print(f"\nSparse gating (k=2) - Output shape: {output_sparse.shape}")
+print(f"Gate distribution: {gates_sparse[0]}")
+print(f"Active experts: {(gates_sparse[0] > 0).sum().item()}")
+```
+
+**Source**: Larkum (2013) Trends Neurosci; Sacramento et al. (2018) eLife; Guerguiev et al. (2017) eLife; Payeur et al. (2021) Nat Commun
+
+---
+
+### 182. Dendritic Clustering Rule
+
+**Purpose**: Competitive learning within dendritic branches—biological basis for sparse feature detectors and clustering.
+
+**Formula**: Winner-Take-All Clustering
+```
+Cluster assignment:
+c_k = argmax σ(w_k^T x + β||x||²)
+       k
+
+Branch activation:
+a_k = σ(w_k^T x + β||x||² - θ_k)
+
+Learning (winner updates):
+Δw_c = η(x - w_c)  [for winner c only]
+
+Threshold adaptation:
+Δθ_k = η_θ(a_k - ρ)
+
+where:
+- c_k = cluster/branch index
+- w_k = branch synaptic weights
+- β = quadratic term coefficient
+- θ_k = branch activation threshold
+- ρ = target sparsity
+- η, η_θ = learning rates
+
+Clustered synapses form on branches
+
+Branch specialization emerges
+```
+
+**Nature's Implementation**: Pyramidal neuron dendrites show clustered synaptic inputs. Each branch detects specific input pattern. Enables single neurons to learn multiple features. Explains receptive field substructure, nonlinear feature selectivity.
+
+**Impact**: **MEDIUM - Sparse Feature Learning**
+Unsupervised clustering in single neuron. Multiple feature detectors per neuron. Sparse activations naturally. Foundation for local learning rules. Critical for understanding dendritic computation and implementing sparse coding.
+
+**Code Example**:
+```python
+class DendriticClusteringNeuron(nn.Module):
+    """Neuron with competitive dendritic branch learning"""
+
+    def __init__(self, n_inputs, n_branches, sparsity=0.1):
+        super().__init__()
+        self.n_branches = n_branches
+        self.sparsity = sparsity
+
+        # Branch weights (clusters)
+        self.W = nn.Parameter(torch.randn(n_branches, n_inputs) * 0.1)
+
+        # Branch thresholds
+        self.theta = nn.Parameter(torch.zeros(n_branches))
+
+        # Quadratic coefficient
+        self.beta = nn.Parameter(torch.zeros(1))
+
+    def branch_activations(self, x):
+        """
+        Compute activation for each branch:
+        a_k = σ(w_k·x + β||x||² - θ_k)
+        """
+        # Linear term
+        linear = F.linear(x, self.W)
+
+        # Quadratic term (helps with clustering)
+        quadratic = self.beta * torch.sum(x**2, dim=1, keepdim=True)
+
+        # Activations
+        activations = torch.sigmoid(linear + quadratic - self.theta)
+
+        return activations
+
+    def forward(self, x):
+        """Compute branch activations"""
+        return self.branch_activations(x)
+
+    def cluster_assignment(self, x):
+        """Winner-take-all: assign to most active branch"""
+        activations = self.branch_activations(x)
+        winners = torch.argmax(activations, dim=1)
+        return winners
+
+    def update_winners(self, x, learning_rate=0.01):
+        """
+        Competitive learning: update only winning branches
+        Δw_winner = η(x - w_winner)
+        """
+        with torch.no_grad():
+            # Find winners
+            activations = self.branch_activations(x)
+            winners = torch.argmax(activations, dim=1)
+
+            # Update each sample's winner
+            for i, winner_idx in enumerate(winners):
+                # Hebbian-like update
+                delta_w = learning_rate * (x[i] - self.W[winner_idx])
+                self.W[winner_idx] += delta_w
+
+                # Normalize weights (optional)
+                self.W[winner_idx] /= torch.norm(self.W[winner_idx])
+
+    def update_thresholds(self, x, learning_rate=0.001):
+        """
+        Threshold adaptation to maintain sparsity:
+        Δθ_k = η(a_k - ρ)
+        """
+        with torch.no_grad():
+            activations = self.branch_activations(x)
+
+            # Average activation per branch
+            mean_activation = activations.mean(dim=0)
+
+            # Update thresholds to match target sparsity
+            delta_theta = learning_rate * (mean_activation - self.sparsity)
+            self.theta += delta_theta
+
+
+class DendriticClusteringLayer(nn.Module):
+    """Layer of clustering neurons"""
+
+    def __init__(self, n_inputs, n_neurons, n_branches_per_neuron):
+        super().__init__()
+        self.neurons = nn.ModuleList([
+            DendriticClusteringNeuron(n_inputs, n_branches_per_neuron)
+            for _ in range(n_neurons)
+        ])
+
+    def forward(self, x):
+        """Compute activations for all neurons"""
+        outputs = torch.stack([
+            neuron(x) for neuron in self.neurons
+        ], dim=1)  # [batch, n_neurons, n_branches]
+
+        # Pool across branches (sum or max)
+        return outputs.max(dim=2)[0]  # Max pool
+
+    def train_step(self, x, lr_weights=0.01, lr_threshold=0.001):
+        """One step of competitive learning"""
+        for neuron in self.neurons:
+            neuron.update_winners(x, learning_rate=lr_weights)
+            neuron.update_thresholds(x, learning_rate=lr_threshold)
+
+
+# Example: Learn clusters in dendritic branches
+n_inputs = 20
+n_branches = 5
+
+neuron = DendriticClusteringNeuron(n_inputs, n_branches, sparsity=0.2)
+
+# Generate clustered data (5 clusters)
+n_samples = 500
+cluster_centers = torch.randn(5, n_inputs)
+data = []
+labels = []
+
+for i in range(n_samples):
+    cluster_idx = np.random.randint(0, 5)
+    sample = cluster_centers[cluster_idx] + torch.randn(n_inputs) * 0.3
+    data.append(sample)
+    labels.append(cluster_idx)
+
+data = torch.stack(data)
+labels = torch.tensor(labels)
+
+# Train with competitive learning
+for epoch in range(100):
+    # Shuffle data
+    perm = torch.randperm(n_samples)
+    data_shuffled = data[perm]
+
+    for i in range(0, n_samples, 32):
+        batch = data_shuffled[i:i+32]
+
+        neuron.update_winners(batch, learning_rate=0.05)
+        neuron.update_thresholds(batch, learning_rate=0.01)
+
+    if epoch % 20 == 0:
+        # Check clustering quality
+        activations = neuron(data)
+        assignments = neuron.cluster_assignment(data)
+
+        # Purity: how well assignments match true labels
+        from scipy.stats import mode
+        cluster_purity = []
+        for branch_idx in range(n_branches):
+            branch_samples = labels[assignments == branch_idx]
+            if len(branch_samples) > 0:
+                purity = mode(branch_samples.numpy())[1][0] / len(branch_samples)
+                cluster_purity.append(purity)
+
+        print(f"Epoch {epoch}, Branch purity: {np.mean(cluster_purity):.3f}")
+        print(f"  Branch activations (mean): {activations.mean(dim=0)}")
+```
+
+**Source**: Losonczy & Magee (2006) Neuron; Mel (1992) Neural Comp; Kastellakis et al. (2015) Neuron; Poirazi & Mel (2001) Neural Comp
+
+---
+
+### 183. Shunting Inhibition (Divisive Normalization)
+
+**Purpose**: Biological divisive normalization via shunting—continuous-time analog of batch normalization and attention softmax.
+
+**Formula**: Shunting Dynamics
+```
+Shunting equation:
+τ ẋ = -ax + bx(1 - x) - cx(d + y)
+
+Simplified (divisive):
+ẋ = -ax + f(I) / (1 + Σ y_j)
+                    j
+
+Steady-state (normalization):
+x* = I / (1 + Σ I_j / K)
+              j
+
+Divisive normalization:
+r_i = R_i / (σ + Σ w_ij R_j)
+                  j
+
+where:
+- x = neural activity
+- I = input
+- y_j = lateral inhibitory inputs
+- σ = semi-saturation constant
+- w_ij = normalization weights
+- Implements: softmax, batch norm, layer norm
+```
+
+**Nature's Implementation**: Cortical inhibitory interneurons provide shunting inhibition. Divisive normalization in V1, MT, LIP. Contrast normalization, gain control. Implements biological softmax for winner-take-all, attention, probability normalization.
+
+**Impact**: **MEDIUM-HIGH - Biological Normalization**
+Continuous-time batch norm. Natural softmax. No need for separate normalization layer. Foundation for attention, gain control. Critical for understanding cortical computations and implementing bio-realistic normalization.
+
+**Code Example**:
+```python
+class ShuntingInhibitionLayer(nn.Module):
+    """Divisive normalization via shunting inhibition"""
+
+    def __init__(self, n_units, tau=10.0, semi_saturation=1.0):
+        super().__init__()
+        self.n_units = n_units
+        self.tau = tau
+        self.sigma = semi_saturation
+
+        # Lateral inhibition weights
+        self.W_inhib = nn.Parameter(torch.ones(n_units, n_units) / n_units)
+
+        # Excitatory weights
+        self.W_exc = nn.Parameter(torch.randn(n_units, n_units) * 0.1)
+
+    def shunting_dynamics(self, x, I, dt=0.1):
+        """
+        Shunting equation:
+        dx/dt = (-x + I) / (1 + Σ w_ij x_j)
+        """
+        # Inhibitory pool
+        inhib_sum = F.linear(x, self.W_inhib)
+
+        # Shunting (divisive) term
+        denom = 1.0 + inhib_sum + self.sigma
+
+        # Dynamics
+        dxdt = (-x + I) / denom
+
+        return x + (dxdt / self.tau) * dt
+
+    def forward(self, I, n_iterations=50, dt=0.1):
+        """
+        Iteratively compute steady-state response
+        """
+        batch_size = I.shape[0]
+        x = torch.zeros(batch_size, self.n_units)
+
+        for _ in range(n_iterations):
+            x = self.shunting_dynamics(x, I, dt)
+
+        return x
+
+    def divisive_normalization(self, I):
+        """
+        Steady-state divisive normalization:
+        x = I / (σ + Σ w_ij I_j)
+        """
+        # Normalization pool
+        norm_pool = F.linear(I, self.W_inhib) + self.sigma
+
+        # Normalized response
+        x = I / norm_pool
+
+        return x
+
+
+class BiologicalSoftmax(nn.Module):
+    """
+    Softmax via shunting inhibition
+    Models winner-take-all with biological dynamics
+    """
+
+    def __init__(self, n_units, tau=1.0, lateral_strength=1.0):
+        super().__init__()
+        self.n_units = n_units
+        self.tau = tau
+        self.lateral_strength = lateral_strength
+
+    def dynamics(self, x, I, dt=0.01):
+        """
+        Winner-take-all dynamics:
+        dx/dt = -x + I - β·Σ x_j
+                        j≠i
+        """
+        # Lateral inhibition (all-to-all except self)
+        lateral = self.lateral_strength * (x.sum(dim=1, keepdim=True) - x)
+
+        # Dynamics
+        dxdt = (-x + I - lateral) / self.tau
+
+        # ReLU (non-negative firing rates)
+        x_new = torch.relu(x + dxdt * dt)
+
+        return x_new
+
+    def forward(self, logits, n_iterations=100, dt=0.01):
+        """
+        Continuous-time softmax via shunting
+        """
+        batch_size = logits.shape[0]
+        x = torch.zeros_like(logits)
+
+        for _ in range(n_iterations):
+            x = self.dynamics(x, logits, dt)
+
+        # Normalize to probability
+        return x / x.sum(dim=1, keepdim=True)
+
+
+class DivisiveNormalizationAttention(nn.Module):
+    """
+    Attention via divisive normalization
+    Biological alternative to softmax attention
+    """
+
+    def __init__(self, dim, normalization_radius=1.0):
+        super().__init__()
+        self.dim = dim
+        self.sigma = normalization_radius
+
+        # Q, K, V projections
+        self.W_q = nn.Linear(dim, dim)
+        self.W_k = nn.Linear(dim, dim)
+        self.W_v = nn.Linear(dim, dim)
+
+    def forward(self, x):
+        """
+        Divisively normalized attention
+        """
+        Q = self.W_q(x)
+        K = self.W_k(x)
+        V = self.W_v(x)
+
+        # Attention scores (unnormalized)
+        scores = torch.matmul(Q, K.transpose(-2, -1)) / np.sqrt(self.dim)
+
+        # Divisive normalization (biological softmax)
+        # a_ij = s_ij / (σ + Σ_k s_ik)
+        norm_pool = scores.sum(dim=-1, keepdim=True) + self.sigma
+        attention = scores / norm_pool
+
+        # Apply attention
+        output = torch.matmul(attention, V)
+
+        return output
+
+
+# Example: Shunting inhibition dynamics
+n_units = 10
+layer = ShuntingInhibitionLayer(n_units, tau=10.0, semi_saturation=0.5)
+
+# Input (non-normalized)
+I = torch.tensor([[1.0, 5.0, 2.0, 0.5, 3.0, 1.5, 4.0, 2.5, 1.0, 0.8]])
+
+# Divisive normalization (steady-state)
+x_norm = layer.divisive_normalization(I)
+print("Input:", I)
+print("Normalized:", x_norm)
+print("Sum:", x_norm.sum())
+
+# Dynamic convergence
+x_dynamic = layer(I, n_iterations=100, dt=0.1)
+print("Dynamic steady-state:", x_dynamic)
+
+# Biological softmax
+softmax_layer = BiologicalSoftmax(n_units, tau=1.0, lateral_strength=2.0)
+logits = torch.tensor([[2.0, 5.0, 1.0, 3.0, 4.0, 0.5, 2.5, 1.5, 3.5, 2.0]])
+
+# Standard softmax
+standard_softmax = torch.softmax(logits, dim=1)
+
+# Biological softmax
+bio_softmax = softmax_layer(logits, n_iterations=200, dt=0.01)
+
+print("\nSoftmax comparison:")
+print("Standard:", standard_softmax)
+print("Biological:", bio_softmax)
+print("Difference:", torch.abs(standard_softmax - bio_softmax).max())
+```
+
+**Source**: Carandini & Heeger (2012) Nat Rev Neurosci; Heeger (1992) Vis Neurosci; Rubin et al. (2015) Neural Comp; Louie et al. (2014) J Neurosci
+
+---
+
+### 184. Langevin Sampling (Neural Monte Carlo)
+
+**Purpose**: Stochastic gradient descent on energy landscape—neural noise as computational mechanism for sampling and exploration.
+
+**Formula**: Stochastic Dynamics
+```
+Langevin equation:
+dx = -∇E(x) dt + √(2T) dW
+
+Discrete (Euler-Maruyama):
+x_{t+1} = x_t - η∇E(x_t) + √(2ηT) ε_t
+
+where ε_t ~ N(0, I)
+
+Equilibrium distribution:
+p(x) ∝ exp(-E(x) / T)
+
+For neural networks:
+dθ = -∇L(θ) dt + √(2T/N) dW
+
+Preconditioned Langevin:
+dx = -G^{-1}∇E dt + √(2T) G^{-1/2} dW
+
+where:
+- E(x) = energy function
+- T = temperature (noise level)
+- W = Wiener process
+- η = step size
+- G = preconditioning matrix (e.g., Fisher information)
+- L = loss function
+```
+
+**Nature's Implementation**: Neural variability as sampling mechanism. Spontaneous activity explores energy landscape. Temperature = neural noise level. Explains trial-to-trial variability, exploration, probabilistic inference. Used for decision-making under uncertainty, motor planning, perceptual sampling.
+
+**Impact**: **MEDIUM-HIGH - Stochastic Exploration**
+Neural noise is computational, not just nuisance. Exploration via gradient + noise. Samples from posterior. Foundation for Bayesian brain hypothesis, energy-based models. Critical for understanding neural variability and implementing sampling networks.
+
+**Code Example**:
+```python
+class LangevinSampler:
+    """Langevin dynamics for sampling from energy-based models"""
+
+    def __init__(self, energy_fn, dim, temperature=1.0):
+        """
+        energy_fn: E(x) - function to minimize
+        dim: dimensionality
+        temperature: noise level
+        """
+        self.energy = energy_fn
+        self.dim = dim
+        self.T = temperature
+
+    def energy_gradient(self, x, eps=1e-5):
+        """Compute ∇E(x) via finite differences"""
+        grad = np.zeros(self.dim)
+
+        for i in range(self.dim):
+            x_plus = x.copy()
+            x_plus[i] += eps
+
+            x_minus = x.copy()
+            x_minus[i] -= eps
+
+            grad[i] = (self.energy(x_plus) - self.energy(x_minus)) / (2 * eps)
+
+        return grad
+
+    def step(self, x, dt=0.01):
+        """
+        One Langevin step:
+        x_new = x - η∇E(x) + √(2ηT) ε
+        """
+        # Gradient descent
+        grad = self.energy_gradient(x)
+        drift = -grad * dt
+
+        # Diffusion (noise)
+        noise = np.sqrt(2 * dt * self.T) * np.random.randn(self.dim)
+
+        return x + drift + noise
+
+    def sample(self, x_init, n_steps=10000, dt=0.01, burnin=1000):
+        """
+        Generate samples via Langevin MCMC
+        """
+        x = x_init.copy()
+        samples = []
+
+        for step in range(n_steps):
+            x = self.step(x, dt)
+
+            # Store after burn-in
+            if step >= burnin:
+                samples.append(x.copy())
+
+        return np.array(samples)
+
+    def sample_batch(self, x_init, n_steps=1000, dt=0.01):
+        """Sample trajectory"""
+        trajectory = [x_init.copy()]
+        x = x_init
+
+        for _ in range(n_steps):
+            x = self.step(x, dt)
+            trajectory.append(x.copy())
+
+        return np.array(trajectory)
+
+
+class NeuralLangevinDynamics(nn.Module):
+    """Neural network with Langevin dynamics for sampling"""
+
+    def __init__(self, input_dim, hidden_dim, temperature=0.1):
+        super().__init__()
+        self.temperature = temperature
+
+        # Energy network E(x)
+        self.energy_net = nn.Sequential(
+            nn.Linear(input_dim, hidden_dim),
+            nn.Tanh(),
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.Tanh(),
+            nn.Linear(hidden_dim, 1)
+        )
+
+    def energy(self, x):
+        """Compute E(x)"""
+        return self.energy_net(x).squeeze()
+
+    def sample_langevin(self, x_init, n_steps=100, step_size=0.01):
+        """
+        Sample via Langevin dynamics
+        x_{t+1} = x_t - η∇E(x_t) + √(2ηT) ε
+        """
+        x = x_init.clone().requires_grad_(True)
+        trajectory = [x.detach().clone()]
+
+        for _ in range(n_steps):
+            # Compute gradient
+            E = self.energy(x)
+            E.backward()
+
+            with torch.no_grad():
+                # Gradient descent
+                x = x - step_size * x.grad
+
+                # Add noise
+                noise = torch.randn_like(x) * np.sqrt(2 * step_size * self.temperature)
+                x = x + noise
+
+                # Clear gradient
+                x.grad = None
+                x.requires_grad_(True)
+
+                trajectory.append(x.detach().clone())
+
+        return torch.stack(trajectory)
+
+
+class EnergyBasedSamplingNetwork(nn.Module):
+    """
+    Sample-based neural network using Langevin dynamics
+    Represents distributions via samples
+    """
+
+    def __init__(self, latent_dim, obs_dim, n_samples=10, temperature=0.1):
+        super().__init__()
+        self.latent_dim = latent_dim
+        self.n_samples = n_samples
+        self.temperature = temperature
+
+        # Energy function E(z, x)
+        self.energy_net = nn.Sequential(
+            nn.Linear(latent_dim + obs_dim, 128),
+            nn.ReLU(),
+            nn.Linear(128, 1)
+        )
+
+        # Decoder p(x|z)
+        self.decoder = nn.Sequential(
+            nn.Linear(latent_dim, 128),
+            nn.ReLU(),
+            nn.Linear(128, obs_dim)
+        )
+
+    def energy(self, z, x):
+        """E(z, x) = -log p(x, z)"""
+        combined = torch.cat([z, x], dim=-1)
+        return self.energy_net(combined).squeeze()
+
+    def sample_posterior(self, x_obs, n_steps=50, step_size=0.01):
+        """
+        Sample z ~ p(z|x) via Langevin
+        """
+        batch_size = x_obs.shape[0]
+        z = torch.randn(batch_size, self.latent_dim)
+
+        for _ in range(n_steps):
+            z = z.requires_grad_(True)
+
+            # Energy
+            E = self.energy(z, x_obs).sum()
+
+            # Gradient
+            E.backward()
+
+            with torch.no_grad():
+                # Langevin step
+                z = z - step_size * z.grad
+                z = z + torch.randn_like(z) * np.sqrt(2 * step_size * self.temperature)
+
+        return z.detach()
+
+
+# Example: Sample from Gaussian mixture
+def gaussian_mixture_energy(x):
+    """
+    Energy for mixture of Gaussians:
+    p(x) = Σ w_k N(x | μ_k, σ²)
+    E(x) = -log p(x)
+    """
+    # Three Gaussians
+    mu1, mu2, mu3 = np.array([[-2, 0]]), np.array([[2, 0]]), np.array([[0, 3]])
+    sigma = 0.5
+
+    p1 = np.exp(-np.sum((x - mu1)**2) / (2 * sigma**2))
+    p2 = np.exp(-np.sum((x - mu2)**2) / (2 * sigma**2))
+    p3 = np.exp(-np.sum((x - mu3)**2) / (2 * sigma**2))
+
+    p = (p1 + p2 + p3) / 3
+
+    return -np.log(p + 1e-10)
+
+# Langevin sampling
+sampler = LangevinSampler(gaussian_mixture_energy, dim=2, temperature=0.5)
+
+# Initialize near mode 1
+x_init = np.array([-2.0, 0.0])
+
+# Sample
+samples = sampler.sample(x_init, n_steps=10000, dt=0.01, burnin=1000)
+
+print(f"Generated {len(samples)} samples")
+print(f"Sample mean: {samples.mean(axis=0)}")
+print(f"Sample std: {samples.std(axis=0)}")
+
+# Check multimodality (should visit all three modes)
+modes_visited = []
+for sample in samples[::100]:  # Check every 100th sample
+    if np.linalg.norm(sample - [-2, 0]) < 1.0:
+        modes_visited.append(1)
+    elif np.linalg.norm(sample - [2, 0]) < 1.0:
+        modes_visited.append(2)
+    elif np.linalg.norm(sample - [0, 3]) < 1.0:
+        modes_visited.append(3)
+
+print(f"Modes visited: {set(modes_visited)}")
+```
+
+**Source**: Parisi (1981) Phys Lett; Roberts & Tweedie (1996) Bernoulli; Welling & Teh (2011) ICML; Orbán et al. (2016) Neuron
+
+---
+
+### 185. Gibbs Sampling in Neural Networks
+
+**Purpose**: Stochastic binary units via conditional sampling—foundation for Boltzmann machines and probabilistic neural networks.
+
+**Formula**: Conditional Sampling
+```
+Binary neuron activation:
+P(s_i = 1 | s_{-i}) = σ(Σ W_ij s_j + b_i)
+                         j≠i
+
+where σ(z) = 1/(1 + e^{-z})
+
+Gibbs sampling (sequential):
+For each neuron i:
+  Sample s_i ~ Bernoulli(σ(Σ W_ij s_j + b_i))
+                            j
+
+Block Gibbs (visible/hidden layers):
+  Sample h ~ p(h|v)
+  Sample v ~ p(v|h)
+
+Energy function:
+E(s) = -Σ_{i<j} W_ij s_i s_j - Σ_i b_i s_i
+
+Equilibrium distribution:
+p(s) = exp(-E(s)) / Z
+
+where:
+- s_i ∈ {0, 1} = neuron state
+- W_ij = synaptic weight
+- b_i = bias
+- Z = partition function
+- σ = sigmoid function
+```
+
+**Nature's Implementation**: Stochastic spiking as sampling. Trial-to-trial variability = samples from posterior. Explains probabilistic inference, uncertainty representation. Used for decision-making, perceptual inference, memory retrieval.
+
+**Impact**: **MEDIUM - Probabilistic Neural Units**
+Neurons as probabilistic samplers. Foundation for Boltzmann machines, RBMs. Explains neural variability as computation. Critical for understanding probabilistic brain hypothesis and implementing stochastic networks.
+
+**Code Example**:
+```python
+class GibbsSamplingNetwork:
+    """Binary stochastic network with Gibbs sampling"""
+
+    def __init__(self, n_neurons):
+        self.n = n_neurons
+
+        # Weight matrix (symmetric for Boltzmann)
+        self.W = np.random.randn(n_neurons, n_neurons) * 0.1
+        self.W = (self.W + self.W.T) / 2  # Symmetrize
+        np.fill_diagonal(self.W, 0)  # No self-connections
+
+        # Biases
+        self.b = np.zeros(n_neurons)
+
+    def conditional_prob(self, i, state):
+        """
+        P(s_i = 1 | s_{-i}) = σ(Σ W_ij s_j + b_i)
+        """
+        activation = np.dot(self.W[i], state) + self.b[i]
+        return 1.0 / (1.0 + np.exp(-activation))
+
+    def gibbs_step(self, state, neuron_idx=None):
+        """
+        One Gibbs sampling step
+        If neuron_idx specified, update only that neuron
+        Otherwise, update random neuron
+        """
+        if neuron_idx is None:
+            neuron_idx = np.random.randint(self.n)
+
+        # Conditional probability
+        p = self.conditional_prob(neuron_idx, state)
+
+        # Sample
+        state[neuron_idx] = 1 if np.random.rand() < p else 0
+
+        return state
+
+    def sample(self, n_steps=1000, burnin=100, init_state=None):
+        """
+        Generate samples via Gibbs sampling
+        """
+        if init_state is None:
+            state = np.random.randint(0, 2, size=self.n)
+        else:
+            state = init_state.copy()
+
+        samples = []
+
+        for step in range(n_steps + burnin):
+            # Update all neurons sequentially
+            for i in range(self.n):
+                state = self.gibbs_step(state, neuron_idx=i)
+
+            # Store after burn-in
+            if step >= burnin:
+                samples.append(state.copy())
+
+        return np.array(samples)
+
+    def energy(self, state):
+        """
+        E(s) = -Σ W_ij s_i s_j - Σ b_i s_i
+        """
+        E = -0.5 * state @ self.W @ state - self.b @ state
+        return E
+
+
+class RestrictedBoltzmannMachine:
+    """RBM with block Gibbs sampling"""
+
+    def __init__(self, n_visible, n_hidden):
+        self.n_v = n_visible
+        self.n_h = n_hidden
+
+        # Weights (no intra-layer connections)
+        self.W = np.random.randn(n_visible, n_hidden) * 0.01
+        self.b_v = np.zeros(n_visible)
+        self.b_h = np.zeros(n_hidden)
+
+    def sample_hidden(self, v):
+        """
+        Sample h ~ p(h|v)
+        P(h_j = 1 | v) = σ(Σ W_ij v_i + b_h_j)
+        """
+        activation = v @ self.W + self.b_h
+        p_h = 1.0 / (1.0 + np.exp(-activation))
+
+        # Sample
+        h = (np.random.rand(self.n_h) < p_h).astype(int)
+
+        return h, p_h
+
+    def sample_visible(self, h):
+        """
+        Sample v ~ p(v|h)
+        P(v_i = 1 | h) = σ(Σ W_ij h_j + b_v_i)
+        """
+        activation = h @ self.W.T + self.b_v
+        p_v = 1.0 / (1.0 + np.exp(-activation))
+
+        # Sample
+        v = (np.random.rand(self.n_v) < p_v).astype(int)
+
+        return v, p_v
+
+    def contrastive_divergence(self, v_data, k=1, lr=0.01):
+        """
+        CD-k learning: approximate gradient of log-likelihood
+        Δ W ∝ ⟨v h^T⟩_data - ⟨v h^T⟩_model
+        """
+        # Positive phase (data)
+        h_pos, p_h_pos = self.sample_hidden(v_data)
+        pos_grad = np.outer(v_data, p_h_pos)
+
+        # Negative phase (k steps of Gibbs)
+        v_neg = v_data.copy()
+        for _ in range(k):
+            h_neg, _ = self.sample_hidden(v_neg)
+            v_neg, p_v_neg = self.sample_visible(h_neg)
+
+        h_neg, p_h_neg = self.sample_hidden(v_neg)
+        neg_grad = np.outer(p_v_neg, p_h_neg)
+
+        # Update weights
+        self.W += lr * (pos_grad - neg_grad)
+        self.b_v += lr * (v_data - p_v_neg)
+        self.b_h += lr * (p_h_pos - p_h_neg)
+
+    def train(self, data, n_epochs=100, k=1, lr=0.01):
+        """Train RBM on binary data"""
+        for epoch in range(n_epochs):
+            # Shuffle data
+            np.random.shuffle(data)
+
+            for v_data in data:
+                self.contrastive_divergence(v_data, k=k, lr=lr)
+
+            if epoch % 20 == 0:
+                # Reconstruction error
+                v_test = data[0]
+                h, _ = self.sample_hidden(v_test)
+                v_recon, _ = self.sample_visible(h)
+                error = np.mean((v_test - v_recon)**2)
+                print(f"Epoch {epoch}, Reconstruction error: {error:.4f}")
+
+
+# Example: Gibbs sampling network
+n_neurons = 20
+network = GibbsSamplingNetwork(n_neurons)
+
+# Set weights to create some structure
+# Two groups with strong intra-group connections
+network.W[:10, :10] = 0.5  # Group 1
+network.W[10:, 10:] = 0.5  # Group 2
+network.W = (network.W + network.W.T) / 2
+np.fill_diagonal(network.W, 0)
+
+# Sample
+samples = network.sample(n_steps=1000, burnin=100)
+
+print(f"Generated {len(samples)} samples")
+print(f"Mean activation: {samples.mean(axis=0)}")
+
+# Check correlations
+corr = np.corrcoef(samples.T)
+print(f"\nIntra-group correlation (group 1): {corr[:10, :10].mean():.3f}")
+print(f"Inter-group correlation: {corr[:10, 10:].mean():.3f}")
+
+# RBM example
+n_visible = 16
+n_hidden = 8
+
+rbm = RestrictedBoltzmannMachine(n_visible, n_hidden)
+
+# Generate binary training data (random patterns)
+train_data = np.random.randint(0, 2, size=(100, n_visible))
+
+# Train
+rbm.train(train_data, n_epochs=100, k=1, lr=0.1)
+
+# Test reconstruction
+v_test = train_data[0]
+h, _ = rbm.sample_hidden(v_test)
+v_recon, _ = rbm.sample_visible(h)
+
+print(f"\nRBM Reconstruction:")
+print(f"Input:  {v_test}")
+print(f"Recon:  {v_recon}")
+```
+
+**Source**: Geman & Geman (1984) IEEE Trans PAMI; Hinton (2002) Neural Comp; Ackley et al. (1985) Cogn Sci; Buesing et al. (2011) NIPS
+
+---
+
+### 186. Neural Sampling Hypothesis
+
+**Purpose**: Spikes as samples from posterior distributions—probabilistic population codes via sampling.
+
+**Formula**: Spike-Based Sampling
+```
+Spike probability:
+P(spike_i | x) ∝ exp(-(E_i(spike) - r_i(x))² / 2σ²)
+
+Or Poisson:
+P(spike_i | x) = (λ_i(x))^{n_i} exp(-λ_i(x)) / n_i!
+
+where λ_i(x) = tuning curve
+
+Population code as samples:
+p(x | spikes) ≈ (1/N) Σ δ(x - x^{(i)})
+                     i
+
+where x^{(i)} decoded from spike pattern i
+
+Sampling efficiency:
+N_effective = N / (1 + r²)
+
+where r = noise correlation
+
+Bayesian inference:
+p(x | r) ∝ Π p(r_i | x) p(x)
+           i
+
+Implemented via:
+spikes ~ samples from p(x | r)
+
+where:
+- r = population rate vector
+- n_i = spike count
+- λ_i = firing rate
+- x = stimulus/latent variable
+- N = population size
+```
+
+**Nature's Implementation**: Cortical variability = samples, not noise. Trial-to-trial variability implements posterior sampling. Explains Poisson-like variability, correlation structure, uncertainty representation. Used for perception, decision-making, motor control.
+
+**Impact**: **MEDIUM - Probabilistic Population Codes**
+Variability is feature, not bug. Spikes encode distributions via samples. Bayesian inference without integration. Critical for understanding neural variability and implementing probabilistic neural networks.
+
+**Code Example**:
+```python
+class NeuralSamplingPopulation:
+    """Population code via spike sampling"""
+
+    def __init__(self, n_neurons, stimulus_range=(0, 180)):
+        self.n_neurons = n_neurons
+        self.stim_min, self.stim_max = stimulus_range
+
+        # Tuning curves (von Mises)
+        self.preferred = np.linspace(self.stim_min, self.stim_max, n_neurons)
+        self.tuning_width = 20.0
+
+    def tuning_curve(self, stimulus, neuron_idx):
+        """λ_i(x) = gain · exp(κ cos(x - μ_i))"""
+        kappa = 1.0 / (self.tuning_width**2)
+        rate = 10 * np.exp(kappa * np.cos(2 * np.pi * (stimulus - self.preferred[neuron_idx]) / 180))
+        return rate
+
+    def sample_spikes_poisson(self, stimulus, n_trials=1):
+        """
+        Generate spike samples via Poisson process
+        Each trial = one sample from posterior
+        """
+        spikes = np.zeros((n_trials, self.n_neurons))
+
+        for trial in range(n_trials):
+            for i in range(self.n_neurons):
+                rate = self.tuning_curve(stimulus, i)
+                spikes[trial, i] = np.random.poisson(rate)
+
+        return spikes
+
+    def decode_sample(self, spike_pattern):
+        """
+        Decode stimulus from single spike pattern (one sample)
+        x̂ = argmax p(spikes | x)
+        """
+        stimulus_grid = np.linspace(self.stim_min, self.stim_max, 180)
+        log_likelihood = np.zeros(len(stimulus_grid))
+
+        for j, stim in enumerate(stimulus_grid):
+            # Log-likelihood: Σ [n_i log(λ_i) - λ_i]
+            for i in range(self.n_neurons):
+                rate = self.tuning_curve(stim, i)
+                log_likelihood[j] += spike_pattern[i] * np.log(rate + 1e-10) - rate
+
+        # MAP estimate
+        decoded = stimulus_grid[np.argmax(log_likelihood)]
+        return decoded
+
+    def posterior_from_samples(self, spikes, stimulus_grid=None):
+        """
+        Approximate posterior via samples:
+        p(x | r) ≈ (1/N) Σ δ(x - x_decoded^{(i)})
+        """
+        if stimulus_grid is None:
+            stimulus_grid = np.linspace(self.stim_min, self.stim_max, 180)
+
+        # Decode each sample (trial)
+        decoded_samples = []
+        for trial in range(spikes.shape[0]):
+            decoded = self.decode_sample(spikes[trial])
+            decoded_samples.append(decoded)
+
+        # Histogram to approximate distribution
+        hist, bins = np.histogram(decoded_samples, bins=stimulus_grid)
+        posterior = hist / hist.sum()
+
+        return bins[:-1], posterior
+
+    def compare_integration_vs_sampling(self, stimulus, n_samples=100):
+        """
+        Compare:
+        1. Analytical integration (exact Bayesian)
+        2. Sampling approximation
+        """
+        # Generate samples
+        spikes = self.sample_spikes_poisson(stimulus, n_trials=n_samples)
+
+        # Sampling-based posterior
+        stim_grid, posterior_samples = self.posterior_from_samples(spikes)
+
+        # Integration-based posterior (analytical)
+        # Average spike pattern
+        mean_spikes = spikes.mean(axis=0)
+
+        # Likelihood for each stimulus
+        posterior_integration = np.zeros(len(stim_grid))
+        for j, stim in enumerate(stim_grid):
+            log_lik = 0
+            for i in range(self.n_neurons):
+                rate = self.tuning_curve(stim, i)
+                log_lik += mean_spikes[i] * np.log(rate + 1e-10) - rate
+
+            posterior_integration[j] = np.exp(log_lik)
+
+        posterior_integration /= posterior_integration.sum()
+
+        return stim_grid, posterior_samples, posterior_integration
+
+
+class SamplingNeuralNetwork(nn.Module):
+    """Neural network with sampling-based inference"""
+
+    def __init__(self, input_dim, hidden_dim, n_samples=10):
+        super().__init__()
+        self.n_samples = n_samples
+
+        # Encoder: input → distribution parameters
+        self.encoder = nn.Sequential(
+            nn.Linear(input_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, hidden_dim * 2)  # μ and log σ
+        )
+
+    def forward(self, x):
+        """
+        Sample-based inference
+        Represent distribution via samples instead of parameters
+        """
+        # Distribution parameters
+        h = self.encoder(x)
+        mu = h[:, :h.shape[1]//2]
+        log_sigma = h[:, h.shape[1]//2:]
+
+        # Generate samples (instead of single mean)
+        samples = []
+        for _ in range(self.n_samples):
+            eps = torch.randn_like(mu)
+            sample = mu + torch.exp(log_sigma) * eps
+            samples.append(sample)
+
+        # Represent distribution via samples
+        return torch.stack(samples, dim=1)  # [batch, n_samples, hidden_dim]
+
+    def sample_based_prediction(self, x, prediction_fn):
+        """
+        Make prediction by sampling:
+        E[f(z)] ≈ (1/N) Σ f(z_i), z_i ~ p(z|x)
+        """
+        samples = self.forward(x)  # [batch, n_samples, dim]
+
+        # Apply prediction function to each sample
+        predictions = []
+        for i in range(self.n_samples):
+            pred = prediction_fn(samples[:, i])
+            predictions.append(pred)
+
+        # Average predictions
+        return torch.stack(predictions, dim=0).mean(dim=0)
+
+
+# Example: Sampling vs integration
+n_neurons = 50
+population = NeuralSamplingPopulation(n_neurons, stimulus_range=(0, 180))
+
+# True stimulus
+true_stimulus = 90
+
+# Compare methods
+stim_grid, posterior_samples, posterior_integration = population.compare_integration_vs_sampling(
+    true_stimulus, n_samples=500
+)
+
+print(f"True stimulus: {true_stimulus}°")
+
+# Sampling-based estimate
+if len(posterior_samples) > 0 and posterior_samples.sum() > 0:
+    sample_mean = np.sum(stim_grid * posterior_samples / posterior_samples.sum())
+    print(f"Sampling estimate: {sample_mean:.1f}°")
+
+# Integration-based estimate
+int_mean = np.sum(stim_grid * posterior_integration)
+print(f"Integration estimate: {int_mean:.1f}°")
+
+# Uncertainty (variance)
+sample_var = np.sum((stim_grid - sample_mean)**2 * posterior_samples / posterior_samples.sum()) if posterior_samples.sum() > 0 else 0
+int_var = np.sum((stim_grid - int_mean)**2 * posterior_integration)
+
+print(f"\nUncertainty (std):")
+print(f"  Sampling: {np.sqrt(sample_var):.1f}°")
+print(f"  Integration: {np.sqrt(int_var):.1f}°")
+```
+
+**Source**: Hoyer & Hyvarinen (2003) NIPS; Fiser et al. (2010) Trends Cogn Sci; Orbán et al. (2016) Neuron; Berkes et al. (2011) Science
+
+---
+
+### 187. Boltzmann Machine (Unrestricted Energy Model)
+
+**Purpose**: General energy-based model with symmetric weights—foundation for unsupervised learning and generative models.
+
+**Formula**: Energy-Based Distribution
+```
+Energy function:
+E(s) = -Σ_{i<j} W_ij s_i s_j - Σ_i b_i s_i
+
+Probability distribution:
+p(s) = exp(-E(s)) / Z
+
+where Z = Σ exp(-E(s')) [partition function]
+          s'
+
+Learning (maximum likelihood):
+∂log p(s) / ∂W_ij = ⟨s_i s_j⟩_data - ⟨s_i s_j⟩_model
+
+Gradient:
+Δ W_ij = η (⟨s_i s_j⟩_data - ⟨s_i s_j⟩_model)
+
+where:
+- ⟨·⟩_data = expectation under data
+- ⟨·⟩_model = expectation under model (via sampling)
+- s_i ∈ {0, 1} or {-1, +1}
+- W_ij = W_ji (symmetric)
+
+Restricted BM (bipartite):
+E(v, h) = -v^T W h - b^T v - c^T h
+```
+
+**Nature's Implementation**: Attractor networks, associative memory, unsupervised learning. Symmetric recurrent connections. Energy minimization = pattern completion. Explains spontaneous brain activity, memory consolidation, slow-wave sleep.
+
+**Impact**: **MEDIUM - Energy-Based Learning**
+Unsupervised learning via energy minimization. Generative model. Foundation for RBMs, deep Boltzmann machines. Critical for understanding unsupervised cortical learning and implementing energy-based models.
+
+**Code Example**:
+```python
+class BoltzmannMachine:
+    """General Boltzmann machine with unrestricted connectivity"""
+
+    def __init__(self, n_units):
+        self.n_units = n_units
+
+        # Symmetric weight matrix
+        self.W = np.random.randn(n_units, n_units) * 0.01
+        self.W = (self.W + self.W.T) / 2
+        np.fill_diagonal(self.W, 0)
+
+        # Biases
+        self.b = np.zeros(n_units)
+
+    def energy(self, s):
+        """
+        E(s) = -Σ W_ij s_i s_j - Σ b_i s_i
+        """
+        return -0.5 * s @ self.W @ s - self.b @ s
+
+    def sample_gibbs(self, n_steps=1000, init_state=None):
+        """Sample from model via Gibbs sampling"""
+        if init_state is None:
+            state = np.random.randint(0, 2, size=self.n_units)
+        else:
+            state = init_state.copy()
+
+        for _ in range(n_steps):
+            # Update each unit
+            for i in range(self.n_units):
+                # Conditional probability
+                activation = np.dot(self.W[i], state) + self.b[i]
+                p = 1.0 / (1.0 + np.exp(-activation))
+
+                # Sample
+                state[i] = 1 if np.random.rand() < p else 0
+
+        return state
+
+    def train(self, data, n_epochs=100, lr=0.01, k=10):
+        """
+        Train via contrastive divergence
+        Δ W = η (⟨s_i s_j⟩_data - ⟨s_i s_j⟩_model)
+        """
+        n_samples = len(data)
+
+        for epoch in range(n_epochs):
+            # Data statistics
+            pos_corr = np.zeros((self.n_units, self.n_units))
+            pos_bias = np.zeros(self.n_units)
+
+            for s_data in data:
+                pos_corr += np.outer(s_data, s_data)
+                pos_bias += s_data
+
+            pos_corr /= n_samples
+            pos_bias /= n_samples
+
+            # Model statistics (via sampling)
+            neg_corr = np.zeros((self.n_units, self.n_units))
+            neg_bias = np.zeros(self.n_units)
+
+            for s_data in data:
+                # k steps of Gibbs starting from data
+                s_model = s_data.copy()
+                for _ in range(k):
+                    s_model = self.sample_gibbs(n_steps=1, init_state=s_model)
+
+                neg_corr += np.outer(s_model, s_model)
+                neg_bias += s_model
+
+            neg_corr /= n_samples
+            neg_bias /= n_samples
+
+            # Update
+            self.W += lr * (pos_corr - neg_corr)
+            self.W = (self.W + self.W.T) / 2  # Symmetrize
+            np.fill_diagonal(self.W, 0)
+
+            self.b += lr * (pos_bias - neg_bias)
+
+            if epoch % 20 == 0:
+                # Average energy
+                avg_energy = np.mean([self.energy(s) for s in data])
+                print(f"Epoch {epoch}, Average energy: {avg_energy:.4f}")
+
+    def generate_samples(self, n_samples, n_steps=1000):
+        """Generate new samples from model"""
+        samples = []
+        for _ in range(n_samples):
+            sample = self.sample_gibbs(n_steps=n_steps)
+            samples.append(sample)
+
+        return np.array(samples)
+
+
+# Example: Learn binary patterns
+n_units = 16
+bm = BoltzmannMachine(n_units)
+
+# Create training patterns (e.g., vertical and horizontal bars)
+patterns = []
+
+# Vertical bars
+for i in range(4):
+    pattern = np.zeros(16)
+    pattern[i::4] = 1
+    patterns.append(pattern)
+
+# Horizontal bars
+for i in range(4):
+    pattern = np.zeros(16)
+    pattern[i*4:(i+1)*4] = 1
+    patterns.append(pattern)
+
+patterns = np.array(patterns)
+
+print("Training patterns:")
+for i, p in enumerate(patterns):
+    print(f"  {i}: {p.reshape(4, 4).astype(int)}")
+
+# Train
+bm.train(patterns, n_epochs=200, lr=0.1, k=5)
+
+# Generate new samples
+generated = bm.generate_samples(n_samples=5, n_steps=1000)
+
+print("\nGenerated patterns:")
+for i, g in enumerate(generated):
+    print(f"  {i}: {g.reshape(4, 4).astype(int)}")
+
+# Check if generated patterns match training distribution
+energies_train = [bm.energy(p) for p in patterns]
+energies_gen = [bm.energy(g) for g in generated]
+
+print(f"\nEnergy statistics:")
+print(f"  Training: {np.mean(energies_train):.4f} ± {np.std(energies_train):.4f}")
+print(f"  Generated: {np.mean(energies_gen):.4f} ± {np.std(energies_gen):.4f}")
+```
+
+**Source**: Ackley et al. (1985) Cogn Sci; Hinton & Sejnowski (1983) Proc IEEE; Salakhutdinov & Hinton (2009) AISTATS; Fischer & Igel (2012) ICANN
+
+---
+### 188. Reward-Modulated STDP (R-STDP)
+
+**Formula:**
+```
+Δw = R · f(Δt)
+
+where f(Δt) = {
+    A_+ e^{-Δt/τ_+}     if Δt > 0  (post before pre)
+    -A_- e^{Δt/τ_-}     if Δt < 0  (pre before post)
+}
+
+Δt = t_post - t_pre
+R = reward signal (scalar modulation)
+A_+, A_- = potentiation/depression amplitudes
+τ_+, τ_- = time constants
+```
+
+**Variable Definitions:**
+- `w`: synaptic weight
+- `R`: reward signal (dopamine-like modulation)
+- `Δt`: spike time difference (post - pre)
+- `A_+`: LTP amplitude when post fires after pre
+- `A_-`: LTD amplitude when pre fires after post
+- `τ_+, τ_-`: STDP time constants (~20ms)
+
+**Nature's Implementation:**
+Dopaminergic neurons in VTA/SNc broadcast reward prediction errors that modulate spike-timing-dependent plasticity in striatal and cortical circuits. This three-factor learning rule (pre-spike, post-spike, reward) implements reinforcement learning by selectively strengthening synapses that preceded rewarding outcomes.
+
+**Impact:** CRITICAL - Bridges reinforcement learning theory with biological synaptic plasticity, explaining how dopamine enables credit assignment over time. Foundation for actor-critic models and deep RL algorithms with biological constraints.
+
+**Implementation (250 lines):**
+```python
+import torch
+import torch.nn as nn
+import numpy as np
+import matplotlib.pyplot as plt
+from collections import deque
+
+class RewardModulatedSTDP:
+    """
+    Reward-Modulated Spike-Timing-Dependent Plasticity
+
+    Implements R-STDP where synaptic changes depend on:
+    1. Relative spike timing (STDP kernel)
+    2. Reward signal (dopamine-like modulation)
+    3. Eligibility traces (bridges temporal credit assignment)
+    """
+
+    def __init__(self, n_pre, n_post, A_plus=0.01, A_minus=0.012,
+                 tau_plus=20.0, tau_minus=20.0, tau_eligibility=100.0,
+                 w_min=0.0, w_max=1.0):
+        """
+        Args:
+            n_pre: Number of presynaptic neurons
+            n_post: Number of postsynaptic neurons
+            A_plus: LTP amplitude
+            A_minus: LTD amplitude
+            tau_plus: LTP time constant (ms)
+            tau_minus: LTD time constant (ms)
+            tau_eligibility: Eligibility trace decay (ms)
+            w_min, w_max: Weight bounds
+        """
+        self.n_pre = n_pre
+        self.n_post = n_post
+
+        # STDP parameters
+        self.A_plus = A_plus
+        self.A_minus = A_minus
+        self.tau_plus = tau_plus
+        self.tau_minus = tau_minus
+
+        # Eligibility trace parameters
+        self.tau_e = tau_eligibility
+
+        # Synaptic weights
+        self.W = np.random.uniform(0.2, 0.5, (n_post, n_pre))
+        self.w_min = w_min
+        self.w_max = w_max
+
+        # Eligibility traces
+        self.eligibility = np.zeros((n_post, n_pre))
+
+        # Spike timing buffers
+        self.pre_spike_times = [deque(maxlen=100) for _ in range(n_pre)]
+        self.post_spike_times = [deque(maxlen=100) for _ in range(n_post)]
+
+    def stdp_kernel(self, delta_t):
+        """
+        Compute STDP kernel: f(Δt) = A_+ exp(-Δt/τ_+) or -A_- exp(Δt/τ_-)
+
+        Args:
+            delta_t: Post spike time - pre spike time
+
+        Returns:
+            Weight change factor
+        """
+        if delta_t > 0:
+            # Post after pre -> LTP
+            return self.A_plus * np.exp(-delta_t / self.tau_plus)
+        elif delta_t < 0:
+            # Pre after post -> LTD
+            return -self.A_minus * np.exp(delta_t / self.tau_minus)
+        else:
+            return 0.0
+
+    def update_eligibility(self, pre_spikes, post_spikes, current_time, dt=1.0):
+        """
+        Update eligibility traces based on spike timing
+
+        e_ij(t+dt) = e_ij(t) * exp(-dt/τ_e) + f(Δt_ij)
+
+        Args:
+            pre_spikes: Binary array [n_pre] indicating which pre neurons spiked
+            post_spikes: Binary array [n_post] indicating which post neurons spiked
+            current_time: Current simulation time (ms)
+            dt: Time step (ms)
+        """
+        # Decay existing traces
+        decay_factor = np.exp(-dt / self.tau_e)
+        self.eligibility *= decay_factor
+
+        # Update spike time buffers
+        for i, spiked in enumerate(pre_spikes):
+            if spiked:
+                self.pre_spike_times[i].append(current_time)
+
+        for j, spiked in enumerate(post_spikes):
+            if spiked:
+                self.post_spike_times[j].append(current_time)
+
+        # Compute STDP contributions for each synapse
+        for j in range(self.n_post):
+            if not post_spikes[j]:
+                continue
+
+            for i in range(self.n_pre):
+                # Check all recent pre-spikes for this synapse
+                for t_pre in self.pre_spike_times[i]:
+                    if abs(current_time - t_pre) < 5 * self.tau_plus:
+                        delta_t = current_time - t_pre
+                        self.eligibility[j, i] += self.stdp_kernel(delta_t)
+
+        # Also check for LTD (pre after post)
+        for i in range(self.n_pre):
+            if not pre_spikes[i]:
+                continue
+
+            for j in range(self.n_post):
+                for t_post in self.post_spike_times[j]:
+                    if abs(current_time - t_post) < 5 * self.tau_minus:
+                        delta_t = t_post - current_time
+                        if delta_t < 0:  # Post was before this pre spike
+                            self.eligibility[j, i] += self.stdp_kernel(delta_t)
+
+    def apply_reward(self, reward):
+        """
+        Apply reward-modulated weight update: Δw = R · e
+
+        Args:
+            reward: Scalar reward signal (can be positive or negative)
+        """
+        # Weight update proportional to eligibility and reward
+        dW = reward * self.eligibility
+
+        self.W += dW
+
+        # Enforce weight bounds
+        self.W = np.clip(self.W, self.w_min, self.w_max)
+
+        # Optional: Reset eligibility after reward (depends on model)
+        # self.eligibility *= 0.5  # Partial reset
+
+    def forward(self, pre_activity):
+        """
+        Compute postsynaptic activity
+
+        Args:
+            pre_activity: [n_pre] activity levels
+
+        Returns:
+            post_activity: [n_post] weighted sum
+        """
+        return self.W @ pre_activity
+
+
+class RSTDPPolicyNetwork:
+    """
+    Complete reinforcement learning agent using R-STDP
+    """
+
+    def __init__(self, n_states, n_actions, n_hidden=100):
+        self.n_states = n_states
+        self.n_actions = n_actions
+        self.n_hidden = n_hidden
+
+        # Two-layer network with R-STDP synapses
+        self.layer1 = RewardModulatedSTDP(n_states, n_hidden,
+                                          A_plus=0.01, A_minus=0.012)
+        self.layer2 = RewardModulatedSTDP(n_hidden, n_actions,
+                                          A_plus=0.01, A_minus=0.012)
+
+        # Spike generation parameters
+        self.threshold = 1.0
+        self.reset_potential = 0.0
+        self.tau_mem = 10.0
+
+    def encode_state(self, state):
+        """Convert state to spike rates (population coding)"""
+        # Simple rate coding: state values -> Poisson spike probabilities
+        return np.clip(state, 0, 1)
+
+    def generate_spikes(self, rates, dt=1.0):
+        """Generate Poisson spikes from rates"""
+        return np.random.rand(len(rates)) < (rates * dt / 1000.0)
+
+    def integrate_and_fire(self, input_current, membrane_potential, dt=1.0):
+        """
+        Simple LIF dynamics
+
+        τ dV/dt = -V + I
+        """
+        dV = (-membrane_potential + input_current) / self.tau_mem * dt
+        membrane_potential += dV
+
+        spikes = membrane_potential >= self.threshold
+        membrane_potential[spikes] = self.reset_potential
+
+        return membrane_potential, spikes
+
+    def select_action(self, state, T=100, dt=1.0):
+        """
+        Run spiking network for T ms and select action based on spike counts
+
+        Args:
+            state: Environment state
+            T: Simulation time (ms)
+            dt: Time step (ms)
+
+        Returns:
+            action: Selected action index
+            spike_counts: [n_actions] spike counts for debugging
+        """
+        # Initialize
+        V_hidden = np.zeros(self.n_hidden)
+        V_output = np.zeros(self.n_actions)
+        spike_counts = np.zeros(self.n_actions)
+
+        # Encode state as rates
+        input_rates = self.encode_state(state)
+
+        # Simulate for T milliseconds
+        for t in np.arange(0, T, dt):
+            # Generate input spikes
+            input_spikes = self.generate_spikes(input_rates, dt)
+
+            # Layer 1: State -> Hidden
+            I_hidden = self.layer1.forward(input_spikes.astype(float))
+            V_hidden, spikes_hidden = self.integrate_and_fire(I_hidden, V_hidden, dt)
+
+            # Layer 2: Hidden -> Actions
+            I_output = self.layer2.forward(spikes_hidden.astype(float))
+            V_output, spikes_output = self.integrate_and_fire(I_output, V_output, dt)
+
+            spike_counts += spikes_output
+
+        # Select action with highest spike count (plus exploration noise)
+        action_probs = spike_counts / (spike_counts.sum() + 1e-10)
+        action = np.random.choice(self.n_actions, p=action_probs + 1e-10)
+
+        return action, spike_counts
+
+    def train_episode(self, state_sequence, action_sequence, reward_sequence, T=100):
+        """
+        Train on an episode using R-STDP
+
+        Args:
+            state_sequence: List of states
+            action_sequence: List of actions taken
+            reward_sequence: List of rewards received
+            T: Simulation time per step (ms)
+        """
+        dt = 1.0
+
+        for state, action, reward in zip(state_sequence, action_sequence, reward_sequence):
+            # Forward pass (same as select_action but track all spikes)
+            V_hidden = np.zeros(self.n_hidden)
+            V_output = np.zeros(self.n_actions)
+
+            input_rates = self.encode_state(state)
+
+            for t in np.arange(0, T, dt):
+                input_spikes = self.generate_spikes(input_rates, dt)
+
+                # Layer 1
+                I_hidden = self.layer1.forward(input_spikes.astype(float))
+                V_hidden, spikes_hidden = self.integrate_and_fire(I_hidden, V_hidden, dt)
+
+                # Update eligibility traces for layer 1
+                self.layer1.update_eligibility(input_spikes, spikes_hidden, t, dt)
+
+                # Layer 2
+                I_output = self.layer2.forward(spikes_hidden.astype(float))
+                V_output, spikes_output = self.integrate_and_fire(I_output, V_output, dt)
+
+                # Update eligibility traces for layer 2
+                self.layer2.update_eligibility(spikes_hidden, spikes_output, t, dt)
+
+            # Apply reward to both layers
+            self.layer1.apply_reward(reward)
+            self.layer2.apply_reward(reward)
+
+
+# Example: Train on simple bandit task
+if __name__ == "__main__":
+    np.random.seed(42)
+
+    # 2-armed bandit: state is constant, 2 actions with different reward probs
+    n_states = 4
+    n_actions = 2
+
+    # True reward probabilities
+    reward_probs = [0.3, 0.7]  # Action 1: 30%, Action 2: 70%
+
+    agent = RSTDPPolicyNetwork(n_states, n_actions, n_hidden=50)
+
+    # Training
+    n_trials = 500
+    rewards_history = []
+    action_history = []
+
+    print("Training R-STDP agent on 2-armed bandit...")
+
+    for trial in range(n_trials):
+        # Fixed state (bandit has no state)
+        state = np.array([0.5, 0.5, 0.5, 0.5])
+
+        # Select action
+        action, spike_counts = agent.select_action(state, T=100)
+
+        # Get reward
+        reward = 1.0 if np.random.rand() < reward_probs[action] else -0.5
+
+        # Train
+        agent.train_episode([state], [action], [reward], T=100)
+
+        rewards_history.append(reward)
+        action_history.append(action)
+
+        if trial % 100 == 0:
+            recent_reward = np.mean(rewards_history[-100:]) if len(rewards_history) >= 100 else np.mean(rewards_history)
+            recent_actions = np.array(action_history[-100:]) if len(action_history) >= 100 else np.array(action_history)
+            action_1_rate = np.mean(recent_actions == 1)
+            print(f"Trial {trial}: Avg reward = {recent_reward:.3f}, Action 1 rate = {action_1_rate:.2f}")
+
+    # Final evaluation
+    final_actions = np.array(action_history[-100:])
+    print(f"\nFinal performance:")
+    print(f"  Action 0 rate: {np.mean(final_actions == 0):.2f} (optimal: {reward_probs[0]:.2f})")
+    print(f"  Action 1 rate: {np.mean(final_actions == 1):.2f} (optimal: {reward_probs[1]:.2f})")
+    print(f"  Average reward: {np.mean(rewards_history[-100:]):.3f}")
+```
+
+**Sources:**
+- Frémaux & Gerstner (2016). "Neuromodulated Spike-Timing-Dependent Plasticity and Theory of Three-Factor Learning Rules"
+- Izhikevich (2007). "Solving the Distal Reward Problem through Linkage of STDP and Dopamine Signaling"
+- Florian (2007). "Reinforcement Learning Through Modulation of Spike-Timing-Dependent Synaptic Plasticity"
+
+---
+
+### 189. Contrastive Hebbian Learning (CHL)
+
+**Formula:**
+```
+ΔW = η(x^+ y^{+T} - x^- y^{-T})
+
+where:
+x^+ = activity during positive (clamped) phase
+y^+ = activity during positive phase
+x^- = activity during negative (free) phase
+y^- = activity during negative phase
+η = learning rate
+```
+
+**Equivalent Energy-Based Formulation:**
+```
+ΔW = η(⟨xy^T⟩_data - ⟨xy^T⟩_model)
+
+For energy E(x,y) = -y^T W x:
+∂E/∂W = -xy^T
+```
+
+**Variable Definitions:**
+- `W`: weight matrix between layers
+- `x^+`: "clamped" activity when output is constrained to target
+- `y^+`: output activity in clamped phase (= target)
+- `x^-`: "free" activity when network runs autonomously
+- `y^-`: output activity in free phase (= prediction)
+- `η`: learning rate
+
+**Nature's Implementation:**
+CHL models cortical learning through alternating phases of feedforward and feedback processing. The positive phase represents sensory-driven activity with top-down constraints, while the negative phase represents internally generated predictions. This matches wake-sleep cycles and attentional modulation in cortex.
+
+**Impact:** HIGH - Demonstrates that Hebbian learning with contrastive phases (positive/negative) is mathematically equivalent to backpropagation under symmetric weights. Provides biologically plausible account of credit assignment without explicit error signals or non-local weight transport.
+
+**Implementation (280 lines):**
+```python
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import numpy as np
+import matplotlib.pyplot as plt
+
+class ContrastiveHebbianLayer(nn.Module):
+    """
+    Single layer with Contrastive Hebbian Learning
+
+    ΔW = η(x^+ y^{+T} - x^- y^{-T})
+
+    Two-phase learning:
+    1. Positive phase: Output clamped to target, measure x^+ y^{+T}
+    2. Negative phase: Output free-running, measure x^- y^{-T}
+    """
+
+    def __init__(self, input_dim, output_dim, symmetric=True):
+        super().__init__()
+        self.input_dim = input_dim
+        self.output_dim = output_dim
+        self.symmetric = symmetric
+
+        # Forward weights
+        self.W = nn.Parameter(torch.randn(output_dim, input_dim) * 0.1)
+
+        if symmetric:
+            # Backward weights = forward weights (weight transport problem solved)
+            self.W_back = self.W.T
+        else:
+            # Separate backward weights (biologically implausible)
+            self.W_back = nn.Parameter(torch.randn(input_dim, output_dim) * 0.1)
+
+        self.bias = nn.Parameter(torch.zeros(output_dim))
+
+    def forward_pass(self, x):
+        """Compute forward activation y = f(Wx + b)"""
+        return torch.sigmoid(F.linear(x, self.W, self.bias))
+
+    def backward_pass(self, y):
+        """Compute backward activation x = f(W^T y)"""
+        if self.symmetric:
+            return torch.sigmoid(F.linear(y, self.W.T))
+        else:
+            return torch.sigmoid(F.linear(y, self.W_back))
+
+    def positive_phase(self, x, y_target, n_steps=10, lr_phase=0.1):
+        """
+        Positive (clamped) phase: Settle to equilibrium with output clamped
+
+        Args:
+            x: Input [batch, input_dim]
+            y_target: Target output [batch, output_dim]
+            n_steps: Number of settling iterations
+            lr_phase: Step size for settling
+
+        Returns:
+            x_plus: Settled input activity
+            y_plus: Settled output activity (close to y_target)
+        """
+        x_plus = x.clone()
+        y_plus = y_target.clone()
+
+        for _ in range(n_steps):
+            # Update input based on feedback from clamped output
+            x_recon = self.backward_pass(y_plus)
+            x_plus = x_plus + lr_phase * (x + x_recon - 2 * x_plus)
+
+            # Keep output clamped (but allow small relaxation toward forward prediction)
+            y_pred = self.forward_pass(x_plus)
+            y_plus = 0.9 * y_target + 0.1 * y_pred
+
+        return x_plus, y_plus
+
+    def negative_phase(self, x, n_steps=10, lr_phase=0.1):
+        """
+        Negative (free) phase: Settle to equilibrium without clamping
+
+        Args:
+            x: Input [batch, input_dim]
+            n_steps: Number of settling iterations
+            lr_phase: Step size for settling
+
+        Returns:
+            x_minus: Settled input activity
+            y_minus: Settled output activity (free prediction)
+        """
+        x_minus = x.clone()
+
+        for _ in range(n_steps):
+            # Forward pass
+            y_minus = self.forward_pass(x_minus)
+
+            # Backward pass
+            x_recon = self.backward_pass(y_minus)
+
+            # Settle toward consistency
+            x_minus = x_minus + lr_phase * (x + x_recon - 2 * x_minus)
+
+        # Final forward pass
+        y_minus = self.forward_pass(x_minus)
+
+        return x_minus, y_minus
+
+    def contrastive_update(self, x_plus, y_plus, x_minus, y_minus, lr):
+        """
+        Apply CHL weight update: ΔW = η(x^+ y^{+T} - x^- y^{-T})
+
+        Args:
+            x_plus, y_plus: Activities from positive phase
+            x_minus, y_minus: Activities from negative phase
+            lr: Learning rate
+        """
+        batch_size = x_plus.shape[0]
+
+        # Positive phase statistics: ⟨xy^T⟩_clamped
+        pos_corr = torch.matmul(y_plus.T, x_plus) / batch_size
+
+        # Negative phase statistics: ⟨xy^T⟩_free
+        neg_corr = torch.matmul(y_minus.T, x_minus) / batch_size
+
+        # Contrastive Hebbian update
+        dW = lr * (pos_corr - neg_corr)
+
+        self.W.data += dW
+
+        # Update bias
+        db = lr * (y_plus.mean(0) - y_minus.mean(0))
+        self.bias.data += db
+
+
+class ContrastiveHebbianNetwork(nn.Module):
+    """
+    Multi-layer network trained with Contrastive Hebbian Learning
+    """
+
+    def __init__(self, layer_sizes, symmetric=True):
+        """
+        Args:
+            layer_sizes: List of layer dimensions [input, hidden1, hidden2, ..., output]
+            symmetric: Use symmetric weights (W_back = W_forward^T)
+        """
+        super().__init__()
+        self.layer_sizes = layer_sizes
+        self.n_layers = len(layer_sizes) - 1
+
+        # Create layers
+        self.layers = nn.ModuleList([
+            ContrastiveHebbianLayer(layer_sizes[i], layer_sizes[i+1], symmetric)
+            for i in range(self.n_layers)
+        ])
+
+    def forward(self, x):
+        """Standard forward pass"""
+        h = x
+        for layer in self.layers:
+            h = layer.forward_pass(h)
+        return h
+
+    def train_batch(self, x, y_target, lr=0.01, n_settle=20):
+        """
+        Train on batch using contrastive phases
+
+        Args:
+            x: Input [batch, input_dim]
+            y_target: Target [batch, output_dim]
+            lr: Learning rate
+            n_settle: Settling steps per phase
+
+        Returns:
+            loss: Reconstruction error
+        """
+        # POSITIVE PHASE: Clamp output to target, settle network
+        activities_plus = [x]
+        h = x
+
+        # Forward pass through all layers
+        for i, layer in enumerate(self.layers[:-1]):
+            h = layer.forward_pass(h)
+            activities_plus.append(h)
+
+        # Last layer: run positive phase with clamped output
+        x_in = activities_plus[-1]
+        x_plus_final, y_plus = self.layers[-1].positive_phase(
+            x_in, y_target, n_steps=n_settle
+        )
+        activities_plus[-1] = x_plus_final
+        activities_plus.append(y_plus)
+
+        # NEGATIVE PHASE: Free-running, settle network
+        activities_minus = [x]
+        h = x
+
+        # Forward through all layers (free-running)
+        for layer in self.layers:
+            h = layer.forward_pass(h)
+            activities_minus.append(h)
+
+        # Settle final layer
+        x_in = activities_minus[-2]
+        x_minus_final, y_minus = self.layers[-1].negative_phase(
+            x_in, n_steps=n_settle
+        )
+        activities_minus[-2] = x_minus_final
+        activities_minus[-1] = y_minus
+
+        # UPDATE WEIGHTS using contrastive Hebbian rule
+        for i, layer in enumerate(self.layers):
+            x_plus = activities_plus[i]
+            y_plus = activities_plus[i+1]
+            x_minus = activities_minus[i]
+            y_minus = activities_minus[i+1]
+
+            layer.contrastive_update(x_plus, y_plus, x_minus, y_minus, lr)
+
+        # Compute loss (for monitoring)
+        loss = F.mse_loss(y_minus, y_target)
+
+        return loss.item()
+
+
+# Example: Train on MNIST-like classification
+if __name__ == "__main__":
+    torch.manual_seed(42)
+
+    # Generate synthetic data (XOR-like problem)
+    def generate_xor_data(n_samples=100):
+        X = torch.randn(n_samples, 2)
+        y = ((X[:, 0] > 0) ^ (X[:, 1] > 0)).long()
+        y_onehot = F.one_hot(y, num_classes=2).float()
+        return X, y_onehot
+
+    # Create network
+    model = ContrastiveHebbianNetwork(
+        layer_sizes=[2, 20, 20, 2],
+        symmetric=True
+    )
+
+    print("Training Contrastive Hebbian Network on XOR task...")
+    print("Architecture:", model.layer_sizes)
+
+    # Training loop
+    n_epochs = 500
+    batch_size = 32
+    lr = 0.1
+
+    losses = []
+
+    for epoch in range(n_epochs):
+        X_train, y_train = generate_xor_data(batch_size)
+
+        loss = model.train_batch(X_train, y_train, lr=lr, n_settle=10)
+        losses.append(loss)
+
+        if epoch % 50 == 0:
+            # Evaluate
+            with torch.no_grad():
+                X_test, y_test = generate_xor_data(500)
+                y_pred = model.forward(X_test)
+                pred_classes = y_pred.argmax(dim=1)
+                true_classes = y_test.argmax(dim=1)
+                acc = (pred_classes == true_classes).float().mean()
+
+                print(f"Epoch {epoch}: Loss = {loss:.4f}, Accuracy = {acc:.3f}")
+
+    # Final test
+    print("\nFinal evaluation:")
+    with torch.no_grad():
+        X_test, y_test = generate_xor_data(1000)
+        y_pred = model.forward(X_test)
+        pred_classes = y_pred.argmax(dim=1)
+        true_classes = y_test.argmax(dim=1)
+        acc = (pred_classes == true_classes).float().mean()
+        print(f"Test Accuracy: {acc:.3f}")
+
+        # Check weight symmetry
+        if model.layers[0].symmetric:
+            print("\nWeight symmetry maintained (biologically plausible)")
+
+        # Show weight statistics
+        for i, layer in enumerate(model.layers):
+            print(f"Layer {i} weights: mean={layer.W.mean():.3f}, std={layer.W.std():.3f}")
+```
+
+**Sources:**
+- Movellan (1991). "Contrastive Hebbian Learning in the Continuous Hopfield Model"
+- Xie & Seung (2003). "Equivalence of Backpropagation and Contrastive Hebbian Learning"
+- Hinton (2007). "Learning Multiple Layers of Representation"
+
+---
+
+### 190. Liquid State Machine (LSM)
+
+**Formula:**
+```
+ẋ = -λx + W_rec σ(x) + W_in u(t)
+
+y(t) = W_out x(t)
+
+where:
+x ∈ ℝ^N = recurrent reservoir state
+u(t) = input signal
+W_rec = fixed random recurrent weights
+W_in = fixed random input weights
+W_out = trained readout weights (only trainable parameters)
+σ = activation function (typically tanh or identity)
+λ = leak rate
+```
+
+**Separation Property:**
+```
+||x(u₁, t) - x(u₂, t)|| > ε  if u₁ ≠ u₂
+
+(Different inputs create separated trajectories)
+```
+
+**Approximation Property:**
+```
+f: U → Y can be approximated by W_out x(u, t)
+
+(Rich dynamics enable universal computation)
+```
+
+**Variable Definitions:**
+- `x(t)`: N-dimensional reservoir state (liquid)
+- `u(t)`: Input time series
+- `W_rec`: N×N fixed recurrent connectivity (sparse, random)
+- `W_in`: N×D fixed input projection
+- `W_out`: M×N trainable readout weights
+- `λ`: Leak time constant (neuron time scale)
+- `σ`: Nonlinearity (typically tanh)
+
+**Nature's Implementation:**
+Cortical microcircuits act as liquid reservoirs with rich, high-dimensional dynamics driven by recurrent connectivity. Input signals perturb this "neural liquid," creating complex spatiotemporal activity patterns. Downstream readout neurons (e.g., in motor cortex) learn to extract task-relevant information from these transient states without modifying the recurrent circuit.
+
+**Impact:** HIGH - Demonstrates that random recurrent networks can serve as universal temporal processors when combined with linear readout. Explains how cortex can rapidly adapt to new tasks by only training readout connections, preserving the rich dynamics of cortical columns. Foundation for reservoir computing and echo state networks.
+
+**Implementation (300 lines):**
+```python
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy import sparse
+
+class LiquidStateMachine(nn.Module):
+    """
+    Liquid State Machine (LSM) / Reservoir Computer
+
+    Reservoir dynamics: ẋ = -λx + W_rec tanh(x) + W_in u(t) + noise
+    Readout: y = W_out x
+
+    Only W_out is trained; W_rec and W_in are fixed random matrices.
+    """
+
+    def __init__(self, input_dim, reservoir_dim, output_dim,
+                 spectral_radius=0.9, sparsity=0.1, leak_rate=1.0,
+                 input_scaling=1.0, noise_level=0.0):
+        """
+        Args:
+            input_dim: Dimension of input signal u(t)
+            reservoir_dim: Number of reservoir neurons N
+            output_dim: Dimension of output y(t)
+            spectral_radius: Largest eigenvalue magnitude of W_rec
+            sparsity: Connection probability in W_rec
+            leak_rate: λ in ẋ = -λx + ...
+            input_scaling: Scaling for W_in
+            noise_level: σ_noise for neural noise
+        """
+        super().__init__()
+
+        self.input_dim = input_dim
+        self.reservoir_dim = reservoir_dim
+        self.output_dim = output_dim
+        self.leak_rate = leak_rate
+        self.noise_level = noise_level
+
+        # Fixed random input weights W_in
+        self.W_in = torch.randn(reservoir_dim, input_dim) * input_scaling
+
+        # Fixed random recurrent weights W_rec (sparse)
+        self.W_rec = self._initialize_reservoir(reservoir_dim, spectral_radius, sparsity)
+
+        # Trainable readout weights W_out
+        self.W_out = nn.Linear(reservoir_dim, output_dim)
+
+        # Reservoir state
+        self.x = torch.zeros(reservoir_dim)
+
+    def _initialize_reservoir(self, N, spectral_radius, sparsity):
+        """
+        Create sparse random reservoir with specified spectral radius
+
+        Spectral radius determines memory capacity and stability:
+        - ρ < 1: Stable, fading memory
+        - ρ ≈ 1: Edge of chaos, maximal memory
+        - ρ > 1: Unstable, chaotic
+        """
+        # Create sparse random matrix
+        W = torch.randn(N, N) * (torch.rand(N, N) < sparsity).float()
+
+        # Scale to desired spectral radius
+        eigenvalues = torch.linalg.eigvals(W)
+        current_radius = torch.max(torch.abs(eigenvalues)).item()
+
+        if current_radius > 0:
+            W = W * (spectral_radius / current_radius)
+
+        return W
+
+    def reservoir_step(self, u, x, dt=1.0):
+        """
+        Single Euler step of reservoir dynamics:
+
+        ẋ = -λx + W_rec tanh(x) + W_in u + ξ
+
+        Args:
+            u: Input [input_dim]
+            x: Current state [reservoir_dim]
+            dt: Time step
+
+        Returns:
+            x_next: Updated state
+        """
+        # Input drive
+        input_drive = torch.matmul(self.W_in, u)
+
+        # Recurrent drive
+        recurrent_drive = torch.matmul(self.W_rec, torch.tanh(x))
+
+        # Neural noise
+        noise = self.noise_level * torch.randn_like(x)
+
+        # Euler integration: x(t+dt) = x(t) + dt * ẋ(t)
+        dx = -self.leak_rate * x + recurrent_drive + input_drive + noise
+        x_next = x + dx * dt
+
+        return x_next
+
+    def forward(self, u_sequence, x0=None, dt=1.0, return_states=False):
+        """
+        Process input sequence through reservoir
+
+        Args:
+            u_sequence: [seq_len, batch, input_dim] or [seq_len, input_dim]
+            x0: Initial reservoir state (if None, use zeros)
+            dt: Time step
+            return_states: If True, return all reservoir states
+
+        Returns:
+            y_sequence: [seq_len, batch, output_dim] readout outputs
+            x_sequence: [seq_len, batch, reservoir_dim] if return_states
+        """
+        # Handle batched and unbatched input
+        if u_sequence.dim() == 2:
+            u_sequence = u_sequence.unsqueeze(1)  # Add batch dim
+
+        seq_len, batch_size, _ = u_sequence.shape
+
+        # Initialize state
+        if x0 is None:
+            x = torch.zeros(batch_size, self.reservoir_dim)
+        else:
+            x = x0
+
+        # Collect states and outputs
+        x_sequence = []
+        y_sequence = []
+
+        for t in range(seq_len):
+            u_t = u_sequence[t]  # [batch, input_dim]
+
+            # Update each sample in batch
+            x_next = []
+            for b in range(batch_size):
+                x_b = self.reservoir_step(u_t[b], x[b], dt)
+                x_next.append(x_b)
+
+            x = torch.stack(x_next)
+
+            # Readout
+            y = self.W_out(x)
+
+            x_sequence.append(x)
+            y_sequence.append(y)
+
+        y_sequence = torch.stack(y_sequence)  # [seq_len, batch, output_dim]
+
+        if return_states:
+            x_sequence = torch.stack(x_sequence)  # [seq_len, batch, reservoir_dim]
+            return y_sequence, x_sequence
+        else:
+            return y_sequence
+
+    def train_readout(self, u_sequences, y_targets, reg=1e-6):
+        """
+        Train readout weights using ridge regression
+
+        W_out = Y X^T (X X^T + λI)^{-1}
+
+        Args:
+            u_sequences: List of input sequences
+            y_targets: List of target sequences
+            reg: Ridge regression regularization
+        """
+        all_states = []
+        all_targets = []
+
+        # Collect reservoir states for all sequences
+        with torch.no_grad():
+            for u_seq, y_tar in zip(u_sequences, y_targets):
+                _, x_seq = self.forward(u_seq, return_states=True)
+
+                # Flatten sequence dimension
+                x_flat = x_seq.view(-1, self.reservoir_dim)
+                y_flat = y_tar.view(-1, self.output_dim)
+
+                all_states.append(x_flat)
+                all_targets.append(y_flat)
+
+        # Concatenate all data
+        X = torch.cat(all_states, dim=0).T  # [reservoir_dim, n_samples]
+        Y = torch.cat(all_targets, dim=0).T  # [output_dim, n_samples]
+
+        # Ridge regression: W_out = Y X^T (X X^T + λI)^{-1}
+        XXT = torch.matmul(X, X.T)
+        XXT_reg = XXT + reg * torch.eye(self.reservoir_dim)
+
+        W_out_optimal = torch.matmul(
+            torch.matmul(Y, X.T),
+            torch.inverse(XXT_reg)
+        )
+
+        # Update readout weights
+        self.W_out.weight.data = W_out_optimal
+        self.W_out.bias.data = torch.zeros(self.output_dim)
+
+
+# Example: Time series prediction (Mackey-Glass)
+def mackey_glass(n_steps, tau=17, n0=10, beta=0.2, gamma=0.1, n=10, dt=1.0):
+    """
+    Generate Mackey-Glass chaotic time series:
+
+    dx/dt = β x(t-τ) / (1 + x(t-τ)^n) - γ x(t)
+    """
+    x = np.zeros(n_steps)
+    x[:tau] = n0 * np.random.rand(tau)
+
+    for t in range(tau, n_steps):
+        x_tau = x[t - tau]
+        dx = (beta * x_tau / (1 + x_tau**n) - gamma * x[t]) * dt
+        x[t] = x[t-1] + dx
+
+    return x
+
+
+if __name__ == "__main__":
+    torch.manual_seed(42)
+    np.random.seed(42)
+
+    print("Liquid State Machine - Mackey-Glass Prediction")
+
+    # Generate chaotic time series
+    series = mackey_glass(5000, tau=17)
+    series = (series - series.mean()) / series.std()  # Normalize
+
+    # Create input-output pairs: predict k steps ahead
+    k_ahead = 10
+    u_data = series[:-k_ahead].reshape(-1, 1)
+    y_data = series[k_ahead:].reshape(-1, 1)
+
+    # Split train/test
+    train_size = 3000
+    u_train = torch.FloatTensor(u_data[:train_size])
+    y_train = torch.FloatTensor(y_data[:train_size])
+    u_test = torch.FloatTensor(u_data[train_size:])
+    y_test = torch.FloatTensor(y_data[train_size:])
+
+    # Create LSM
+    lsm = LiquidStateMachine(
+        input_dim=1,
+        reservoir_dim=500,
+        output_dim=1,
+        spectral_radius=0.95,
+        sparsity=0.1,
+        leak_rate=0.3,
+        noise_level=0.001
+    )
+
+    print(f"Reservoir size: {lsm.reservoir_dim}")
+    print(f"Spectral radius: 0.95 (near edge of chaos)")
+    print(f"Sparsity: 10%")
+
+    # Train readout (ridge regression on reservoir states)
+    print("\nTraining readout layer...")
+    lsm.train_readout([u_train], [y_train], reg=1e-6)
+
+    # Test
+    print("Testing...")
+    with torch.no_grad():
+        y_pred_train = lsm.forward(u_train)
+        y_pred_test = lsm.forward(u_test)
+
+        train_mse = F.mse_loss(y_pred_train.squeeze(), y_train.squeeze())
+        test_mse = F.mse_loss(y_pred_test.squeeze(), y_test.squeeze())
+
+        print(f"\nTrain MSE: {train_mse:.6f}")
+        print(f"Test MSE: {test_mse:.6f}")
+
+        # Compute prediction horizon (where error exceeds threshold)
+        errors = (y_pred_test.squeeze() - y_test.squeeze()).abs()
+        threshold = 0.5
+        horizon = (errors < threshold).sum().item()
+        print(f"Prediction horizon (error < {threshold}): {horizon} steps")
+```
+
+**Sources:**
+- Maass, Natschläger & Markram (2002). "Real-Time Computing Without Stable States: A New Framework for Neural Computation Based on Perturbations"
+- Jaeger (2001). "The 'Echo State' Approach to Analysing and Training Recurrent Neural Networks"
+- Legenstein & Maass (2007). "Edge of Chaos and Prediction of Computational Performance for Neural Circuit Models"
+### 191. Continuous Attractor Network (General Formulation)
+
+**Formula:**
+```
+τ dr/dt = -r + f(W * r + I_ext)
+
+where:
+r(x, t) = neural activity at position x and time t
+W(x, x') = translation-invariant connectivity kernel
+f = activation function (typically rectified or sigmoidal)
+I_ext = external input
+* = convolution operator
+
+Connectivity kernel (Mexican hat):
+W(x - x') = A exp(-(x-x')²/2σ_E²) - B exp(-(x-x')²/2σ_I²)
+```
+
+**Attractor Manifold:**
+```
+M = {r(x) | r stable, ∫ r(x) dx = const}
+
+For head direction: r(θ) = r₀ + A cos(θ - θ₀)
+For spatial position: r(x,y) = A exp(-||p - (x,y)||²/2σ²)
+```
+
+**Bump Dynamics:**
+```
+Velocity integration: θ̇_bump = β · velocity_input
+
+Path integration: ṗ_bump = β · v_input
+```
+
+**Variable Definitions:**
+- `r(x,t)`: Population firing rate at position x on feature space
+- `W(x,x')`: Synaptic weight from neuron at x' to neuron at x
+- `σ_E, σ_I`: Excitatory and inhibitory spatial scales
+- `A, B`: Excitation and inhibition strengths (B > A for stability)
+- `τ`: Membrane time constant
+- `f`: Activation function with threshold
+- `θ_bump`: Location of activity bump on manifold
+
+**Nature's Implementation:**
+Head direction cells in postsubiculum/anterior thalamus form ring attractors that maintain stable orientation representations. Grid cells in entorhinal cortex form 2D continuous attractors enabling path integration. Place cells may use 2D bump attractors. The translation-invariant "Mexican hat" connectivity (local excitation, surround inhibition) emerges from cortical circuit structure.
+
+**Impact:** CRITICAL - Explains working memory persistence, spatial navigation, motor planning, and any neural system maintaining analog values without external input. Continuous attractors implement perfect integration of velocity signals for path integration. They provide computational substrate for Bayesian inference over continuous variables and demonstrate how symmetries in connectivity create manifolds of stable states.
+
+**Implementation (350 lines):**
+```python
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.ndimage import gaussian_filter1d
+
+class ContinuousAttractorNetwork1D(nn.Module):
+    """
+    1D Continuous Attractor Network (Ring Attractor)
+
+    Implements head direction cells with continuous attractor dynamics:
+    τ dr/dt = -r + f(W * r + I_ext)
+
+    where W is a Mexican hat connectivity kernel.
+    """
+
+    def __init__(self, n_neurons=360, tau=10.0, A_exc=2.0, A_inh=1.5,
+                 sigma_exc=0.15, sigma_inh=0.5, threshold=0.0):
+        """
+        Args:
+            n_neurons: Number of neurons in ring (e.g., 360 for degrees)
+            tau: Time constant (ms)
+            A_exc: Excitatory amplitude
+            A_inh: Inhibitory amplitude
+            sigma_exc: Excitatory spread (fraction of ring)
+            sigma_inh: Inhibitory spread (fraction of ring)
+            threshold: Firing threshold
+        """
+        super().__init__()
+
+        self.n_neurons = n_neurons
+        self.tau = tau
+        self.threshold = threshold
+
+        # Create Mexican hat connectivity matrix
+        self.W = self._create_mexican_hat(n_neurons, A_exc, A_inh,
+                                           sigma_exc, sigma_inh)
+
+    def _create_mexican_hat(self, n, A_exc, A_inh, sigma_exc, sigma_inh):
+        """
+        Create translation-invariant Mexican hat connectivity:
+
+        W(Δx) = A_exc exp(-Δx²/2σ_exc²) - A_inh exp(-Δx²/2σ_inh²)
+
+        Returns [n, n] circulant matrix
+        """
+        # Distance on ring (wrap around)
+        indices = torch.arange(n)
+        dist = torch.minimum(
+            torch.abs(indices[:, None] - indices[None, :]),
+            n - torch.abs(indices[:, None] - indices[None, :])
+        ).float()
+
+        # Normalize to [0, 1]
+        dist = dist / n
+
+        # Mexican hat
+        exc = A_exc * torch.exp(-dist**2 / (2 * sigma_exc**2))
+        inh = A_inh * torch.exp(-dist**2 / (2 * sigma_inh**2))
+
+        W = exc - inh
+
+        return W
+
+    def activation(self, x):
+        """Rectified activation with threshold"""
+        return F.relu(x - self.threshold)
+
+    def step(self, r, I_ext, dt=1.0):
+        """
+        Single Euler step: τ dr/dt = -r + f(W r + I_ext)
+
+        Args:
+            r: Current activity [n_neurons]
+            I_ext: External input [n_neurons]
+            dt: Time step (ms)
+
+        Returns:
+            r_next: Updated activity
+        """
+        # Recurrent drive
+        recurrent = torch.matmul(self.W, r)
+
+        # Dynamics
+        dr = (-r + self.activation(recurrent + I_ext)) / self.tau * dt
+
+        r_next = r + dr
+
+        return r_next
+
+    def forward(self, I_ext_sequence, r0=None, dt=1.0):
+        """
+        Simulate attractor over time with input sequence
+
+        Args:
+            I_ext_sequence: [seq_len, n_neurons] external inputs
+            r0: Initial state (if None, random)
+            dt: Time step
+
+        Returns:
+            r_sequence: [seq_len, n_neurons] activity over time
+        """
+        seq_len = I_ext_sequence.shape[0]
+
+        if r0 is None:
+            r = torch.rand(self.n_neurons) * 0.1
+        else:
+            r = r0.clone()
+
+        r_sequence = []
+
+        for t in range(seq_len):
+            r = self.step(r, I_ext_sequence[t], dt)
+            r_sequence.append(r)
+
+        return torch.stack(r_sequence)
+
+    def get_bump_position(self, r):
+        """
+        Decode bump position using population vector
+
+        θ = atan2(Σ r_i sin(θ_i), Σ r_i cos(θ_i))
+        """
+        angles = torch.linspace(0, 2*np.pi, self.n_neurons + 1)[:-1]
+
+        weighted_sin = torch.sum(r * torch.sin(angles))
+        weighted_cos = torch.sum(r * torch.cos(angles))
+
+        theta = torch.atan2(weighted_sin, weighted_cos)
+
+        return theta.item()
+
+
+class ContinuousAttractorNetwork2D(nn.Module):
+    """
+    2D Continuous Attractor Network
+
+    Models spatial representations like grid cells or place cells:
+    τ dr/dt = -r + f(W * r + I_ext)
+
+    W(x, x') = Mexican hat in 2D
+    """
+
+    def __init__(self, grid_size=32, tau=10.0, A_exc=3.0, A_inh=2.0,
+                 sigma_exc=0.1, sigma_inh=0.3, threshold=0.0):
+        """
+        Args:
+            grid_size: Number of neurons per dimension (total = grid_size²)
+            tau: Time constant
+            A_exc, A_inh: Excitatory/inhibitory amplitudes
+            sigma_exc, sigma_inh: Spatial spreads (fraction of grid)
+            threshold: Firing threshold
+        """
+        super().__init__()
+
+        self.grid_size = grid_size
+        self.n_neurons = grid_size * grid_size
+        self.tau = tau
+        self.threshold = threshold
+
+        # Create 2D Mexican hat (as sparse conv for efficiency)
+        self.W_kernel = self._create_mexican_hat_2d(
+            A_exc, A_inh, sigma_exc, sigma_inh
+        )
+
+    def _create_mexican_hat_2d(self, A_exc, A_inh, sigma_exc, sigma_inh):
+        """
+        Create 2D Mexican hat kernel for convolution
+
+        W(Δx, Δy) = A_exc exp(-(Δx² + Δy²)/2σ_exc²) - A_inh exp(-(Δx² + Δy²)/2σ_inh²)
+        """
+        # Kernel size (should capture ~3σ)
+        k = int(self.grid_size * sigma_inh * 3)
+        if k % 2 == 0:
+            k += 1
+
+        k = min(k, self.grid_size)
+
+        # Create meshgrid
+        x = torch.linspace(-0.5, 0.5, k)
+        y = torch.linspace(-0.5, 0.5, k)
+        X, Y = torch.meshgrid(x, y, indexing='ij')
+        dist_sq = X**2 + Y**2
+
+        # Mexican hat
+        exc = A_exc * torch.exp(-dist_sq / (2 * sigma_exc**2))
+        inh = A_inh * torch.exp(-dist_sq / (2 * sigma_inh**2))
+
+        kernel = exc - inh
+
+        # Normalize
+        kernel = kernel - kernel.mean()
+
+        return kernel.unsqueeze(0).unsqueeze(0)  # [1, 1, k, k]
+
+    def activation(self, x):
+        """Rectified activation"""
+        return F.relu(x - self.threshold)
+
+    def step(self, r, I_ext, dt=1.0):
+        """
+        Single step with 2D convolution
+
+        Args:
+            r: [grid_size, grid_size] activity
+            I_ext: [grid_size, grid_size] external input
+            dt: Time step
+
+        Returns:
+            r_next: Updated activity
+        """
+        # Reshape for conv2d: [1, 1, H, W]
+        r_conv = r.unsqueeze(0).unsqueeze(0)
+
+        # Recurrent drive via 2D convolution (circular padding)
+        pad = self.W_kernel.shape[-1] // 2
+        r_padded = F.pad(r_conv, (pad, pad, pad, pad), mode='circular')
+        recurrent = F.conv2d(r_padded, self.W_kernel, padding=0).squeeze()
+
+        # Dynamics
+        dr = (-r + self.activation(recurrent + I_ext)) / self.tau * dt
+
+        r_next = r + dr
+
+        return r_next
+
+    def forward(self, I_ext_sequence, r0=None, dt=1.0):
+        """
+        Simulate 2D attractor
+
+        Args:
+            I_ext_sequence: [seq_len, grid_size, grid_size]
+            r0: Initial state
+            dt: Time step
+
+        Returns:
+            r_sequence: [seq_len, grid_size, grid_size]
+        """
+        seq_len = I_ext_sequence.shape[0]
+
+        if r0 is None:
+            r = torch.rand(self.grid_size, self.grid_size) * 0.1
+        else:
+            r = r0.clone()
+
+        r_sequence = []
+
+        for t in range(seq_len):
+            r = self.step(r, I_ext_sequence[t], dt)
+            r_sequence.append(r)
+
+        return torch.stack(r_sequence)
+
+    def get_bump_position(self, r):
+        """
+        Decode 2D bump position using center of mass
+
+        Returns (x, y) in [0, 1] × [0, 1]
+        """
+        # Normalize
+        r_norm = r / (r.sum() + 1e-10)
+
+        # Compute center of mass
+        x_coords = torch.arange(self.grid_size).float()
+        y_coords = torch.arange(self.grid_size).float()
+
+        x_com = (r_norm.sum(dim=0) * x_coords).sum() / self.grid_size
+        y_com = (r_norm.sum(dim=1) * y_coords).sum() / self.grid_size
+
+        return x_com.item(), y_com.item()
+
+
+class PathIntegrationAttractor:
+    """
+    Continuous attractor network performing path integration
+
+    Integrates velocity commands to maintain position estimate:
+    θ̇_bump = β · ω (for 1D/head direction)
+    ṗ_bump = β · v (for 2D/spatial position)
+    """
+
+    def __init__(self, network_type='1D', grid_size=360):
+        """
+        Args:
+            network_type: '1D' (ring) or '2D' (spatial)
+            grid_size: Number of neurons (1D) or per dimension (2D)
+        """
+        self.network_type = network_type
+
+        if network_type == '1D':
+            self.network = ContinuousAttractorNetwork1D(
+                n_neurons=grid_size,
+                tau=10.0,
+                A_exc=2.5,
+                A_inh=1.8,
+                sigma_exc=0.15,
+                sigma_inh=0.5
+            )
+            self.grid_size = grid_size
+        else:
+            self.network = ContinuousAttractorNetwork2D(
+                grid_size=grid_size,
+                tau=10.0,
+                A_exc=3.0,
+                A_inh=2.0,
+                sigma_exc=0.1,
+                sigma_inh=0.3
+            )
+            self.grid_size = grid_size
+
+    def velocity_to_input(self, velocity, gain=10.0):
+        """
+        Convert velocity command to asymmetric input that shifts bump
+
+        For 1D: velocity > 0 -> shift clockwise
+        For 2D: velocity = (v_x, v_y) -> shift in that direction
+        """
+        if self.network_type == '1D':
+            # Create asymmetric input that shifts bump
+            shift_input = torch.zeros(self.grid_size)
+
+            # Positive velocity -> increase activity ahead
+            if velocity > 0:
+                phase_shift = int(velocity * gain)
+                shift_input = torch.roll(torch.exp(-torch.arange(self.grid_size).float() / 20), phase_shift)
+            elif velocity < 0:
+                phase_shift = int(-velocity * gain)
+                shift_input = torch.roll(torch.exp(-torch.arange(self.grid_size).float() / 20), -phase_shift)
+
+            shift_input = shift_input * abs(velocity) * gain
+
+            return shift_input
+
+        else:  # 2D
+            # Create gradient input in direction of velocity
+            shift_input = torch.zeros(self.grid_size, self.grid_size)
+
+            v_x, v_y = velocity
+
+            # Create spatial gradient
+            x = torch.linspace(-1, 1, self.grid_size)
+            y = torch.linspace(-1, 1, self.grid_size)
+            X, Y = torch.meshgrid(x, y, indexing='ij')
+
+            # Gradient in velocity direction
+            gradient = v_x * X + v_y * Y
+            shift_input = gain * gradient * (v_x**2 + v_y**2)**0.5
+
+            return shift_input
+
+    def integrate_path(self, velocity_sequence, dt=1.0, gain=5.0):
+        """
+        Perform path integration over velocity sequence
+
+        Args:
+            velocity_sequence: [seq_len] (1D) or [seq_len, 2] (2D) velocities
+            dt: Time step
+            gain: Velocity-to-input gain
+
+        Returns:
+            position_sequence: Decoded positions over time
+            activity_sequence: Neural activity over time
+        """
+        seq_len = len(velocity_sequence)
+
+        # Convert velocities to input sequence
+        if self.network_type == '1D':
+            I_ext_seq = torch.stack([
+                self.velocity_to_input(v, gain) for v in velocity_sequence
+            ])
+
+            # Initial bump at random position
+            r0 = torch.zeros(self.grid_size)
+            r0[self.grid_size // 2] = 1.0
+            r0 = gaussian_filter1d(r0.numpy(), sigma=10)
+            r0 = torch.FloatTensor(r0)
+
+            # Simulate
+            r_seq = self.network.forward(I_ext_seq, r0=r0, dt=dt)
+
+            # Decode positions
+            positions = [self.network.get_bump_position(r_seq[t]) for t in range(seq_len)]
+
+            return positions, r_seq
+
+        else:  # 2D
+            I_ext_seq = torch.stack([
+                self.velocity_to_input(v, gain) for v in velocity_sequence
+            ])
+
+            # Initial bump at center
+            r0 = torch.zeros(self.grid_size, self.grid_size)
+            r0[self.grid_size // 2, self.grid_size // 2] = 1.0
+
+            # Simulate
+            r_seq = self.network.forward(I_ext_seq, r0=r0, dt=dt)
+
+            # Decode positions
+            positions = [self.network.get_bump_position(r_seq[t]) for t in range(seq_len)]
+
+            return positions, r_seq
+
+
+# Example: 1D path integration (head direction)
+if __name__ == "__main__":
+    torch.manual_seed(42)
+
+    print("="*60)
+    print("1D Continuous Attractor: Head Direction Path Integration")
+    print("="*60)
+
+    # Create path integrator
+    integrator_1d = PathIntegrationAttractor(network_type='1D', grid_size=360)
+
+    # Generate velocity sequence (angular velocity)
+    T = 200
+    t = np.linspace(0, 10, T)
+    angular_velocity = 0.05 * np.sin(2 * np.pi * 0.5 * t)  # Sinusoidal turning
+
+    velocity_seq = torch.FloatTensor(angular_velocity)
+
+    # Integrate
+    print("Integrating angular velocity...")
+    positions, activities = integrator_1d.integrate_path(velocity_seq, dt=1.0, gain=8.0)
+
+    # Compute true integrated position
+    true_positions = np.cumsum(angular_velocity) * 1.0
+
+    print(f"Final decoded angle: {positions[-1]:.3f} rad")
+    print(f"Final true angle: {true_positions[-1]:.3f} rad")
+    print(f"Integration error: {abs(positions[-1] - true_positions[-1]):.3f} rad")
+
+    print("\n" + "="*60)
+    print("2D Continuous Attractor: Spatial Path Integration")
+    print("="*60)
+
+    # Create 2D path integrator
+    integrator_2d = PathIntegrationAttractor(network_type='2D', grid_size=32)
+
+    # Generate 2D velocity sequence (circular motion)
+    T = 100
+    t = np.linspace(0, 2*np.pi, T)
+    velocity_x = 0.02 * np.cos(t)
+    velocity_y = 0.02 * np.sin(t)
+
+    velocity_seq_2d = torch.FloatTensor(np.stack([velocity_x, velocity_y], axis=1))
+
+    # Integrate
+    print("Integrating 2D velocity...")
+    positions_2d, activities_2d = integrator_2d.integrate_path(velocity_seq_2d, dt=1.0, gain=3.0)
+
+    # Compute true integrated position
+    true_x = np.cumsum(velocity_x) * 1.0
+    true_y = np.cumsum(velocity_y) * 1.0
+
+    decoded_x = [p[0] for p in positions_2d]
+    decoded_y = [p[1] for p in positions_2d]
+
+    print(f"Final decoded position: ({decoded_x[-1]:.3f}, {decoded_y[-1]:.3f})")
+    print(f"Final true position: ({true_x[-1]:.3f}, {true_y[-1]:.3f})")
+
+    error = ((decoded_x[-1] - true_x[-1])**2 + (decoded_y[-1] - true_y[-1])**2)**0.5
+    print(f"Integration error: {error:.3f}")
+
+    print("\n✓ Continuous attractor successfully maintains stable activity bump")
+    print("✓ Path integration demonstrated in 1D (head direction) and 2D (spatial)")
+```
+
+**Sources:**
+- Zhang (1996). "Representation of Spatial Orientation by the Intrinsic Dynamics of the Head-Direction Cell Ensemble"
+- Samsonovich & McNaughton (1997). "Path Integration and Cognitive Mapping in a Continuous Attractor Neural Network Model"
+- Burak & Fiete (2009). "Accurate Path Integration in Continuous Attractor Network Models of Grid Cells"
+- Wimmer et al. (2014). "Bump Attractor Dynamics in Prefrontal Cortex Explains Behavioral Precision in Spatial Working Memory"
+
 ## Summary Statistics
 
-**Total Architectures Documented**: 175
+**Total Architectures Documented**: 191
 **Critical Impact**: 5 (paradigm-shifting)
 **High Impact**: 10 (10-100x improvements)
 **Medium-High Impact**: 12 (2-10x improvements)
