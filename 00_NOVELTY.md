@@ -1,7 +1,7 @@
 # Novel Biological AI Architectures - Complete Catalog
 
 **Compiled**: 2025-12-11
-**Total Architectures**: 113+
+**Total Architectures**: 117
 **Organization**: Ordered by AI Impact (Highest → Lowest)
 
 ---
@@ -12,7 +12,7 @@ These architectures fundamentally change how AI systems are designed and operate
 
 ---
 
-### 1. Mechanism-Driven Architecture (MDA)
+### Mechanism-Driven Architecture (MDA)
 
 **Purpose**: Replace hand-coded networks with dynamically-assembled cognitive systems derived from biological mechanisms.
 
@@ -72,7 +72,7 @@ class MechanismDrivenArchitecture:
 
 ---
 
-### 2. Self-Learning Brain (Gene Expression Meta-Layer)
+### Self-Learning Brain (Gene Expression Meta-Layer)
 
 **Purpose**: Hyperparameters evolve via gene-expression-like dynamics instead of being static.
 
@@ -142,7 +142,7 @@ class GeneExpressionMetaController:
 
 ---
 
-### 3. Predictive Coding Hierarchy
+### Predictive Coding Hierarchy
 
 **Purpose**: Replace feedforward + backprop with bidirectional error minimization.
 
@@ -207,7 +207,7 @@ class PredictiveCodingLayer(nn.Module):
 
 ---
 
-### 4. Global Workspace Theory (Conscious AI)
+### Global Workspace Theory (Conscious AI)
 
 **Purpose**: Multiple unconscious processors compete for global broadcast—winner becomes "conscious" and shares with all.
 
@@ -284,7 +284,7 @@ class GlobalWorkspace:
 
 ---
 
-### 5. Multi-Compartment Dendritic Neurons
+### Multi-Compartment Dendritic Neurons
 
 **Purpose**: Neurons as small networks with spatial computation, not scalar activations.
 
@@ -371,7 +371,7 @@ These architectures provide 10-100x improvements in specific capabilities.
 
 ---
 
-### 6. MAPK Amplifying Cascade
+### MAPK Amplifying Cascade
 
 **Purpose**: Sequential amplification for rare event detection (1000x signal boost).
 
@@ -431,7 +431,7 @@ class CascadeStage(nn.Module):
 
 ---
 
-### 7. Goldbeter-Koshland Ultrasensitivity
+### Goldbeter-Koshland Ultrasensitivity
 
 **Purpose**: Switch-like responses without cooperativity—zero-order kinetics creates sharp thresholds.
 
@@ -491,7 +491,7 @@ class GoldbeterKoshlandAttention(nn.Module):
 
 ---
 
-### 8. Triplet STDP (Sequence Learning)
+### Triplet STDP (Sequence Learning)
 
 **Purpose**: Learn temporal sequences through spike-timing with frequency dependence.
 
@@ -576,7 +576,7 @@ class TripletSTDP(nn.Module):
 
 ---
 
-### 9. Voltage-Dependent STDP (Clopath Rule)
+### Voltage-Dependent STDP (Clopath Rule)
 
 **Purpose**: Plasticity driven by membrane voltage (realistic) rather than discrete spikes.
 
@@ -646,7 +646,7 @@ class ClopathSTDP(nn.Module):
 
 ---
 
-### 10. Dopamine-Modulated STDP (Reward Learning)
+### Dopamine-Modulated STDP (Reward Learning)
 
 **Purpose**: Eligibility traces gated by reward signal—solves credit assignment problem.
 
@@ -725,7 +725,7 @@ class DopamineModulatedSTDP(nn.Module):
 
 ---
 
-### 11. Calcium-Based Plasticity (Shouval Model)
+### Calcium-Based Plasticity (Shouval Model)
 
 **Purpose**: Unified LTP/LTD based on Ca²⁺ concentration thresholds.
 
@@ -802,7 +802,7 @@ class CalciumBasedPlasticity(nn.Module):
 
 ---
 
-### 12. Wilson-Cowan E-I Dynamics
+### Wilson-Cowan E-I Dynamics
 
 **Purpose**: Excitatory-inhibitory balance creates oscillations and stability.
 
@@ -883,7 +883,7 @@ class WilsonCowanLayer(nn.Module):
 
 ---
 
-### 13. Kuramoto Synchronization
+### Kuramoto Synchronization
 
 **Purpose**: Phase oscillators that synchronize—solves binding problem through temporal alignment.
 
@@ -958,7 +958,7 @@ These architectures provide 2-10x improvements or enable new capabilities.
 
 ---
 
-### 14. Metabolic Loss Function (65 Objectives)
+### Metabolic Loss Function (65 Objectives)
 
 **Purpose**: Multi-objective loss balancing 65 competing objectives simultaneously using thermodynamic potentials.
 
@@ -1041,7 +1041,7 @@ class MetabolicLoss(nn.Module):
 
 ---
 
-### 15. Hill Activation (Adaptive Cooperativity)
+### Hill Activation (Adaptive Cooperativity)
 
 **Purpose**: Learnable steepness activation function—sharp or smooth switching based on data.
 
@@ -1095,7 +1095,7 @@ class HillActivation(nn.Module):
 
 ---
 
-### 16. Michaelis-Menten Activation
+### Michaelis-Menten Activation
 
 **Purpose**: Saturation-based activation prevents explosive growth, automatic normalization.
 
@@ -1130,7 +1130,7 @@ class MichaelisMentenActivation(nn.Module):
 
 ---
 
-### 17. Energy-Aware Neurons (ATP Budgeting)
+### Energy-Aware Neurons (ATP Budgeting)
 
 **Purpose**: Neurons track ATP—can only fire if energy available. Automatic sparsity.
 
@@ -1180,7 +1180,7 @@ class EnergyAwareNeuron(nn.Module):
 
 ---
 
-### 18. Dual-Channel Neurons (Fast + Slow)
+### Dual-Channel Neurons (Fast + Slow)
 
 **Purpose**: Fast electrical pathway + slow modulatory channel for multi-timescale computation.
 
@@ -1223,7 +1223,7 @@ class DualChannelNeuron(nn.Module):
 
 ---
 
-### 19. Multi-Timescale Gate
+### Multi-Timescale Gate
 
 **Purpose**: Multiple gating variables with geometric time constant spacing (5ms, 50ms, 500ms).
 
@@ -1283,7 +1283,7 @@ class MultiTimescaleGate(nn.Module):
 
 ---
 
-### 20. Synaptic Convolution (Dual-Exponential Kernels)
+### Synaptic Convolution (Dual-Exponential Kernels)
 
 **Purpose**: Temporal convolution with realistic synaptic dynamics (rise + decay).
 
@@ -1335,7 +1335,7 @@ class SynapticConv1D(nn.Module):
 
 ---
 
-### 21. Leaky Residual Block (LIF-Inspired)
+### Leaky Residual Block (LIF-Inspired)
 
 **Purpose**: Leaky integrate-and-fire dynamics for residual connections.
 
@@ -1385,7 +1385,7 @@ class LeakyResidualBlock(nn.Module):
 
 ---
 
-### 22. BCM Learning Rule (Sliding Threshold)
+### BCM Learning Rule (Sliding Threshold)
 
 **Purpose**: Self-stabilizing unsupervised learning with activity-dependent threshold.
 
@@ -1439,7 +1439,7 @@ class BCMLayer(nn.Module):
 
 ---
 
-### 23. Oja's Rule (Automatic PCA)
+### Oja's Rule (Automatic PCA)
 
 **Purpose**: Hebbian learning with built-in normalization—extracts principal components.
 
@@ -1487,7 +1487,7 @@ These architectures excel in specific domains or scenarios.
 
 ---
 
-### 24. Boltzmann Gated Activation
+### Boltzmann Gated Activation
 
 **Purpose**: Voltage-gated channel kinetics for adaptive thresholds.
 
@@ -1522,7 +1522,7 @@ class BoltzmannActivation(nn.Module):
 
 ---
 
-### 25. Hodgkin-Huxley Alpha Function
+### Hodgkin-Huxley Alpha Function
 
 **Purpose**: Voltage-dependent gating variable dynamics.
 
@@ -1569,7 +1569,7 @@ class HodgkinHuxleyGate(nn.Module):
 
 ---
 
-### 26. Ion Channel Gating (m³h Dynamics)
+### Ion Channel Gating (m³h Dynamics)
 
 **Purpose**: Multi-variable gating with inactivation—complex temporal dynamics.
 
@@ -1629,7 +1629,7 @@ class IonChannelGate(nn.Module):
 
 ---
 
-### 27. GTPase Amplification Cycle
+### GTPase Amplification Cycle
 
 **Purpose**: Catalytic amplification—one GEF activates many GTPases.
 
@@ -1680,7 +1680,7 @@ class GTPaseAmplifier(nn.Module):
 
 ---
 
-### 28. IP3 Receptor (Calcium-Induced Calcium Release)
+### IP3 Receptor (Calcium-Induced Calcium Release)
 
 **Purpose**: Positive feedback amplification through CICR.
 
@@ -1731,7 +1731,7 @@ class IP3Receptor(nn.Module):
 
 ---
 
-### 29. SERCA Pump (Active Transport)
+### SERCA Pump (Active Transport)
 
 **Purpose**: ATP-driven calcium pumping with saturation.
 
@@ -1763,7 +1763,7 @@ class SERCAPump(nn.Module):
 
 ---
 
-### 30. Calmodulin Activation (Four Ca²⁺ Binding)
+### Calmodulin Activation (Four Ca²⁺ Binding)
 
 **Purpose**: Cooperative calcium sensor—4 Ca²⁺ bind with high cooperativity.
 
@@ -1794,7 +1794,7 @@ class Calmodulin(nn.Module):
 
 ---
 
-### 31. Synaptic Scaling (Homeostatic Plasticity)
+### Synaptic Scaling (Homeostatic Plasticity)
 
 **Purpose**: Global weight scaling to maintain target firing rate.
 
@@ -1832,7 +1832,7 @@ class SynapticScaling(nn.Module):
 
 ---
 
-### 32. Theta Neuron (Phase Representation)
+### Theta Neuron (Phase Representation)
 
 **Purpose**: Neurons as phase oscillators on unit circle.
 
@@ -1874,7 +1874,7 @@ class ThetaNeuron(nn.Module):
 
 ---
 
-### 33. PING Gamma Oscillations (E-I Loop)
+### PING Gamma Oscillations (E-I Loop)
 
 **Purpose**: Pyramidal-Interneuron gamma rhythm (40-80 Hz) for attention.
 
@@ -1935,7 +1935,7 @@ class PINGGamma(nn.Module):
 
 ---
 
-### 34. Goodwin Circadian Oscillator
+### Goodwin Circadian Oscillator
 
 **Purpose**: 24-hour rhythms from transcriptional feedback.
 
@@ -1986,7 +1986,7 @@ class GoodwinOscillator(nn.Module):
 
 ---
 
-### 35. Izhikevich Bursting Neuron
+### Izhikevich Bursting Neuron
 
 **Purpose**: Efficient spiking model with bursting dynamics.
 
@@ -2037,7 +2037,7 @@ class IzhikevichNeuron(nn.Module):
 
 ---
 
-### 36. Morris-Lecar Model
+### Morris-Lecar Model
 
 **Purpose**: 2D excitable system with limit cycles.
 
@@ -2087,7 +2087,7 @@ class MorrisLecarNeuron(nn.Module):
 
 ---
 
-### 37. Repressilator (Genetic Oscillator)
+### Repressilator (Genetic Oscillator)
 
 **Purpose**: Three-gene mutual repression creates oscillations.
 
@@ -2135,7 +2135,7 @@ class Repressilator(nn.Module):
 
 ---
 
-### 38. Drift-Diffusion Decision Model
+### Drift-Diffusion Decision Model
 
 **Purpose**: Evidence accumulation until threshold—explains reaction times.
 
@@ -2187,7 +2187,7 @@ class DriftDiffusionModel(nn.Module):
 
 ---
 
-### 39. Habit vs Goal Arbitration (Dual RL Systems)
+### Habit vs Goal Arbitration (Dual RL Systems)
 
 **Purpose**: Model-free (habits) vs model-based (planning) with reliability-weighted mixing.
 
@@ -2243,7 +2243,7 @@ class HabitGoalArbitration(nn.Module):
 
 ---
 
-### 40. Attractor Memory Bank (Hopfield Network)
+### Attractor Memory Bank (Hopfield Network)
 
 **Purpose**: Content-addressable memory via pattern completion.
 
@@ -2304,7 +2304,7 @@ class AttractorMemoryBank(nn.Module):
 
 ---
 
-### 41. Bayesian Inference Layer
+### Bayesian Inference Layer
 
 **Purpose**: Update beliefs via Bayes' rule—principled uncertainty.
 
@@ -2353,7 +2353,7 @@ class BayesianInferenceLayer(nn.Module):
 
 ---
 
-### 42. Metacognition Module (Confidence Estimation)
+### Metacognition Module (Confidence Estimation)
 
 **Purpose**: Network monitors its own uncertainty—"knows what it knows".
 
@@ -2414,7 +2414,7 @@ Now including all 33 original architectures with enhanced details:
 
 ---
 
-### 43. Logistic Growth Regulation
+### Logistic Growth Regulation
 
 **Purpose**: Self-limiting growth prevents runaway activation.
 
@@ -2450,7 +2450,7 @@ class LogisticActivation(nn.Module):
 
 ---
 
-### 44. Lotka-Volterra Competition
+### Lotka-Volterra Competition
 
 **Purpose**: Two populations compete for resources—winner-take-all dynamics.
 
@@ -2492,7 +2492,7 @@ class LotkaVolterraLayer(nn.Module):
 
 ---
 
-### 45. MWC Allosteric Model
+### MWC Allosteric Model
 
 **Purpose**: Cooperative binding with conformational states—steep response curves.
 
@@ -2532,7 +2532,7 @@ class MWCActivation(nn.Module):
 
 ---
 
-### 46. JAK-STAT Signaling
+### JAK-STAT Signaling
 
 **Purpose**: Cytokine signaling with SOCS negative feedback.
 
@@ -2574,7 +2574,7 @@ class JAKSTATLayer(nn.Module):
 
 ---
 
-### 47. Notch-Delta Lateral Inhibition
+### Notch-Delta Lateral Inhibition
 
 **Purpose**: One cell activates, inhibits neighbors—pattern formation.
 
@@ -2617,7 +2617,7 @@ class NotchDeltaCell(nn.Module):
 
 ---
 
-### 48. Power-Law STDP
+### Power-Law STDP
 
 **Purpose**: Weight-dependent plasticity with power-law scaling.
 
@@ -2661,7 +2661,7 @@ class PowerLawSTDP(nn.Module):
 
 ---
 
-### 49. Anti-Hebbian STDP
+### Anti-Hebbian STDP
 
 **Purpose**: Inverted timing rule—decorrelation instead of correlation.
 
@@ -2696,7 +2696,7 @@ class AntiHebbianSTDP(nn.Module):
 
 ---
 
-### 50. Mexican Hat STDP
+### Mexican Hat STDP
 
 **Purpose**: Center-surround in time—precise timing encouraged, broad timing discouraged.
 
@@ -2737,7 +2737,7 @@ class MexicanHatSTDP(nn.Module):
 
 ---
 
-### 51. Covariance Learning Rule
+### Covariance Learning Rule
 
 **Purpose**: Remove mean activity—learn decorrelated features.
 
@@ -2788,325 +2788,699 @@ Due to space constraints, here are condensed entries for the remaining 61 archit
 
 ---
 
-### 52. Multiplicative STDP (Soft Bounds)
+### Multiplicative STDP (Soft Bounds)
 **Formula**: `Δw = (w_max - w)·f₊(Δt)` for LTP, `w·f₋(Δt)` for LTD
 **Impact**: Naturally bounded weights without clipping
 **Source**: PLASTICITY_FORMULAS_COMPLETE.md:96-108
 
-### 53. Symmetric STDP
+### Symmetric STDP
 **Formula**: `Δw = A·exp(-|Δt|/τ)` (both directions LTP)
 **Impact**: Non-Hebbian synchrony detection
 **Source**: PLASTICITY_FORMULAS_COMPLETE.md:40-50
 
-### 54. Log-STDP
+### Log-STDP
 **Formula**: `Δw = η·log(1 + w/w₀)·f(Δt)`
 **Impact**: Weak synapses learn faster
 **Source**: PLASTICITY_FORMULAS_COMPLETE.md:110-122
 
-### 55. Eligibility Trace Memory
+### Eligibility Trace Memory
 **Formula**: `de/dt = -e/τ_e + STDP(Δt)·δ(t - t_spike)`
 **Impact**: Credit assignment for delayed rewards
 **Source**: PLASTICITY_FORMULAS_COMPLETE.md:477-488
 
-### 56. Intrinsic Excitability Homeostasis
+### Intrinsic Excitability Homeostasis
 **Formula**: `dg_max/dt = β·(r_target - r_actual)`
 **Impact**: Non-synaptic plasticity for stability
 **Source**: PLASTICITY_FORMULAS_COMPLETE.md:313-323
 
-### 57. Heterosynaptic Plasticity
+### Heterosynaptic Plasticity
 **Formula**: `Δw_i = -γ·Σ_{j≠i} Δw_j`
 **Impact**: Local competition between synapses
 **Source**: PLASTICITY_FORMULAS_COMPLETE.md:325-336
 
-### 58. Metaplastic Threshold
+### Metaplastic Threshold
 **Formula**: `θ_m = ⟨c²⟩/θ₀`
 **Impact**: Learning to learn, memory consolidation
 **Source**: PLASTICITY_FORMULAS_COMPLETE.md:401-414
 
-### 59. Sparse Coding Objective
+### Sparse Coding Objective
 **Formula**: `min_a ||x - Φa||² + λ||a||₁`
 **Impact**: L1-sparse representations like V1
 **Source**: PLASTICITY_FORMULAS_COMPLETE.md:432-443
 
-### 60. Predictive Coding Error
+### Predictive Coding Error
 **Formula**: `ε = x - x̂ = x - Wr`
 **Impact**: Hierarchical prediction-driven learning
 **Source**: PLASTICITY_FORMULAS_COMPLETE.md:445-458
 
-### 61. Contrastive Divergence
+### Contrastive Divergence
 **Formula**: `Δw = η·(⟨s_i s_j⟩_data - ⟨s_i s_j⟩_model)`
 **Impact**: Energy-based unsupervised learning
 **Source**: PLASTICITY_FORMULAS_COMPLETE.md:460-471
 
-### 62. Infomax/ICA Learning
+### Infomax/ICA Learning
 **Formula**: `ΔW = η·(I + (1 - 2y)u^T)W`
 **Impact**: Independent component extraction
 **Source**: PLASTICITY_FORMULAS_COMPLETE.md:419-430
 
-### 63. NMDA Working Memory Gate
+### NMDA Working Memory Gate
 **Formula**: Bistable NMDA plateau potentials with long τ
 **Impact**: Persistent activity for working memory
 **Source**: bio_ai_components.py
 
-### 64. Rare Event Detector (Cascade)
+### Rare Event Detector (Cascade)
 **Formula**: 3-stage MAPK-like cascade with high gain
 **Impact**: 1000x amplification for anomaly detection
 **Source**: SIGNAL_AMPLIFICATION_REPORT.md:802-875
 
-### 65. Autoactivation Amplifier
+### Autoactivation Amplifier
 **Formula**: Product autocatalyzes own production
 **Impact**: Exponential amplification until saturation
 **Source**: SIGNAL_AMPLIFICATION_REPORT.md:445-458
 
-### 66. Bistable Toggle Switch
+### Bistable Toggle Switch
 **Formula**: Mutual repression creates two stable states
 **Impact**: Memory without recurrence
 **Source**: SIGNAL_AMPLIFICATION_REPORT.md:423-507
 
-### 67. FitzHugh-Nagumo Oscillator
+### FitzHugh-Nagumo Oscillator
 **Formula**: 2D excitable system with cubic nullcline
 **Impact**: Oscillatory attention reset
 **Source**: OSCILLATORY_PATTERNS_ANALYSIS.md:56-81
 
-### 68. Van der Pol Oscillator
+### Van der Pol Oscillator
 **Formula**: Self-sustaining oscillation via nonlinear damping
 **Impact**: Periodic routing between pathways
 **Source**: OSCILLATORY_PATTERNS_ANALYSIS.md:82-90
 
-### 69. ING Gamma (Interneuron Network)
+### ING Gamma (Interneuron Network)
 **Formula**: Mutually inhibiting interneurons create fast gamma
 **Impact**: 60-100 Hz inhibitory competition
 **Source**: OSCILLATORY_PATTERNS_ANALYSIS.md:160-168
 
-### 70. Ring Attractor (Head Direction)
+### Ring Attractor (Head Direction)
 **Formula**: Continuous attractor with periodic boundary
 **Impact**: Angular/cyclic variable representation
 **Source**: MECHANISM_TO_ARCHITECTURE_PATTERNS.md
 
-### 71. Line Attractor (Eye Position)
+### Line Attractor (Eye Position)
 **Formula**: 1D continuous attractor for integration
 **Impact**: Perfect integration without drift
 **Source**: MECHANISM_TO_ARCHITECTURE_PATTERNS.md
 
-### 72. CaMKII Autophosphorylation
+### CaMKII Autophosphorylation
 **Formula**: Self-sustaining kinase activity
 **Impact**: Molecular memory for LTP
 **Source**: expand_04_signaling.py:217-222
 
-### 73. Calcineurin Activation
+### Calcineurin Activation
 **Formula**: Ca/CaM-activated phosphatase
 **Impact**: LTD signaling pathway
 **Source**: expand_04_signaling.py:223-228
 
-### 74. RyR Calcium Release
+### RyR Calcium Release
 **Formula**: CICR amplification
 **Impact**: Calcium wave propagation
 **Source**: expand_04_signaling.py:176-180
 
-### 75. PMCA Calcium Extrusion
+### PMCA Calcium Extrusion
 **Formula**: Plasma membrane Ca pump
 **Impact**: Restore baseline calcium
 **Source**: expand_04_signaling.py:187-193
 
-### 76. NCX Sodium-Calcium Exchanger
+### NCX Sodium-Calcium Exchanger
 **Formula**: Electrogenic 3Na:1Ca exchange
 **Impact**: Voltage-dependent Ca regulation
 **Source**: expand_04_signaling.py:194-198
 
-### 77. Calcium Buffering
+### Calcium Buffering
 **Formula**: Rapid Ca binding to buffer proteins
 **Impact**: Shape calcium transients
 **Source**: expand_04_signaling.py:199-204
 
-### 78. PI3K-AKT Survival Pathway
+### PI3K-AKT Survival Pathway
 **Formula**: PIP3-mediated kinase activation
 **Impact**: Anti-apoptotic signaling
 **Source**: expand_04_signaling.py:93-117
 
-### 79. mTORC1 Growth Signaling
+### mTORC1 Growth Signaling
 **Formula**: Rheb-activated kinase complex
 **Impact**: Protein synthesis control
 **Source**: expand_04_signaling.py:137-153
 
-### 80. NF-κB Inflammatory Response
+### NF-κB Inflammatory Response
 **Formula**: IκB degradation → nuclear translocation
 **Impact**: Oscillatory gene expression
 **Source**: expand_04_signaling.py:264-294
 
-### 81. Wnt/β-Catenin Pathway
+### Wnt/β-Catenin Pathway
 **Formula**: Destruction complex inhibition
 **Impact**: Development and stem cells
 **Source**: expand_04_signaling.py:297-327
 
-### 82. TGF-β/SMAD Signaling
+### TGF-β/SMAD Signaling
 **Formula**: Receptor-mediated SMAD phosphorylation
 **Impact**: Growth factor responses
 **Source**: expand_04_signaling.py:356-381
 
-### 83. Adenylyl Cyclase (Gs-stimulated)
+### Adenylyl Cyclase (Gs-stimulated)
 **Formula**: cAMP production from ATP
 **Impact**: Second messenger cascades
 **Source**: expand_04_signaling.py:233-241
 
-### 84. PKA Activation (cAMP)
+### PKA Activation (cAMP)
 **Formula**: 4 cAMP → catalytic subunit release
 **Impact**: Phosphorylation cascade
 **Source**: expand_04_signaling.py:239-249
 
-### 85. CREB Transcription Factor
+### CREB Transcription Factor
 **Formula**: PKA-mediated gene activation
 **Impact**: Long-term memory formation
 **Source**: expand_04_signaling.py:251-255
 
-### 86. IKK Inflammatory Kinase
+### IKK Inflammatory Kinase
 **Formula**: Signal-activated kinase complex
 **Impact**: Innate immune responses
 **Source**: expand_04_signaling.py:266-270
 
-### 87. GSK3β Regulation
+### GSK3β Regulation
 **Formula**: AKT-mediated inhibition
 **Impact**: Glycogen synthesis, Wnt signaling
 **Source**: expand_04_signaling.py (AKT targets)
 
-### 88. FOXO Transcription Factor
+### FOXO Transcription Factor
 **Formula**: AKT phosphorylation → cytoplasmic retention
 **Impact**: Apoptosis gene regulation
 **Source**: expand_04_signaling.py (AKT targets)
 
-### 89. TSC2 Tumor Suppressor
+### TSC2 Tumor Suppressor
 **Formula**: AKT inhibition releases mTORC1
 **Impact**: Growth control
 **Source**: expand_04_signaling.py (AKT targets)
 
-### 90. S6K Translation Regulator
+### S6K Translation Regulator
 **Formula**: mTORC1-activated kinase
 **Impact**: Ribosome biogenesis
 **Source**: expand_04_signaling.py:143-147
 
-### 91. 4E-BP1 Translation Repressor
+### 4E-BP1 Translation Repressor
 **Formula**: mTORC1 phosphorylation releases eIF4E
 **Impact**: Cap-dependent translation
 **Source**: expand_04_signaling.py:149-153
 
-### 92. Dishevelled Wnt Transducer
+### Dishevelled Wnt Transducer
 **Formula**: Receptor activation inhibits destruction
 **Impact**: Wnt signal amplification
 **Source**: expand_04_signaling.py:311-315
 
-### 93. β-Catenin Transcription
+### β-Catenin Transcription
 **Formula**: Nuclear accumulation → gene activation
 **Impact**: Development genes
 **Source**: expand_04_signaling.py:317-327
 
-### 94. NICD Notch Signaling
+### NICD Notch Signaling
 **Formula**: γ-secretase cleavage → nuclear entry
 **Impact**: Cell fate decisions
 **Source**: expand_04_signaling.py:338-348
 
-### 95. Hes/Hey Transcriptional Repressors
+### Hes/Hey Transcriptional Repressors
 **Formula**: NICD-driven gene expression
 **Impact**: Maintain progenitor state
 **Source**: expand_04_signaling.py:344-348
 
-### 96. SMAD2/3 Phosphorylation
+### SMAD2/3 Phosphorylation
 **Formula**: TGF-β receptor kinase activity
 **Impact**: Cytoplasm-to-nucleus shuttle
 **Source**: expand_04_signaling.py:365-375
 
-### 97. SMAD4 Co-Factor
+### SMAD4 Co-Factor
 **Formula**: Forms complex with pSMAD2/3
 **Impact**: Nuclear entry signal
 **Source**: expand_04_signaling.py:371-375
 
-### 98. PDE4 Feedback Inhibition
+### PDE4 Feedback Inhibition
 **Formula**: PKA activates cAMP degradation
 **Impact**: Negative feedback oscillations
 **Source**: expand_04_signaling.py:257-261
 
-### 99. A20 Ubiquitin Editing
+### A20 Ubiquitin Editing
 **Formula**: NF-κB-induced IKK inhibitor
 **Impact**: Terminate inflammation
 **Source**: expand_04_signaling.py:290-294
 
-### 100. IκBα Resynthesis
+### IκBα Resynthesis
 **Formula**: NF-κB drives own inhibitor
 **Impact**: Oscillatory negative feedback
 **Source**: expand_04_signaling.py:284-288
 
-### 101. BioTransformer (Complete Architecture)
+### BioTransformer (Complete Architecture)
 **Formula**: Multi-component biological transformer
 **Impact**: Integrated bio-inspired architecture
 **Source**: bio_ai_components.py:727-799
 
-### 102. Channel Gate m³h (Complete)
+### Channel Gate m³h (Complete)
 **Formula**: Sodium channel activation/inactivation
 **Impact**: Realistic action potential generation
 **Source**: bio_ai_components.py:130-209
 
-### 103. Conductance-Based Neuron
+### Conductance-Based Neuron
 **Formula**: Full Hodgkin-Huxley with multiple channels
 **Impact**: Biophysically accurate spiking
 **Source**: 00_NOVELTY.csv, bio databases
 
-### 104. Short-Term Synaptic Plasticity
+### Short-Term Synaptic Plasticity
 **Formula**: Resource depletion and recovery
 **Impact**: Dynamic synaptic strength
 **Source**: 00_NOVELTY.csv (ID 13-17)
 
-### 105. Vesicle Release Dynamics
+### Vesicle Release Dynamics
 **Formula**: Probabilistic neurotransmitter release
 **Impact**: Stochastic transmission
 **Source**: 00_NOVELTY.csv (ID 14-15)
 
-### 106. Facilitation/Depression
+### Facilitation/Depression
 **Formula**: Use-dependent synaptic modulation
 **Impact**: Temporal filtering
 **Source**: 00_NOVELTY.csv (ID 16-17)
 
-### 107. AMPA Receptor Kinetics
+### AMPA Receptor Kinetics
 **Formula**: Fast glutamate-gated channel
 **Impact**: Excitatory transmission (3ms)
 **Source**: bioformulas.db, 00_NOVELTY.csv
 
-### 108. GABA Receptor Dynamics
+### GABA Receptor Dynamics
 **Formula**: Inhibitory chloride channel
 **Impact**: Fast inhibition (10ms)
 **Source**: bioformulas.db
 
-### 109. Dendritic Spike Initiation
+### Dendritic Spike Initiation
 **Formula**: Active dendrites with Na/Ca spikes
 **Impact**: Non-linear integration
 **Source**: bio research literature
 
-### 110. Backpropagating Action Potentials
+### Backpropagating Action Potentials
 **Formula**: Retrograde spike propagation
 **Impact**: Coincidence detection for STDP
 **Source**: neuroscience literature
 
-### 111. Spike-Frequency Adaptation
+### Spike-Frequency Adaptation
 **Formula**: AHP currents reduce firing over time
 **Impact**: Transient vs sustained responses
 **Source**: 00_NOVELTY.csv (ID 18)
 
-### 112. Bursting via Slow Calcium
+### Bursting via Slow Calcium
 **Formula**: Ca-activated K current creates bursts
 **Impact**: Information in burst patterns
 **Source**: Computational neuroscience
 
-### 113. Gain Modulation
+### Gain Modulation
 **Formula**: Multiplicative scaling of responses
 **Impact**: Context-dependent processing
 **Source**: Sensory neuroscience
 
 ---
 
+### Full Hodgkin-Huxley Conductance Model
+
+**Purpose**: Gold standard biophysical neuron model with voltage-gated ion channels.
+
+**Formula**: Complete Conductance-Based Dynamics
+```
+C_m·dV/dt = -(g_Na·m³·h·(V - E_Na) + g_K·n⁴·(V - E_K) + g_L·(V - E_L)) + I_ext
+
+Gating variables:
+dm/dt = α_m(V)·(1 - m) - β_m(V)·m
+dh/dt = α_h(V)·(1 - h) - β_h(V)·h  
+dn/dt = α_n(V)·(1 - n) - β_n(V)·n
+
+where:
+- C_m = membrane capacitance (1 μF/cm²)
+- g_Na, g_K, g_L = conductances (120, 36, 0.3 mS/cm²)
+- E_Na, E_K, E_L = reversal potentials (50, -77, -54.4 mV)
+- m³h = sodium activation³ × inactivation
+- n⁴ = potassium activation⁴
+- α, β = voltage-dependent rate functions
+```
+
+**Nature's Implementation**: Squid giant axon action potentials (Hodgkin & Huxley, 1952). Universal model for voltage-gated channels. Nobel Prize 1963.
+
+**Impact**: **HIGH - Biophysical Gold Standard**
+Most accurate spiking model. Matches experimental data precisely. Explains action potential shape, conduction velocity, refractory period. Foundation for all conductance-based models. Computational cost higher than LIF but essential for biophysical realism.
+
+**Code Example**:
+```python
+class HodgkinHuxleyNeuron(nn.Module):
+    """Complete HH model with Na, K, and leak channels"""
+    
+    def __init__(self, n_neurons):
+        super().__init__()
+        # State variables
+        self.V = torch.full((n_neurons,), -65.0)  # Membrane potential (mV)
+        self.m = torch.zeros(n_neurons)  # Na activation
+        self.h = torch.ones(n_neurons)   # Na inactivation
+        self.n = torch.zeros(n_neurons)  # K activation
+        
+        # Parameters (classic HH values)
+        self.C_m = 1.0      # μF/cm²
+        self.g_Na = 120.0   # mS/cm²
+        self.g_K = 36.0     # mS/cm²
+        self.g_L = 0.3      # mS/cm²
+        self.E_Na = 50.0    # mV
+        self.E_K = -77.0    # mV
+        self.E_L = -54.4    # mV
+    
+    def alpha_m(self, V):
+        return 0.1 * (V + 40) / (1 - torch.exp(-(V + 40) / 10))
+    
+    def beta_m(self, V):
+        return 4.0 * torch.exp(-(V + 65) / 18)
+    
+    def alpha_h(self, V):
+        return 0.07 * torch.exp(-(V + 65) / 20)
+    
+    def beta_h(self, V):
+        return 1.0 / (1 + torch.exp(-(V + 35) / 10))
+    
+    def alpha_n(self, V):
+        return 0.01 * (V + 55) / (1 - torch.exp(-(V + 55) / 10))
+    
+    def beta_n(self, V):
+        return 0.125 * torch.exp(-(V + 65) / 80)
+    
+    def forward(self, I_ext, dt=0.01):
+        """Integrate HH equations"""
+        # Gating variable dynamics
+        dm = (self.alpha_m(self.V) * (1 - self.m) - self.beta_m(self.V) * self.m) * dt
+        dh = (self.alpha_h(self.V) * (1 - self.h) - self.beta_h(self.V) * self.h) * dt
+        dn = (self.alpha_n(self.V) * (1 - self.n) - self.beta_n(self.V) * self.n) * dt
+        
+        self.m += dm
+        self.h += dh
+        self.n += dn
+        
+        # Ionic currents
+        I_Na = self.g_Na * (self.m ** 3) * self.h * (self.V - self.E_Na)
+        I_K = self.g_K * (self.n ** 4) * (self.V - self.E_K)
+        I_L = self.g_L * (self.V - self.E_L)
+        
+        # Membrane potential
+        dV = (I_ext - I_Na - I_K - I_L) / self.C_m * dt
+        self.V += dV
+        
+        # Spike detection
+        spikes = (self.V > 0).float()
+        
+        return spikes, self.V
+```
+
+**Source**: Hodgkin & Huxley (1952) J Physiol; 00_NOVELTY.csv; Computational Neuroscience textbooks
+
+---
+
+### Canonical Pair-Based STDP
+
+**Purpose**: Foundational spike-timing dependent plasticity—causality-based learning.
+
+**Formula**: Classic Asymmetric Learning Window
+```
+Δw = {
+    A_+·exp(-Δt/τ_+)   if Δt > 0  (pre before post → LTP)
+    -A_-·exp(Δt/τ_-)   if Δt < 0  (post before pre → LTD)
+}
+
+where:
+- Δt = t_post - t_pre (spike time difference)
+- A_+ ≈ 0.01 (LTP amplitude)
+- A_- ≈ 0.01 (LTD amplitude)  
+- τ_+ ≈ 20 ms (LTP time constant)
+- τ_- ≈ 20 ms (LTD time constant)
+```
+
+**Nature's Implementation**: First discovered in hippocampus, cortex, cerebellum. Universal learning rule in brain. Causality detector: "neurons that fire together, wire together" (Hebb, 1949), but with precise timing.
+
+**Impact**: **HIGH - Foundational Learning Rule**
+Most important unsupervised learning rule in neuroscience. Basis for sequence learning, temporal coding, causality detection. Led to all STDP variants (triplet, voltage-dependent, etc.). Explains how brain learns without labels. Critical for spiking neural networks.
+
+**Code Example**:
+```python
+class PairBasedSTDP(nn.Module):
+    """Classic STDP with exponential windows"""
+    
+    def __init__(self, n_pre, n_post, A_plus=0.01, A_minus=0.01, tau_plus=20.0, tau_minus=20.0):
+        super().__init__()
+        self.W = nn.Parameter(torch.randn(n_post, n_pre) * 0.01)
+        
+        # STDP parameters
+        self.A_plus = A_plus
+        self.A_minus = A_minus
+        self.tau_plus = tau_plus
+        self.tau_minus = tau_minus
+        
+        # Spike traces for eligibility
+        self.pre_trace = torch.zeros(n_pre)
+        self.post_trace = torch.zeros(n_post)
+    
+    def forward(self, x):
+        """Standard forward pass"""
+        return F.linear(x, self.W)
+    
+    def stdp_update(self, pre_spikes, post_spikes, dt=1.0):
+        """Update weights based on spike timing"""
+        # Decay traces
+        self.pre_trace *= np.exp(-dt / self.tau_plus)
+        self.post_trace *= np.exp(-dt / self.tau_minus)
+        
+        # LTP: post spike while pre trace active
+        if post_spikes.any():
+            dW_ltp = self.A_plus * torch.outer(post_spikes, self.pre_trace)
+            self.W += dW_ltp
+        
+        # LTD: pre spike while post trace active  
+        if pre_spikes.any():
+            dW_ltd = -self.A_minus * torch.outer(self.post_trace, pre_spikes)
+            self.W += dW_ltd
+        
+        # Update traces with new spikes
+        self.pre_trace += pre_spikes
+        self.post_trace += post_spikes
+        
+        # Weight bounds
+        self.W.data.clamp_(0, 1)
+    
+    def get_spike_timing_curve(self):
+        """Plot classic STDP learning window"""
+        delta_t = np.linspace(-100, 100, 200)
+        dw = np.where(delta_t > 0,
+                     self.A_plus * np.exp(-delta_t / self.tau_plus),
+                     -self.A_minus * np.exp(delta_t / self.tau_minus))
+        return delta_t, dw
+```
+
+**Source**: Bi & Poo (1998) J Neurosci; Markram et al. (1997) Science; PLASTICITY_FORMULAS_COMPLETE.md ID:25
+
+---
+
+### Leaky Integrate-and-Fire (LIF) Neuron
+
+**Purpose**: Canonical spiking neuron model—simple, efficient, widely used.
+
+**Formula**: Leaky Integration with Threshold
+```
+τ_m·dV/dt = -(V - E_L) + R_m·I_ext
+
+If V ≥ V_th: emit spike, V ← V_reset, wait t_refract
+
+where:
+- τ_m = membrane time constant (10-20 ms)
+- E_L = resting potential (-70 mV)
+- V_th = spike threshold (-55 mV)
+- V_reset = reset potential (-65 mV)
+- R_m = membrane resistance
+- t_refract = refractory period (2-5 ms)
+```
+
+**Nature's Implementation**: Simplified model capturing essential neuron properties: leak, integration, threshold. Trade-off between Hodgkin-Huxley (complex) and rate models (too simple).
+
+**Impact**: **MEDIUM-HIGH - Standard Spiking Model**
+Most widely used spiking neuron model. 100x faster than Hodgkin-Huxley. Captures key properties: temporal integration, threshold, refractory period. Foundation for large-scale spiking neural networks (Loihi, SpiNNaker, BrainScaleS). Good balance of realism vs efficiency.
+
+**Code Example**:
+```python
+class LIFNeuron(nn.Module):
+    """Leaky Integrate-and-Fire neuron"""
+    
+    def __init__(self, n_neurons, tau_m=10.0, V_th=-55.0, V_reset=-65.0, t_refract=2.0):
+        super().__init__()
+        self.n = n_neurons
+        
+        # Parameters
+        self.tau_m = tau_m      # Membrane time constant (ms)
+        self.E_L = -70.0        # Resting potential (mV)
+        self.V_th = V_th        # Spike threshold (mV)
+        self.V_reset = V_reset  # Reset potential (mV)
+        self.R_m = 10.0         # Membrane resistance (MΩ)
+        
+        # State variables
+        self.V = torch.full((n_neurons,), self.E_L)
+        self.refractory_counter = torch.zeros(n_neurons)
+        self.t_refract = t_refract
+    
+    def forward(self, I_ext, dt=1.0):
+        """Integrate and fire"""
+        # Only integrate non-refractory neurons
+        not_refractory = self.refractory_counter == 0
+        
+        # Leaky integration
+        dV = (-(self.V - self.E_L) + self.R_m * I_ext) / self.tau_m * dt
+        self.V = torch.where(not_refractory, self.V + dV, self.V)
+        
+        # Spike detection
+        spikes = (self.V >= self.V_th) & not_refractory
+        
+        # Reset spiking neurons
+        self.V = torch.where(spikes, torch.tensor(self.V_reset), self.V)
+        self.refractory_counter = torch.where(
+            spikes, 
+            torch.tensor(self.t_refract),
+            self.refractory_counter
+        )
+        
+        # Decrement refractory counter
+        self.refractory_counter = torch.clamp(
+            self.refractory_counter - dt, 
+            min=0
+        )
+        
+        return spikes.float()
+    
+    def reset_state(self):
+        """Reset to resting state"""
+        self.V.fill_(self.E_L)
+        self.refractory_counter.zero_()
+```
+
+**Source**: Lapicque (1907); Gerstner & Kistler (2002) Spiking Neuron Models; 00_NOVELTY.csv
+
+---
+### Linear-Nonlinear-Poisson (LNP) Model
+
+**Purpose**: Sensory neuron encoding model—stimulus to spike train conversion.
+
+**Formula**: Filter, Nonlinearity, Stochastic Spiking
+```
+r(t) = f(∫ k(τ)·s(t-τ) dτ)
+
+P(spike in [t, t+dt]) = r(t)·dt
+
+where:
+- s(t) = sensory stimulus (e.g., light intensity, sound)
+- k(τ) = temporal filter (receptive field)
+- f(·) = nonlinearity (typically sigmoid or exp)
+- r(t) = instantaneous firing rate
+- Spikes follow Poisson process with rate r(t)
+```
+
+**Nature's Implementation**: Retinal ganglion cells, LGN neurons, auditory nerve fibers, olfactory receptor neurons. Standard model in sensory neuroscience.
+
+**Impact**: **MEDIUM - Sensory Coding**
+Captures how sensory neurons encode stimuli. Linear filter extracts features, nonlinearity shapes response, Poisson adds variability. Used to fit experimental data, predict responses to novel stimuli. Foundation for understanding sensory representations. Important for neural prosthetics and brain-computer interfaces.
+
+**Code Example**:
+```python
+class LNPNeuron(nn.Module):
+    """Linear-Nonlinear-Poisson sensory neuron"""
+    
+    def __init__(self, filter_length=50, nonlinearity='exponential'):
+        super().__init__()
+        # Linear filter (learnable receptive field)
+        self.filter = nn.Parameter(torch.randn(filter_length) * 0.1)
+        self.nonlinearity_type = nonlinearity
+        
+        # Bias
+        self.bias = nn.Parameter(torch.zeros(1))
+    
+    def linear_stage(self, stimulus):
+        """Convolve stimulus with temporal filter"""
+        # stimulus shape: (batch, time)
+        # Pad for causal filtering
+        padded = F.pad(stimulus.unsqueeze(1), (len(self.filter)-1, 0))
+        
+        # Convolve
+        filtered = F.conv1d(padded, self.filter.flip(0).view(1, 1, -1))
+        
+        return filtered.squeeze(1)
+    
+    def nonlinear_stage(self, x):
+        """Apply nonlinearity to filtered stimulus"""
+        if self.nonlinearity_type == 'exponential':
+            # Exponential nonlinearity (common for spiking)
+            firing_rate = torch.exp(x + self.bias)
+        elif self.nonlinearity_type == 'sigmoid':
+            # Sigmoid nonlinearity (bounded)
+            firing_rate = torch.sigmoid(x + self.bias) * 100  # Max 100 Hz
+        elif self.nonlinearity_type == 'softplus':
+            # Soft rectification
+            firing_rate = F.softplus(x + self.bias)
+        else:
+            raise ValueError(f"Unknown nonlinearity: {self.nonlinearity_type}")
+        
+        return firing_rate
+    
+    def poisson_spiking(self, firing_rate, dt=0.001):
+        """Generate Poisson spikes from firing rate"""
+        # Probability of spike in time window dt
+        spike_prob = firing_rate * dt
+        
+        # Poisson process: compare with random uniform
+        spikes = (torch.rand_like(spike_prob) < spike_prob).float()
+        
+        return spikes
+    
+    def forward(self, stimulus, dt=0.001, return_rate=False):
+        """Full LNP cascade"""
+        # Linear filtering
+        filtered = self.linear_stage(stimulus)
+        
+        # Nonlinearity
+        firing_rate = self.nonlinear_stage(filtered)
+        
+        if return_rate:
+            return firing_rate
+        
+        # Poisson spiking
+        spikes = self.poisson_spiking(firing_rate, dt)
+        
+        return spikes, firing_rate
+    
+    def fit_to_data(self, stimulus, spike_train, optimizer, n_epochs=100):
+        """Fit LNP model to experimental data"""
+        for epoch in range(n_epochs):
+            # Predict firing rate
+            rate_pred = self.forward(stimulus, return_rate=True)
+            
+            # Negative log-likelihood loss (Poisson)
+            # L = -sum(spikes*log(rate) - rate)
+            loss = -(spike_train * torch.log(rate_pred + 1e-8) - rate_pred).mean()
+            
+            # Update
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+            
+            if epoch % 20 == 0:
+                print(f"Epoch {epoch}, Loss: {loss.item():.4f}")
+```
+
+**Source**: Chichilnisky (2001) Network; Pillow et al. (2008) Nature; Sensory neuroscience literature
+
+---
 ## Summary Statistics
 
-**Total Architectures Documented**: 113
+**Total Architectures Documented**: 117
 **Critical Impact**: 5 (paradigm-shifting)
-**High Impact**: 8 (10-100x improvements)
-**Medium-High Impact**: 10 (2-10x improvements)
-**Medium Impact**: 28 (useful specialized)
+**High Impact**: 10 (10-100x improvements)
+**Medium-High Impact**: 11 (2-10x improvements)
+**Medium Impact**: 29 (useful specialized)
 **Low-Medium Impact**: 62 (domain-specific)
 
 **Biological Sources**:
