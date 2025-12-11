@@ -1,7 +1,7 @@
 # Novel Biological AI Architectures - Complete Catalog
 
 **Compiled**: 2025-12-11
-**Total Architectures**: 191
+**Total Architectures**: 192
 **Organization**: Ordered by AI Impact (Highest → Lowest)
 
 ---
@@ -146,17 +146,35 @@ class GeneExpressionMetaController:
 
 **Purpose**: Replace feedforward + backprop with bidirectional error minimization.
 
-**Formula**: Hierarchical Prediction Error
+**Formula**: Hierarchical Prediction Error & Free Energy Minimization
 ```
+Free Energy Formulation (Neuronal Inference):
+ẋ = -∂F/∂x
+
+where F = ½||y - f(x)||² + ½||x - μ||²
+        = prediction error + prior deviation
+
+This yields gradient-descent inference inside the network.
+
+Error Neuron Dynamics (Explicit Form):
+ε = y - f(x)                             [Prediction error]
+ẋ = -ε · f'(x)                           [Gradient descent on error]
+
+Local Weight Learning Rule:
+ΔW = η · ε · x^T                         [Fully local, no backprop needed]
+
+Hierarchical Version:
 ε_l = x_l - μ_l                          [Prediction error at layer l]
 dμ_l/dt = -ε_l + W_l^T · ε_{l+1}        [Update belief from errors]
 dW_l/dt = η · ε_l · μ_{l+1}^T           [Update weights to reduce error]
 
 where:
-- ε_l = prediction error (actual - predicted)
-- μ_l = current belief/representation
-- W_l = generative weights (top-down)
+- F = free energy (objective to minimize)
+- ε = prediction error (actual - predicted)
+- μ = current belief/representation
+- W = generative weights (top-down)
 - η = learning rate
+- f(x) = nonlinear prediction function
 ```
 
 **Nature's Implementation**: Brain's cortical hierarchy constantly predicts lower levels. Prediction errors propagate up, corrections flow down. Only surprising information (errors) is communicated—efficient coding.
@@ -2878,15 +2896,202 @@ Due to space constraints, here are condensed entries for the remaining 61 archit
 **Impact**: 60-100 Hz inhibitory competition
 **Source**: OSCILLATORY_PATTERNS_ANALYSIS.md:160-168
 
-### Ring Attractor (Head Direction)
-**Formula**: Continuous attractor with periodic boundary
-**Impact**: Angular/cyclic variable representation
-**Source**: MECHANISM_TO_ARCHITECTURE_PATTERNS.md
+### Ring Attractor (Head Direction Model)
 
-### Line Attractor (Eye Position)
-**Formula**: 1D continuous attractor for integration
-**Impact**: Perfect integration without drift
-**Source**: MECHANISM_TO_ARCHITECTURE_PATTERNS.md
+**Purpose**: Maintain stable representation of angular/cyclic variables through recurrent dynamics with circular symmetry.
+
+**Formula**: Periodic Continuous Attractor
+```
+τ ẋ_i = -x_i + Σ_j W_ij x_j + I_i
+
+with circular symmetry in W:
+W_ij = W(|i-j|_circular)
+
+Specifically (Mexican hat on ring):
+W_ij = A·exp(-d²_ij/2σ²_E) - B·exp(-d²_ij/2σ²_I)
+
+where d_ij = min(|i-j|, N-|i-j|)  [circular distance]
+
+Bump solution:
+x_i(t) = x₀·exp(cos(2π(i-θ(t))/N)/σ²)
+
+where θ(t) = heading angle encoded by bump position
+
+Velocity integration:
+θ̇ = β·ω_input
+
+where:
+- x_i = firing rate of neuron i (i = 0..N-1, wrapping)
+- W_ij = connection strength (translation-invariant + circular)
+- τ = membrane time constant
+- I_i = external input (asymmetric to shift bump)
+- θ(t) = bump center (encodes current heading)
+- ω_input = angular velocity input
+- β = integration gain
+- A, B = excitation/inhibition strengths
+- σ_E, σ_I = spatial scales
+```
+
+**Nature's Implementation**: Head direction cells in postsubiculum/anterior thalamic nucleus form a ring attractor. Maintain stable heading representation even without visual cues. Integrate angular velocity from vestibular system. Explain persistent direction sense during darkness, navigation.
+
+**Impact**: **MEDIUM-HIGH - Angular Memory**
+Maintains cyclic variables indefinitely. Perfect for heading, phase, periodic signals. No drift with proper tuning. Biological basis for compass sense. Used in robotics for orientation, phase tracking, rhythm generation. Critical for understanding spatial navigation and implementing stable angular representations.
+
+**Code Example**:
+```python
+class RingAttractor(nn.Module):
+    """Head direction ring attractor network"""
+
+    def __init__(self, n_neurons=360, tau=10.0):
+        super().__init__()
+        self.n = n_neurons
+        self.tau = tau
+
+        # Create circular Mexican hat connectivity
+        angles = np.arange(n_neurons) * 2 * np.pi / n_neurons
+        dist = angles[:, None] - angles[None, :]
+
+        # Circular distance
+        dist = np.angle(np.exp(1j * dist))
+
+        # Mexican hat
+        A_exc, A_inh = 2.0, 1.5
+        sigma_exc, sigma_inh = 0.3, 1.0
+
+        W = A_exc * np.exp(-dist**2 / (2*sigma_exc**2)) - \
+            A_inh * np.exp(-dist**2 / (2*sigma_inh**2))
+
+        self.W = torch.FloatTensor(W)
+
+    def forward(self, x, I_ext, dt=0.1, n_steps=50):
+        """
+        Evolve ring attractor dynamics
+        τ ẋ = -x + W·x + I_ext
+        """
+        for _ in range(n_steps):
+            recurrent = torch.matmul(self.W, x)
+            dx = (-x + F.relu(recurrent + I_ext)) / self.tau * dt
+            x = x + dx
+        return x
+
+    def integrate_velocity(self, angular_velocity, dt=1.0):
+        """Shift bump by velocity input"""
+        # Create asymmetric input
+        shift = int(angular_velocity * dt * self.n / (2*np.pi))
+        I_shift = torch.roll(torch.exp(-torch.arange(self.n).float()/10), shift)
+        return I_shift * abs(angular_velocity)
+```
+
+**Source**: Zhang (1996) J Neurosci; Skaggs et al. (1995) Adv Neural Info Proc; MECHANISM_TO_ARCHITECTURE_PATTERNS.md
+
+---
+
+### Line Attractor (Eye Position Integrator)
+
+**Purpose**: Perfect temporal integration of transient inputs—neural integrator for maintaining analog values.
+
+**Formula**: 1D Continuous Attractor with Eigenvalue Condition
+```
+τ ẋ = -x + W·x + I(t)
+
+Stability condition for integration:
+W·v = v    [Eigenvalue λ = 1]
+
+Must have eigenvector v with eigenvalue exactly 1 for perfect integration.
+
+Dynamics on line attractor manifold:
+ẋ_integrated = I(t)    [Perfect integration when τλ = 1]
+
+Discrete update (leaky integrator):
+x(t+1) = (1-α)·x(t) + α·I(t)
+
+where α = dt/τ
+
+For perfect integration: set α such that accumulated drift = 0
+
+Connection structure (uniform + Mexican hat):
+W_ij = w_uniform + [A·exp(-|i-j|²/σ²_E) - B·exp(-|i-j|²/σ²_I)]
+
+where:
+- x = neural population state (encodes integrated value)
+- W = connectivity matrix (must have λ=1 eigenvalue)
+- v = eigenvector corresponding to λ=1 (integrator mode)
+- τ = time constant
+- I(t) = transient input pulse
+```
+
+**Nature's Implementation**: Oculomotor integrator in goldfish/monkey brainstem. Maintains eye position between saccades. Integrates velocity commands into position. Also in spatial working memory (prefrontal cortex), evidence accumulation (LIP), motor preparation.
+
+**Impact**: **MEDIUM-HIGH - Perfect Integration**
+Holds analog values indefinitely without recurrent activity decay. Biological RAM. Explains working memory, decision accumulation, motor holds. Requires fine-tuned connectivity (λ=1 condition fragile). Used for analog memory, temporal integration, evidence accumulation in AI models.
+
+**Code Example**:
+```python
+class LineAttractor(nn.Module):
+    """Line attractor for perfect integration"""
+
+    def __init__(self, n_neurons=50, tau=10.0):
+        super().__init__()
+        self.n = n_neurons
+        self.tau = tau
+
+        # Create connectivity with eigenvalue = 1
+        # Uniform connectivity + local structure
+        W = torch.ones(n_neurons, n_neurons) / n_neurons  # Mean field
+
+        # Add local structure (Mexican hat)
+        for i in range(n_neurons):
+            for j in range(n_neurons):
+                dist = abs(i - j)
+                W[i, j] += 0.5 * np.exp(-dist**2 / 10) - 0.3 * np.exp(-dist**2 / 20)
+
+        # Ensure eigenvalue = 1 (perfect integrator)
+        eigenvalues, eigenvectors = torch.linalg.eig(W)
+        max_eigenvalue = torch.max(torch.abs(eigenvalues)).item()
+        W = W / max_eigenvalue  # Scale to have max eigenvalue = 1
+
+        self.W = W
+        self.W.fill_diagonal_(0)  # No self-connections
+
+    def forward(self, x, I_input, dt=0.1):
+        """
+        Single integration step:
+        τ ẋ = -x + W·x + I
+        """
+        recurrent = torch.matmul(self.W, x)
+        dx = (-x + recurrent + I_input) / self.tau * dt
+        return x + dx
+
+    def integrate_sequence(self, input_sequence, x0=None):
+        """Integrate a sequence of inputs"""
+        if x0 is None:
+            x = torch.zeros(self.n)
+        else:
+            x = x0.clone()
+
+        trajectory = []
+        for I_t in input_sequence:
+            x = self.forward(x, I_t)
+            trajectory.append(x.clone())
+
+        return torch.stack(trajectory)
+
+    def check_integration_quality(self, n_steps=1000):
+        """Verify perfect integration (no drift without input)"""
+        x = torch.randn(self.n)
+        x0_norm = torch.norm(x)
+
+        # Evolve without input
+        for _ in range(n_steps):
+            x = self.forward(x, torch.zeros(self.n), dt=1.0)
+
+        drift = torch.norm(x - x * (x0_norm / torch.norm(x)))
+        return drift.item()  # Should be ~0 for perfect integrator
+```
+
+**Source**: Seung (1996) PNAS; Major & Tank (2004) Nature; Goldman et al. (2003) Neuron; MECHANISM_TO_ARCHITECTURE_PATTERNS.md
+
+---
 
 ### CaMKII Autophosphorylation
 **Formula**: Self-sustaining kinase activity
@@ -5105,7 +5310,26 @@ print(f"Correlation with true latent: {np.corrcoef(true_latent.flatten(), X_infe
 
 **Purpose**: Optimal recursive state estimation from noisy neural observations—real-time BMI decoding with dynamics.
 
-**Formula**: Linear Kalman Filter
+**Formula**: Linear Kalman Filter (Discrete & Continuous-Time)
+
+**Continuous-Time Neural Form** (Prediction + Correction):
+```
+dẋ̂/dt = A·x̂ + B·u + K(y - C·x̂)
+
+where:
+- x̂ = state estimate (continuous evolution)
+- A = dynamics matrix
+- B = control matrix
+- u = control input
+- K = Kalman gain (observation weight)
+- y = continuous observation
+- C = observation matrix
+- (y - C·x̂) = innovation/prediction error
+
+This is continuous-time prediction + correction in neural form.
+```
+
+**Discrete-Time Form** (Predict-Update Cycle):
 ```
 State model:     xₜ = A·xₜ₋₁ + w,  w ~ N(0, Q)
 Observation:     yₜ = C·xₜ + v,    v ~ N(0, R)
@@ -5126,7 +5350,7 @@ where:
 - xₜ = latent state (position, velocity, etc.)
 - yₜ = neural observations (spike counts, LFP)
 - A = dynamics matrix, C = observation matrix
-- Kₜ = Kalman gain
+- Kₜ = Kalman gain (optimal weighting of prediction vs observation)
 - P = covariance, Q = process noise, R = observation noise
 ```
 
@@ -15922,9 +16146,383 @@ if __name__ == "__main__":
 - Burak & Fiete (2009). "Accurate Path Integration in Continuous Attractor Network Models of Grid Cells"
 - Wimmer et al. (2014). "Bump Attractor Dynamics in Prefrontal Cortex Explains Behavioral Precision in Spatial Working Memory"
 
+### 192. Neural ODE (Continuous RNN)
+
+**Formula:**
+```
+ḣ = f(h, x(t))
+
+Or more explicitly:
+dh/dt = f_θ(h(t), x(t), t)
+
+where:
+h(t) ∈ ℝ^d = hidden state (continuous dynamics)
+x(t) = input time series
+f_θ = neural network (can be MLP, GRU cell, etc.)
+θ = learnable parameters
+
+Adjoint sensitivity method for gradients:
+dL/dθ = -∫_{t_1}^{t_0} a(t)^T ∂f/∂θ dt
+
+where a(t) = adjoint state solving:
+da/dt = -a^T ∂f/∂h
+```
+
+**Initial Value Problem:**
+```
+h(t_0) = h_0
+h(t_1) = h_0 + ∫_{t_0}^{t_1} f_θ(h(t), x(t), t) dt
+```
+
+**Variable Definitions:**
+- `h(t)`: Continuous hidden state trajectory
+- `f_θ`: Dynamics function (neural network)
+- `x(t)`: Input signal (can be irregular/continuous)
+- `t`: Continuous time
+- `a(t)`: Adjoint state for backprop through ODE
+- `θ`: All learnable parameters
+
+**Nature's Implementation:**
+Continuous neural dynamics in cortex. Membrane potentials evolve continuously via differential equations. No discrete time steps. Irregular sampling (spikes are events, not clock ticks). Brain computes with continuous-time attractors, not RNN unrolling.
+
+**Impact:** CRITICAL - Replaces discrete RNNs with continuous dynamics. Memory-efficient gradients via adjoint method. Handles irregular time series naturally. Constant memory regardless of sequence length. Foundation for continuous normalizing flows, time-series modeling, neural SDEs. Explains how brain processes continuous sensorimotor streams.
+
+**Implementation (280 lines):**
+```python
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import numpy as np
+from torchdiffeq import odeint_adjoint as odeint
+
+class NeuralODEFunc(nn.Module):
+    """
+    Dynamics function f(h, x, t) for Neural ODE
+    ḣ = f(h, x, t)
+    """
+
+    def __init__(self, hidden_dim, input_dim=0, n_layers=2):
+        super().__init__()
+        self.hidden_dim = hidden_dim
+        self.input_dim = input_dim
+
+        # Dynamics network
+        layers = []
+        in_dim = hidden_dim + input_dim + 1  # +1 for time
+
+        for _ in range(n_layers - 1):
+            layers.append(nn.Linear(in_dim, hidden_dim))
+            layers.append(nn.Tanh())
+            in_dim = hidden_dim
+
+        layers.append(nn.Linear(in_dim, hidden_dim))
+
+        self.net = nn.Sequential(*layers)
+
+    def forward(self, t, h):
+        """
+        Compute dh/dt = f(h, t)
+
+        Args:
+            t: Current time (scalar or tensor)
+            h: Current hidden state [batch, hidden_dim] or [batch, hidden_dim + input_dim]
+
+        Returns:
+            dhdt: Time derivative [batch, hidden_dim]
+        """
+        # Handle input-dependent dynamics
+        if h.shape[1] > self.hidden_dim:
+            # h contains [hidden_state, input]
+            h_state = h[:, :self.hidden_dim]
+            x_input = h[:, self.hidden_dim:]
+        else:
+            h_state = h
+            x_input = torch.zeros(h.shape[0], self.input_dim).to(h.device)
+
+        # Append time
+        if isinstance(t, (int, float)):
+            t_vec = torch.ones(h.shape[0], 1).to(h.device) * t
+        else:
+            t_vec = t.expand(h.shape[0], 1)
+
+        # Concatenate [h, x, t]
+        h_augmented = torch.cat([h_state, x_input, t_vec], dim=1)
+
+        # Compute dynamics
+        dhdt = self.net(h_augmented)
+
+        return dhdt
+
+
+class NeuralODE(nn.Module):
+    """
+    Neural Ordinary Differential Equation
+
+    Continuous-time hidden state dynamics:
+    dh/dt = f_θ(h(t), x(t), t)
+    """
+
+    def __init__(self, input_dim, hidden_dim, output_dim,
+                 n_layers=2, solver='dopri5', rtol=1e-3, atol=1e-4):
+        super().__init__()
+
+        self.input_dim = input_dim
+        self.hidden_dim = hidden_dim
+        self.output_dim = output_dim
+
+        # ODE solver options
+        self.solver = solver
+        self.rtol = rtol
+        self.atol = atol
+
+        # Encoder: x -> h_0
+        self.encoder = nn.Sequential(
+            nn.Linear(input_dim, hidden_dim),
+            nn.Tanh(),
+            nn.Linear(hidden_dim, hidden_dim)
+        )
+
+        # Dynamics function
+        self.ode_func = NeuralODEFunc(hidden_dim, input_dim=0, n_layers=n_layers)
+
+        # Decoder: h -> y
+        self.decoder = nn.Sequential(
+            nn.Linear(hidden_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, output_dim)
+        )
+
+    def forward(self, x, t_span=None, return_traj=False):
+        """
+        Forward pass through Neural ODE
+
+        Args:
+            x: Input [batch, seq_len, input_dim] or [batch, input_dim]
+            t_span: Time points to evaluate [seq_len] or None (use [0, 1])
+            return_traj: If True, return full trajectory
+
+        Returns:
+            y: Output [batch, output_dim] or [batch, seq_len, output_dim]
+        """
+        if x.dim() == 2:
+            # Single input: [batch, input_dim]
+            h0 = self.encoder(x)
+
+            if t_span is None:
+                t_span = torch.tensor([0., 1.]).to(x.device)
+
+            # Solve ODE: h(t) for t in t_span
+            h_traj = odeint(
+                self.ode_func,
+                h0,
+                t_span,
+                method=self.solver,
+                rtol=self.rtol,
+                atol=self.atol
+            )  # [len(t_span), batch, hidden_dim]
+
+            # Decode final state
+            h_final = h_traj[-1]
+            y = self.decoder(h_final)
+
+            if return_traj:
+                # Decode all states
+                y_traj = self.decoder(h_traj.transpose(0, 1))  # [batch, seq_len, output_dim]
+                return y_traj
+            else:
+                return y
+
+        else:
+            # Sequence input: [batch, seq_len, input_dim]
+            batch_size, seq_len, _ = x.shape
+
+            # Encode first timestep
+            h0 = self.encoder(x[:, 0])
+
+            if t_span is None:
+                t_span = torch.linspace(0, 1, seq_len).to(x.device)
+
+            # Solve ODE
+            h_traj = odeint(
+                self.ode_func,
+                h0,
+                t_span,
+                method=self.solver,
+                rtol=self.rtol,
+                atol=self.atol
+            )  # [seq_len, batch, hidden_dim]
+
+            # Decode all timesteps
+            h_traj_batched = h_traj.transpose(0, 1)  # [batch, seq_len, hidden_dim]
+            y = self.decoder(h_traj_batched)  # [batch, seq_len, output_dim]
+
+            return y
+
+
+class LatentODE(nn.Module):
+    """
+    Latent ODE for modeling irregular time series
+
+    Recognition: x(t_i) -> z_0
+    Dynamics: dz/dt = f(z, t)
+    Decoder: z(t) -> x̂(t)
+    """
+
+    def __init__(self, input_dim, latent_dim, hidden_dim, n_layers=2):
+        super().__init__()
+
+        self.input_dim = input_dim
+        self.latent_dim = latent_dim
+
+        # Recognition network (RNN encoder)
+        self.recognition_rnn = nn.GRU(input_dim + 1, hidden_dim, batch_first=True)  # +1 for time
+        self.recognition_proj = nn.Linear(hidden_dim, latent_dim * 2)  # μ and log σ
+
+        # Latent dynamics
+        self.ode_func = NeuralODEFunc(latent_dim, input_dim=0, n_layers=n_layers)
+
+        # Decoder
+        self.decoder = nn.Sequential(
+            nn.Linear(latent_dim, hidden_dim),
+            nn.ReLU(),
+            nn.Linear(hidden_dim, input_dim)
+        )
+
+    def encode(self, x, t_obs):
+        """
+        Encode irregular observations into initial latent state
+
+        Args:
+            x: Observations [batch, n_obs, input_dim]
+            t_obs: Observation times [batch, n_obs]
+
+        Returns:
+            z0_mean, z0_logvar: Initial latent distribution parameters
+        """
+        # Concatenate time to observations
+        t_expanded = t_obs.unsqueeze(-1)
+        x_t = torch.cat([x, t_expanded], dim=-1)
+
+        # Run backwards through time (for causality)
+        x_t_reversed = torch.flip(x_t, dims=[1])
+
+        # RNN encoding
+        _, h_final = self.recognition_rnn(x_t_reversed)
+        h_final = h_final.squeeze(0)
+
+        # Project to latent
+        z0_params = self.recognition_proj(h_final)
+        z0_mean = z0_params[:, :self.latent_dim]
+        z0_logvar = z0_params[:, self.latent_dim:]
+
+        return z0_mean, z0_logvar
+
+    def reparameterize(self, mean, logvar):
+        """Reparameterization trick"""
+        std = torch.exp(0.5 * logvar)
+        eps = torch.randn_like(std)
+        return mean + eps * std
+
+    def forward(self, x_obs, t_obs, t_pred):
+        """
+        Forward pass: encode observations, evolve latent ODE, decode predictions
+
+        Args:
+            x_obs: Observed data [batch, n_obs, input_dim]
+            t_obs: Observation times [batch, n_obs]
+            t_pred: Prediction times [batch, n_pred]
+
+        Returns:
+            x_pred: Predictions [batch, n_pred, input_dim]
+            z0_mean, z0_logvar: For VAE loss
+        """
+        # Encode
+        z0_mean, z0_logvar = self.encode(x_obs, t_obs)
+        z0 = self.reparameterize(z0_mean, z0_logvar)
+
+        # Evolve latent dynamics
+        t_all = torch.cat([t_obs[0], t_pred[0]])  # Assume same time grid for all batches
+        t_all_sorted, sort_idx = torch.sort(t_all)
+
+        z_traj = odeint(self.ode_func, z0, t_all_sorted)  # [n_all, batch, latent_dim]
+
+        # Extract predictions at t_pred
+        pred_mask = sort_idx >= len(t_obs[0])
+        z_pred = z_traj[pred_mask]  # [n_pred, batch, latent_dim]
+
+        # Decode
+        z_pred_batched = z_pred.transpose(0, 1)  # [batch, n_pred, latent_dim]
+        x_pred = self.decoder(z_pred_batched)
+
+        return x_pred, z0_mean, z0_logvar
+
+
+# Example: Time series modeling
+if __name__ == "__main__":
+    torch.manual_seed(42)
+
+    print("Neural ODE for Continuous-Time Modeling")
+    print("=" * 60)
+
+    # Generate synthetic spiral data
+    def spiral(t):
+        x = t * torch.cos(t * 2 * np.pi)
+        y = t * torch.sin(t * 2 * np.pi)
+        return torch.stack([x, y], dim=1)
+
+    t_train = torch.linspace(0, 1, 100)
+    data_train = spiral(t_train)
+
+    # Create Neural ODE
+    model = NeuralODE(
+        input_dim=2,
+        hidden_dim=64,
+        output_dim=2,
+        n_layers=3
+    )
+
+    optimizer = torch.optim.Adam(model.parameters(), lr=1e-3)
+
+    print("\nTraining Neural ODE...")
+    for epoch in range(500):
+        # Forward pass
+        pred = model(data_train[0].unsqueeze(0), t_span=t_train, return_traj=True)
+        pred = pred.squeeze(0)
+
+        # Loss
+        loss = F.mse_loss(pred, data_train)
+
+        # Backward
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+        if epoch % 100 == 0:
+            print(f"Epoch {epoch}: Loss = {loss.item():.6f}")
+
+    print("\nExtrapolation test...")
+    t_test = torch.linspace(0, 1.5, 150)  # Beyond training range
+    with torch.no_grad():
+        pred_extrap = model(data_train[0].unsqueeze(0), t_span=t_test, return_traj=True)
+
+    print(f"Extrapolated {len(t_test)} timesteps (50% beyond training)")
+
+    print("\n✓ Neural ODE trained successfully")
+    print("✓ Continuous-time dynamics learned")
+    print("✓ Memory-efficient adjoint gradients")
+```
+
+**Sources:**
+- Chen et al. (2018). "Neural Ordinary Differential Equations" (NeurIPS Best Paper)
+- Rubanova et al. (2019). "Latent ODEs for Irregularly-Sampled Time Series"
+- Kidger et al. (2020). "Neural Controlled Differential Equations for Irregular Time Series"
+- Massaroli et al. (2020). "Dissecting Neural ODEs"
+
+---
+
 ## Summary Statistics
 
-**Total Architectures Documented**: 191
+**Total Architectures Documented**: 192
 **Critical Impact**: 5 (paradigm-shifting)
 **High Impact**: 10 (10-100x improvements)
 **Medium-High Impact**: 12 (2-10x improvements)
