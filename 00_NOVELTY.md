@@ -1,7 +1,7 @@
 # Novel Biological AI Architectures - Complete Catalog
 
 **Compiled**: 2025-12-11
-**Total Architectures**: 117
+**Total Architectures**: 120
 **Organization**: Ordered by AI Impact (Highest → Lowest)
 
 ---
@@ -3474,13 +3474,284 @@ class LNPNeuron(nn.Module):
 **Source**: Chichilnisky (2001) Network; Pillow et al. (2008) Nature; Sensory neuroscience literature
 
 ---
+### Fokker-Planck Equation (Membrane Potential Distribution)
+
+**Purpose**: Govern probability distributions of membrane potentials under noise—foundation for population density methods.
+
+**Formula**: Forward Kolmogorov Equation
+```
+∂p(V,t)/∂t = -∂[A(V)·p(V,t)]/∂V + (1/2)·∂²[B(V)·p(V,t)]/∂V²
+
+where:
+- p(V,t) = probability density of membrane potential V at time t
+- A(V) = drift coefficient (deterministic dynamics)
+- B(V) = diffusion coefficient (noise intensity²)
+
+For LIF: A(V) = -(V - E_L)/τ_m + R_m·I_ext/τ_m
+         B(V) = σ² (constant noise)
+```
+
+**Nature's Implementation**: Neurons receive thousands of stochastic synaptic inputs (shot noise). Population-level statistics govern collective dynamics. Used in theoretical neuroscience for analytical tractability.
+
+**Impact**: **MEDIUM - Population Analysis**
+Enables analytical solutions for population responses. Alternative to Monte Carlo simulations. Reveals how noise shapes firing rates and synchrony. Foundation for density methods in large-scale brain modeling. Critical for understanding variability in neural responses.
+
+**Code Example**:
+```python
+class FokkerPlanckSolver:
+    """Solve Fokker-Planck for LIF neuron population"""
+    
+    def __init__(self, V_min=-80, V_max=-50, V_th=-55, n_bins=1000):
+        self.V = np.linspace(V_min, V_max, n_bins)
+        self.dV = self.V[1] - self.V[0]
+        self.V_th_idx = np.argmin(np.abs(self.V - V_th))
+        
+        # Parameters
+        self.tau_m = 10.0  # ms
+        self.E_L = -70.0   # mV
+        self.R_m = 10.0    # MΩ
+        self.sigma = 3.0   # mV/√ms (noise)
+        
+        self.p = np.zeros(n_bins)
+        self.p[n_bins//4] = 1.0 / self.dV  # Initial delta function
+    
+    def drift(self, V, I_ext):
+        """A(V): drift coefficient"""
+        return (-(V - self.E_L) + self.R_m * I_ext) / self.tau_m
+    
+    def diffusion(self, V):
+        """B(V): diffusion coefficient"""
+        return self.sigma ** 2
+    
+    def step(self, I_ext, dt=0.1):
+        """Solve Fokker-Planck with flux boundary conditions"""
+        # Compute coefficients at each V
+        A = self.drift(self.V, I_ext)
+        B = self.diffusion(self.V)
+        
+        # Flux: J = A·p - (1/2)·∂(B·p)/∂V
+        J = np.zeros_like(self.p)
+        
+        # Drift flux
+        J += A * self.p
+        
+        # Diffusion flux (central difference for gradient)
+        Bp = B * self.p
+        dBp_dV = np.gradient(Bp, self.dV)
+        J -= 0.5 * dBp_dV
+        
+        # Continuity equation: ∂p/∂t = -∂J/∂V
+        dJ_dV = np.gradient(J, self.dV)
+        self.p += -dJ_dV * dt
+        
+        # Boundary conditions
+        # Absorbing at threshold
+        firing_rate = J[self.V_th_idx] / self.dV  # Flux through threshold
+        self.p[self.V_th_idx:] = 0
+        
+        # Reflecting at V_min
+        self.p[0] = self.p[1]
+        
+        # Inject fired neurons at reset
+        V_reset = -65.0
+        reset_idx = np.argmin(np.abs(self.V - V_reset))
+        self.p[reset_idx] += firing_rate * dt / self.dV
+        
+        # Normalize
+        self.p = np.maximum(self.p, 0)
+        self.p /= (np.sum(self.p) * self.dV + 1e-10)
+        
+        return firing_rate
+    
+    def get_mean_variance(self):
+        """Population statistics"""
+        mean_V = np.sum(self.V * self.p * self.dV)
+        var_V = np.sum((self.V - mean_V)**2 * self.p * self.dV)
+        return mean_V, var_V
+```
+
+**Source**: Risken (1996) Fokker-Planck Equation; Tuckwell (1988) Neural Stochastic Models; Theoretical neuroscience
+
+---
+
+### Ornstein-Uhlenbeck Process (Stochastic Neuron)
+
+**Purpose**: Canonical stochastic differential equation for noisy membrane dynamics.
+
+**Formula**: Mean-Reverting Brownian Motion
+```
+dV = -(1/τ)·(V - μ)·dt + σ·dW_t
+
+where:
+- μ = mean potential
+- τ = time constant
+- σ = noise amplitude
+- dW_t = Wiener process (white noise)
+
+Stationary distribution: p(V) = N(μ, σ²τ/2)
+```
+
+**Nature's Implementation**: Background synaptic bombardment creates fluctuating membrane potential. Balance of excitation and inhibition with stochastic arrival times. Observed in cortical neurons in vivo.
+
+**Impact**: **MEDIUM - Stochastic Modeling**
+Simplest realistic stochastic neuron model. Analytically tractable (Gaussian process). Foundation for diffusion approximation in neural networks. Used to model variability in responses. Key for understanding noise-driven spiking.
+
+**Code Example**:
+```python
+class OrnsteinUhlenbeckNeuron(nn.Module):
+    """OU process as stochastic neuron model"""
+    
+    def __init__(self, n_neurons, tau=10.0, mu=0.0, sigma=1.0):
+        super().__init__()
+        self.n = n_neurons
+        self.tau = tau
+        self.mu = mu
+        self.sigma = sigma
+        
+        # State
+        self.V = torch.normal(mu, sigma * np.sqrt(tau/2), size=(n_neurons,))
+        
+    def forward(self, I_ext=0, dt=0.1):
+        """Euler-Maruyama integration"""
+        # Drift term
+        drift = -(self.V - self.mu - I_ext) / self.tau * dt
+        
+        # Diffusion term (scaled Gaussian noise)
+        diffusion = self.sigma * np.sqrt(dt) * torch.randn_like(self.V)
+        
+        # Update
+        self.V += drift + diffusion
+        
+        return self.V
+    
+    def sample_trajectory(self, T=1000, dt=0.1, I_ext=0):
+        """Generate sample trajectory"""
+        n_steps = int(T / dt)
+        trajectory = torch.zeros(n_steps, self.n)
+        
+        for t in range(n_steps):
+            trajectory[t] = self.forward(I_ext, dt)
+        
+        return trajectory
+    
+    def exact_sample(self, t):
+        """Exact sampling (for validation)"""
+        # Conditional distribution: V(t) | V(0)
+        mean = self.V * np.exp(-t/self.tau) + self.mu * (1 - np.exp(-t/self.tau))
+        var = (self.sigma**2 * self.tau / 2) * (1 - np.exp(-2*t/self.tau))
+        
+        return torch.normal(mean, np.sqrt(var))
+```
+
+**Source**: Uhlenbeck & Ornstein (1930); Ricciardi & Sacerdote (1979) Adv Appl Prob; Computational neuroscience
+
+---
+
+### Generalized Linear Model (GLM) for Spike Trains
+
+**Purpose**: Statistical model linking stimulus and spike history to firing rate—standard for neural encoding analysis.
+
+**Formula**: Log-Linear Encoding Model
+```
+λ(t) = exp(k ⊗ s(t) + h ⊗ y(t) + b)
+
+where:
+- λ(t) = instantaneous firing rate
+- k ⊗ s = stimulus filter convolved with stimulus
+- h ⊗ y = spike history filter convolved with past spikes
+- b = bias (baseline firing rate)
+- Spikes ~ Poisson(λ(t))
+```
+
+**Nature's Implementation**: Captures how sensory neurons encode stimuli plus adaptation/refractoriness effects. Widely used to fit real neural data from retina, LGN, V1, auditory cortex.
+
+**Impact**: **MEDIUM-HIGH - Data-Driven Encoding**
+Standard model for neural encoding. Separates stimulus-driven vs history-dependent components. Maximum likelihood fitting enables parameter inference from data. Reveals temporal receptive fields. Foundation for neural prosthetics and BMI decoding. Explains 60-90% of variance in sensory responses.
+
+**Code Example**:
+```python
+class GLMNeuron(nn.Module):
+    """Generalized Linear Model for spike train encoding"""
+    
+    def __init__(self, stim_filter_len=50, hist_filter_len=30):
+        super().__init__()
+        # Stimulus filter (linear receptive field)
+        self.k = nn.Parameter(torch.randn(stim_filter_len) * 0.1)
+        
+        # Spike history filter (refractoriness, adaptation)
+        self.h = nn.Parameter(torch.randn(hist_filter_len) * 0.1)
+        
+        # Baseline
+        self.b = nn.Parameter(torch.zeros(1))
+    
+    def forward(self, stimulus, spike_history):
+        """Compute firing rate"""
+        # Convolve stimulus with filter
+        k_s = F.conv1d(
+            stimulus.unsqueeze(1),
+            self.k.flip(0).view(1, 1, -1),
+            padding=len(self.k)-1
+        )[:, 0, :stimulus.shape[1]]
+        
+        # Convolve spike history with filter
+        h_y = F.conv1d(
+            spike_history.unsqueeze(1),
+            self.h.flip(0).view(1, 1, -1),
+            padding=len(self.h)-1
+        )[:, 0, :spike_history.shape[1]]
+        
+        # Log-linear rate
+        log_rate = k_s + h_y + self.b
+        rate = torch.exp(log_rate)
+        
+        return rate
+    
+    def generate_spikes(self, rate, dt=0.001):
+        """Sample Poisson spikes"""
+        spike_prob = rate * dt
+        spikes = (torch.rand_like(spike_prob) < spike_prob).float()
+        return spikes
+    
+    def log_likelihood(self, stimulus, spikes, dt=0.001):
+        """Negative log-likelihood loss"""
+        # Need spike history
+        spike_history = torch.cat([
+            torch.zeros(spikes.shape[0], len(self.h)-1, device=spikes.device),
+            spikes[:, :-1]
+        ], dim=1)
+        
+        rate = self.forward(stimulus, spike_history)
+        
+        # Poisson log-likelihood
+        # log P(spikes|rate) = Σ[spikes·log(rate·dt) - rate·dt]
+        ll = torch.sum(spikes * torch.log(rate * dt + 1e-8) - rate * dt)
+        
+        return -ll  # Negative for minimization
+    
+    def fit_to_data(self, stimulus, spikes, optimizer, n_epochs=100, dt=0.001):
+        """Maximum likelihood parameter estimation"""
+        for epoch in range(n_epochs):
+            loss = self.log_likelihood(stimulus, spikes, dt)
+            
+            optimizer.zero_grad()
+            loss.backward()
+            optimizer.step()
+            
+            if epoch % 20 == 0:
+                print(f"Epoch {epoch}, NLL: {loss.item():.4f}")
+```
+
+**Source**: Paninski (2004) Network; Pillow et al. (2008) Nature; Truccolo et al. (2005) J Neurophys
+
+---
+
 ## Summary Statistics
 
-**Total Architectures Documented**: 117
+**Total Architectures Documented**: 120
 **Critical Impact**: 5 (paradigm-shifting)
 **High Impact**: 10 (10-100x improvements)
-**Medium-High Impact**: 11 (2-10x improvements)
-**Medium Impact**: 29 (useful specialized)
+**Medium-High Impact**: 12 (2-10x improvements)
+**Medium Impact**: 32 (useful specialized)
 **Low-Medium Impact**: 62 (domain-specific)
 
 **Biological Sources**:
