@@ -1,7 +1,7 @@
 # Novel Biological AI Architectures - Complete Catalog
 
 **Compiled**: 2025-12-11
-**Total Architectures**: 120
+**Total Architectures**: 135
 **Organization**: Ordered by AI Impact (Highest → Lowest)
 
 ---
@@ -3745,9 +3745,969 @@ class GLMNeuron(nn.Module):
 
 ---
 
+### Mutual Information (Neural Coding Capacity)
+
+**Purpose**: Quantify information content in neural responses—how much stimulus information is encoded.
+
+**Formula**: Shannon Information Between Stimulus and Response
+```
+I(S;R) = ΣΣ p(s,r) · log₂[p(s,r)/(p(s)·p(r))]
+       s r
+
+Equivalently:
+I(S;R) = H(R) - H(R|S) = H(S) - H(S|R)
+
+where:
+- S = stimulus variable
+- R = response (spike count, firing rate)
+- H(R) = response entropy (variability)
+- H(R|S) = noise entropy (trial-to-trial variability)
+- Units: bits
+```
+
+**Nature's Implementation**: Measures coding efficiency in sensory systems. High MI = response reliably discriminates stimuli. Used to study retina, LGN, V1, auditory cortex. Reveals which features are encoded.
+
+**Impact**: **MEDIUM - Coding Analysis**
+Gold standard for quantifying neural information. Reveals what information neurons carry (orientation, color, motion, etc.). Compares coding efficiency across brain regions. Foundation for efficient coding theory. Critical for understanding sensory representations and information bottlenecks.
+
+**Code Example**:
+```python
+class MutualInformationAnalyzer:
+    """Compute mutual information between stimulus and neural response"""
+    
+    def __init__(self, n_stim_bins=10, n_resp_bins=10):
+        self.n_stim_bins = n_stim_bins
+        self.n_resp_bins = n_resp_bins
+    
+    def discretize(self, data, n_bins):
+        """Bin continuous data"""
+        bins = np.linspace(data.min(), data.max(), n_bins + 1)
+        digitized = np.digitize(data, bins[1:-1])
+        return digitized
+    
+    def entropy(self, p):
+        """Shannon entropy H = -Σ p·log₂(p)"""
+        p = p[p > 0]  # Remove zeros
+        return -np.sum(p * np.log2(p))
+    
+    def mutual_information(self, stimulus, response):
+        """Compute I(S;R)"""
+        # Discretize
+        s_binned = self.discretize(stimulus, self.n_stim_bins)
+        r_binned = self.discretize(response, self.n_resp_bins)
+        
+        # Joint distribution p(s,r)
+        joint_hist, _, _ = np.histogram2d(
+            s_binned, r_binned,
+            bins=[self.n_stim_bins, self.n_resp_bins]
+        )
+        p_sr = joint_hist / np.sum(joint_hist)
+        
+        # Marginal distributions
+        p_s = np.sum(p_sr, axis=1)
+        p_r = np.sum(p_sr, axis=0)
+        
+        # Mutual information
+        mi = 0
+        for i in range(self.n_stim_bins):
+            for j in range(self.n_resp_bins):
+                if p_sr[i, j] > 0:
+                    mi += p_sr[i, j] * np.log2(
+                        p_sr[i, j] / (p_s[i] * p_r[j] + 1e-10)
+                    )
+        
+        return mi
+    
+    def mi_decomposition(self, stimulus, response):
+        """I(S;R) = H(R) - H(R|S)"""
+        s_binned = self.discretize(stimulus, self.n_stim_bins)
+        r_binned = self.discretize(response, self.n_resp_bins)
+        
+        # H(R)
+        r_counts = np.bincount(r_binned, minlength=self.n_resp_bins)
+        p_r = r_counts / np.sum(r_counts)
+        H_R = self.entropy(p_r)
+        
+        # H(R|S)
+        H_R_given_S = 0
+        for s_val in range(self.n_stim_bins):
+            # Responses for this stimulus
+            r_for_s = r_binned[s_binned == s_val]
+            
+            if len(r_for_s) > 0:
+                p_s = len(r_for_s) / len(r_binned)
+                
+                r_counts_s = np.bincount(r_for_s, minlength=self.n_resp_bins)
+                p_r_given_s = r_counts_s / np.sum(r_counts_s)
+                
+                H_R_given_S += p_s * self.entropy(p_r_given_s)
+        
+        return H_R - H_R_given_S, H_R, H_R_given_S
+```
+
+**Source**: Shannon (1948) Bell System Tech J; Borst & Theunissen (1999) Nat Neurosci; Information theory
+
+---
+
+### Transfer Entropy (Directed Information Flow)
+
+**Purpose**: Quantify causal influence between neurons—directional communication detection.
+
+**Formula**: Directed Information Transfer
+```
+TE_{X→Y} = ΣΣΣ p(y_{t+1}, y_t^(k), x_t^(l)) · 
+           log[p(y_{t+1}|y_t^(k), x_t^(l)) / p(y_{t+1}|y_t^(k))]
+
+where:
+- X, Y = spike trains of two neurons
+- y_t^(k) = past k values of Y
+- x_t^(l) = past l values of X
+- TE_{X→Y} = how much X predicts future of Y beyond Y's own history
+- Units: bits
+```
+
+**Nature's Implementation**: Reveals functional connectivity in neural circuits. Detects information flow direction (X→Y vs Y→X). Used to map communication pathways in brain networks.
+
+**Impact**: **MEDIUM - Network Analysis**
+Distinguishes correlation from causation. Detects directional coupling asymmetry. Reveals hidden drivers in neural circuits. Superior to cross-correlation for nonlinear systems. Foundation for effective connectivity analysis. Critical for understanding information routing.
+
+**Code Example**:
+```python
+class TransferEntropyAnalyzer:
+    """Compute transfer entropy between spike trains"""
+    
+    def __init__(self, k=5, l=5, n_bins=4):
+        self.k = k  # History length for target
+        self.l = l  # History length for source
+        self.n_bins = n_bins
+    
+    def create_embedding(self, X, Y, k, l):
+        """Create history embeddings"""
+        n = len(Y) - max(k, l) - 1
+        
+        # Future of Y
+        Y_future = Y[max(k,l)+1:max(k,l)+1+n]
+        
+        # Past of Y
+        Y_past = np.zeros((n, k))
+        for i in range(k):
+            Y_past[:, i] = Y[max(k,l)-i:max(k,l)-i+n]
+        
+        # Past of X
+        X_past = np.zeros((n, l))
+        for i in range(l):
+            X_past[:, i] = X[max(k,l)-i:max(k,l)-i+n]
+        
+        return Y_future, Y_past, X_past
+    
+    def discretize_history(self, history, n_bins):
+        """Convert history vector to discrete state"""
+        # Simple binning of each dimension
+        states = np.zeros(len(history), dtype=int)
+        for i in range(history.shape[1]):
+            digitized = np.digitize(
+                history[:, i],
+                np.linspace(history[:, i].min(), history[:, i].max(), n_bins)
+            )
+            states = states * n_bins + digitized
+        return states
+    
+    def transfer_entropy(self, X, Y):
+        """Compute TE_{X→Y}"""
+        # Create embeddings
+        Y_future, Y_past, X_past = self.create_embedding(X, Y, self.k, self.l)
+        
+        # Discretize
+        Y_future_binned = np.digitize(
+            Y_future,
+            np.linspace(Y_future.min(), Y_future.max(), self.n_bins)
+        )
+        Y_past_states = self.discretize_history(Y_past, self.n_bins)
+        X_past_states = self.discretize_history(X_past, self.n_bins)
+        
+        # Joint distribution p(y_{t+1}, y_t^k, x_t^l)
+        n_states_Y = self.n_bins ** self.k
+        n_states_X = self.n_bins ** self.l
+        
+        p_joint = np.zeros((self.n_bins, n_states_Y, n_states_X))
+        for i in range(len(Y_future)):
+            p_joint[
+                Y_future_binned[i],
+                Y_past_states[i],
+                X_past_states[i]
+            ] += 1
+        p_joint /= np.sum(p_joint)
+        
+        # Marginal p(y_t^k, x_t^l)
+        p_past = np.sum(p_joint, axis=0)
+        
+        # Marginal p(y_t^k)
+        p_Y_past = np.sum(p_past, axis=1)
+        
+        # Conditional p(y_{t+1}|y_t^k, x_t^l)
+        p_cond_with_X = p_joint / (p_past[np.newaxis, :, :] + 1e-10)
+        
+        # Conditional p(y_{t+1}|y_t^k)
+        p_Y_future_given_past = np.sum(p_joint, axis=2) / (p_Y_past[np.newaxis, :] + 1e-10)
+        
+        # Transfer entropy
+        te = 0
+        for yf in range(self.n_bins):
+            for yp in range(n_states_Y):
+                for xp in range(n_states_X):
+                    if p_joint[yf, yp, xp] > 0:
+                        te += p_joint[yf, yp, xp] * np.log2(
+                            p_cond_with_X[yf, yp, xp] / 
+                            (p_Y_future_given_past[yf, yp] + 1e-10)
+                        )
+        
+        return te
+    
+    def bidirectional_te(self, X, Y):
+        """Compute TE in both directions"""
+        te_X_to_Y = self.transfer_entropy(X, Y)
+        te_Y_to_X = self.transfer_entropy(Y, X)
+        
+        # Net information flow
+        net_flow = te_X_to_Y - te_Y_to_X
+        
+        return {
+            'TE_X->Y': te_X_to_Y,
+            'TE_Y->X': te_Y_to_X,
+            'net_flow': net_flow,
+            'dominant_direction': 'X->Y' if net_flow > 0 else 'Y->X'
+        }
+```
+
+**Source**: Schreiber (2000) Phys Rev Lett; Vicente et al. (2011) J Comput Neurosci; Network neuroscience
+
+---
+
+### Spike Triggered Average (STA)
+
+**Purpose**: Extract linear receptive field from spike train—reverse correlation method.
+
+**Formula**: Average Stimulus Preceding Spikes
+```
+STA(τ) = (1/N) · Σ s(t_k - τ)
+                k=1..N
+
+where:
+- s(t) = stimulus at time t
+- t_k = spike times
+- τ = time lag
+- N = total number of spikes
+```
+
+**Nature's Implementation**: Standard method to characterize sensory neurons. Reveals temporal/spatial receptive field. Used in retina, LGN, V1, auditory, somatosensory systems.
+
+**Impact**: **MEDIUM - Feature Extraction**
+Simplest reverse correlation method. Model-free receptive field estimation. Works for linear or weakly nonlinear neurons. Fast computation from spike-stimulus pairs. Foundation for more advanced methods (STC, MID). Critical for characterizing unknown neurons.
+
+**Code Example**:
+```python
+class SpikeTriggeredAnalysis:
+    """Spike-triggered average and covariance"""
+    
+    def __init__(self, window_length=50):
+        self.window_length = window_length
+    
+    def compute_sta(self, stimulus, spike_times, dt=0.001):
+        """Compute spike-triggered average"""
+        # Convert spike times to indices
+        spike_indices = (spike_times / dt).astype(int)
+        
+        # Remove spikes too early for full window
+        valid_spikes = spike_indices[spike_indices >= self.window_length]
+        
+        # Collect stimulus snippets before each spike
+        snippets = []
+        for spike_idx in valid_spikes:
+            snippet = stimulus[spike_idx - self.window_length:spike_idx]
+            snippets.append(snippet)
+        
+        # Average
+        sta = np.mean(snippets, axis=0)
+        
+        return sta
+    
+    def compute_stc(self, stimulus, spike_times, dt=0.001):
+        """Compute spike-triggered covariance"""
+        spike_indices = (spike_times / dt).astype(int)
+        valid_spikes = spike_indices[spike_indices >= self.window_length]
+        
+        # Collect snippets
+        snippets = []
+        for spike_idx in valid_spikes:
+            snippet = stimulus[spike_idx - self.window_length:spike_idx]
+            snippets.append(snippet)
+        
+        snippets = np.array(snippets)
+        
+        # STA
+        sta = np.mean(snippets, axis=0)
+        
+        # Prior covariance (entire stimulus)
+        C_prior = np.cov(stimulus.T)
+        
+        # Spike-triggered covariance
+        C_spike = np.cov(snippets.T)
+        
+        return C_spike, C_prior, sta
+    
+    def significant_dimensions(self, C_spike, C_prior, n_dims=3):
+        """Find dimensions that differ from prior (STC analysis)"""
+        # Solve generalized eigenvalue problem
+        # C_spike v = λ C_prior v
+        eigenvalues, eigenvectors = scipy.linalg.eigh(C_spike, C_prior)
+        
+        # Sort by deviation from 1
+        deviation = np.abs(eigenvalues - 1)
+        sorted_idx = np.argsort(deviation)[::-1]
+        
+        # Return top dimensions
+        significant_eigvals = eigenvalues[sorted_idx[:n_dims]]
+        significant_eigvecs = eigenvectors[:, sorted_idx[:n_dims]]
+        
+        return significant_eigvecs, significant_eigvals
+```
+
+**Source**: de Boer & Kuyper (1968) Kybernetik; Chichilnisky (2001) Network; Sensory neuroscience methods
+
+---
+
+### Spike Triggered Covariance (STC)
+
+**Purpose**: Identify nonlinear features beyond STA—full second-order characterization.
+
+**Formula**: Covariance Structure of Spike-Triggering Stimuli
+```
+C_spike = ⟨(s - ⟨s⟩)(s - ⟨s⟩)^T | spikes⟩
+C_prior = ⟨(s - ⟨s⟩)(s - ⟨s⟩)^T⟩
+
+Significant dimensions: eigenvectors where
+eigenvalues of C_spike deviate from C_prior
+```
+
+**Nature's Implementation**: Reveals multiple relevant stimulus dimensions. Captures ON/OFF subunits, complex cells, nonlinear integration. Used for neurons with null STA but strong feature selectivity.
+
+**Impact**: **MEDIUM - Nonlinear Features**
+Goes beyond linear STA. Discovers excitatory and suppressive features. Reveals multiple relevant dimensions. Essential for complex/nonlinear neurons. Foundation for maximally informative dimensions (MID). Explains responses STA cannot.
+
+**Code Example**:
+```python
+class STCAnalyzer:
+    """Full STC analysis with dimension reduction"""
+    
+    def __init__(self, sta_analyzer):
+        self.sta = sta_analyzer
+    
+    def analyze(self, stimulus, spike_times, dt=0.001):
+        """Complete STC analysis"""
+        # Compute STA and STC
+        C_spike, C_prior, sta = self.sta.compute_stc(stimulus, spike_times, dt)
+        
+        # Find significant dimensions
+        sig_dims, sig_vals = self.sta.significant_dimensions(C_spike, C_prior)
+        
+        # Classify dimensions
+        excitatory = sig_vals > 1  # Increased variance
+        suppressive = sig_vals < 1  # Decreased variance
+        
+        results = {
+            'sta': sta,
+            'dimensions': sig_dims,
+            'eigenvalues': sig_vals,
+            'excitatory_dims': sig_dims[:, excitatory],
+            'suppressive_dims': sig_dims[:, suppressive]
+        }
+        
+        return results
+    
+    def project_stimulus(self, stimulus, dimensions):
+        """Project stimulus onto discovered dimensions"""
+        return stimulus @ dimensions
+    
+    def predict_response(self, stimulus, dimensions, nonlinearity='quadratic'):
+        """Predict response using STC dimensions"""
+        # Project
+        projections = self.project_stimulus(stimulus, dimensions)
+        
+        if nonlinearity == 'quadratic':
+            # Sum of squares (energy model)
+            response = np.sum(projections ** 2, axis=1)
+        elif nonlinearity == 'halfwave':
+            # Half-wave rectification
+            response = np.sum(np.maximum(projections, 0), axis=1)
+        
+        return response
+```
+
+**Source**: Brenner et al. (2000) Neural Comp; Rust et al. (2005) Nature; Sensory coding literature
+
+---
+
+### Volterra Series Expansion
+
+**Purpose**: General nonlinear system identification—extends linear models with higher-order kernels.
+
+**Formula**: Polynomial Functional Series
+```
+r(t) = k₀ + ∫ k₁(τ₁)·s(t-τ₁) dτ₁
+          + ∫∫ k₂(τ₁,τ₂)·s(t-τ₁)·s(t-τ₂) dτ₁dτ₂
+          + ...
+
+where:
+- k₀ = baseline
+- k₁(τ) = linear filter (1st-order Volterra kernel)
+- k₂(τ₁,τ₂) = 2nd-order interaction kernel
+- Higher orders capture increasing nonlinearity
+```
+
+**Nature's Implementation**: Captures nonlinear sensory processing. 2nd-order kernels reveal facilitation, suppression, multiplicative interactions. Used in vision, audition.
+
+**Impact**: **MEDIUM - Nonlinear System ID**
+General framework for nonlinear neurons. Systematically characterizes nonlinearities. 1st-order = STA, 2nd-order captures interactions. Computationally expensive for high orders. Bridge between linear and fully nonlinear models.
+
+**Code Example**:
+```python
+class VolterraModel:
+    """Volterra series for nonlinear system identification"""
+    
+    def __init__(self, order=2, kernel1_len=50, kernel2_len=20):
+        self.order = order
+        self.k1_len = kernel1_len
+        self.k2_len = kernel2_len
+        
+        # Kernels (learned)
+        self.k0 = 0  # Baseline
+        self.k1 = np.zeros(kernel1_len)
+        self.k2 = np.zeros((kernel2_len, kernel2_len)) if order >= 2 else None
+    
+    def predict_first_order(self, stimulus):
+        """Linear prediction"""
+        # Convolve stimulus with k1
+        r1 = np.convolve(stimulus, self.k1[::-1], mode='same')
+        return self.k0 + r1
+    
+    def predict_second_order(self, stimulus):
+        """Up to 2nd-order prediction"""
+        r1 = self.predict_first_order(stimulus)
+        
+        # 2nd-order term
+        n = len(stimulus)
+        r2 = np.zeros(n)
+        
+        for t in range(self.k2_len, n):
+            s_window = stimulus[t-self.k2_len:t]
+            # Double convolution
+            r2[t] = s_window.T @ self.k2 @ s_window
+        
+        return r1 + r2
+    
+    def fit(self, stimulus, response, regularization=0.01):
+        """Fit Volterra kernels via least squares"""
+        n = len(stimulus)
+        
+        # Design matrix for 1st-order
+        X1 = np.zeros((n, self.k1_len))
+        for i in range(self.k1_len, n):
+            X1[i, :] = stimulus[i-self.k1_len:i][::-1]
+        
+        # Design matrix for 2nd-order
+        if self.order >= 2:
+            k2_size = self.k2_len * (self.k2_len + 1) // 2
+            X2 = np.zeros((n, k2_size))
+            
+            idx = 0
+            for i in range(self.k2_len):
+                for j in range(i, self.k2_len):
+                    for t in range(self.k2_len, n):
+                        s = stimulus[t-self.k2_len:t]
+                        X2[t, idx] = s[i] * s[j]
+                    idx += 1
+            
+            X = np.hstack([np.ones((n, 1)), X1, X2])
+        else:
+            X = np.hstack([np.ones((n, 1)), X1])
+        
+        # Ridge regression
+        params = np.linalg.solve(
+            X.T @ X + regularization * np.eye(X.shape[1]),
+            X.T @ response
+        )
+        
+        # Extract parameters
+        self.k0 = params[0]
+        self.k1 = params[1:1+self.k1_len]
+        
+        if self.order >= 2:
+            # Reconstruct symmetric k2
+            k2_params = params[1+self.k1_len:]
+            idx = 0
+            for i in range(self.k2_len):
+                for j in range(i, self.k2_len):
+                    self.k2[i, j] = k2_params[idx]
+                    self.k2[j, i] = k2_params[idx]
+                    idx += 1
+```
+
+**Source**: Marmarelis & Marmarelis (1978) White-Noise Analysis; Victor & Shapley (1980) J Physiol; Systems neuroscience
+
+---
+
+### Phase Response Curve (PRC)
+
+**Purpose**: Characterize how perturbations shift oscillator timing—foundation for synchronization analysis.
+
+**Formula**: Infinitesimal Phase Shift
+```
+Δφ = Z(φ) · I(t)
+
+where:
+- φ = phase of oscillator (0 to 2π)
+- Z(φ) = phase response curve (PRC)
+- I(t) = perturbation (current pulse)
+- Δφ = resulting phase shift
+
+Type I: Z(φ) ≥ 0 (always advance)
+Type II: Z(φ) changes sign (can advance or delay)
+```
+
+**Nature's Implementation**: Different neuron types have distinct PRCs. Determines whether neurons synchronize or desynchronize. Critical for understanding network rhythms.
+
+**Impact**: **MEDIUM - Oscillator Theory**
+Predicts synchronization behavior from single-neuron properties. Type I vs II determines network dynamics. Used to understand gamma/theta rhythms. Foundation for weakly coupled oscillator theory. Explains entrainment and phase locking.
+
+**Code Example**:
+```python
+class PhaseResponseAnalyzer:
+    """Compute and apply phase response curves"""
+    
+    def __init__(self, neuron_model):
+        self.neuron = neuron_model
+        self.prc = None
+        self.phases = np.linspace(0, 2*np.pi, 100)
+    
+    def measure_prc(self, perturbation_amplitude=1.0):
+        """Measure PRC by perturbing at different phases"""
+        phase_shifts = []
+        
+        for phi in self.phases:
+            # Run neuron to phase φ
+            self.neuron.reset()
+            T0 = self.neuron.get_period()  # Unperturbed period
+            
+            t_phase = (phi / (2*np.pi)) * T0
+            self.neuron.run_until(t_phase)
+            
+            # Apply perturbation
+            self.neuron.inject_current(perturbation_amplitude, duration=0.1)
+            
+            # Measure new period
+            T1 = self.neuron.measure_next_period()
+            
+            # Phase shift
+            delta_phi = 2*np.pi * (T0 - T1) / T0
+            phase_shifts.append(delta_phi)
+        
+        self.prc = np.array(phase_shifts)
+        return self.phases, self.prc
+    
+    def classify_prc(self):
+        """Determine Type I vs Type II"""
+        if np.all(self.prc >= 0):
+            return "Type I (only advances)"
+        elif np.any(self.prc < 0):
+            return "Type II (can advance or delay)"
+    
+    def predict_synchrony(self, coupling_strength, delay=0):
+        """Predict synchronization using PRC"""
+        # Simplified analysis: look at fixed points of
+        # φ_{n+1} = φ_n + Δφ(φ_n)
+        
+        # Interpolate PRC
+        from scipy import interpolate
+        prc_func = interpolate.interp1d(self.phases, self.prc)
+        
+        # Find fixed points
+        phi_test = np.linspace(0, 2*np.pi, 1000)
+        coupling_effect = coupling_strength * prc_func(phi_test)
+        
+        # Phase difference that produces zero net change
+        phase_diff = phi_test + coupling_effect
+        stable_points = phi_test[np.diff(np.sign(phase_diff - phi_test)) != 0]
+        
+        return stable_points
+```
+
+**Source**: Winfree (1967) J Theor Biol; Ermentrout & Kopell (1991) SIAM J Appl Math; Nonlinear dynamics
+
+---
+
+### Energy-Efficient Coding (Laughlin Model)
+
+**Purpose**: Neurons match tuning curves to stimulus statistics—information-maximizing adaptation.
+
+**Formula**: Probability-Matched Response
+```
+r(s) ∝ ∫₀ˢ p(s') ds'
+
+Equivalently: dr/ds ∝ p(s)
+
+where:
+- r(s) = neural response to stimulus s
+- p(s) = probability distribution of stimulus
+- Steeper slope for common stimuli, shallow for rare
+```
+
+**Nature's Implementation**: Photoreceptors adapt to light statistics. Contrast gain control in retina. Frequency tuning in auditory cortex matches speech statistics.
+
+**Impact**: **MEDIUM - Efficient Coding**
+Optimizes information transmission given limited dynamic range. Explains adaptive rescaling. Predicts tuning curve shapes from stimulus distribution. Foundation for efficient coding theory. Explains why neurons care about typical stimuli.
+
+**Code Example**:
+```python
+class EfficientCodingNeuron:
+    """Neuron with probability-matched tuning"""
+    
+    def __init__(self, n_bins=100):
+        self.n_bins = n_bins
+        self.tuning_curve = None
+        self.stimulus_bins = None
+    
+    def learn_from_statistics(self, stimulus_samples):
+        """Adapt tuning curve to match stimulus statistics"""
+        # Estimate stimulus distribution
+        hist, bin_edges = np.histogram(stimulus_samples, bins=self.n_bins)
+        p_s = hist / np.sum(hist)
+        self.stimulus_bins = (bin_edges[:-1] + bin_edges[1:]) / 2
+        
+        # Cumulative distribution (Laughlin's rule)
+        cdf = np.cumsum(p_s)
+        
+        # Response is proportional to CDF
+        # (Normalized to [0, 1])
+        self.tuning_curve = cdf / cdf[-1]
+    
+    def response(self, stimulus):
+        """Compute response to stimulus"""
+        # Interpolate tuning curve
+        from scipy import interpolate
+        f = interpolate.interp1d(
+            self.stimulus_bins,
+            self.tuning_curve,
+            bounds_error=False,
+            fill_value=(0, 1)
+        )
+        return f(stimulus)
+    
+    def mutual_information(self, stimulus_samples):
+        """Compute MI with efficient code"""
+        responses = self.response(stimulus_samples)
+        
+        # Bin responses
+        r_hist, _ = np.histogram(responses, bins=self.n_bins)
+        p_r = r_hist / np.sum(r_hist)
+        
+        # Joint distribution
+        joint_hist, _, _ = np.histogram2d(
+            stimulus_samples, responses,
+            bins=[self.n_bins, self.n_bins]
+        )
+        p_sr = joint_hist / np.sum(joint_hist)
+        
+        # Marginals
+        p_s = np.sum(p_sr, axis=1)
+        
+        # MI
+        mi = 0
+        for i in range(self.n_bins):
+            for j in range(self.n_bins):
+                if p_sr[i, j] > 0:
+                    mi += p_sr[i, j] * np.log2(
+                        p_sr[i, j] / (p_s[i] * p_r[j] + 1e-10)
+                    )
+        
+        return mi
+    
+    def compare_to_linear(self, stimulus_samples):
+        """Compare efficient code to linear tuning"""
+        # This code
+        mi_efficient = self.mutual_information(stimulus_samples)
+        
+        # Linear tuning
+        self.tuning_curve = (self.stimulus_bins - self.stimulus_bins.min()) / \
+                           (self.stimulus_bins.max() - self.stimulus_bins.min())
+        mi_linear = self.mutual_information(stimulus_samples)
+        
+        # Restore efficient code
+        self.learn_from_statistics(stimulus_samples)
+        
+        return {
+            'mi_efficient': mi_efficient,
+            'mi_linear': mi_linear,
+            'improvement': mi_efficient - mi_linear
+        }
+```
+
+**Source**: Laughlin (1981) Z Naturforsch; Attneave (1954) Psychol Rev; Efficient coding theory
+
+---
+
+### Canonical Hebbian Learning (Rate-Based)
+
+**Purpose**: Foundational unsupervised learning—correlative synaptic strengthening.
+
+**Formula**: Basic Hebbian Rule
+```
+Δw_ij = η · r_i · r_j
+
+where:
+- w_ij = synaptic weight from neuron j to neuron i
+- r_i, r_j = firing rates
+- η = learning rate
+- "Cells that fire together, wire together"
+```
+
+**Nature's Implementation**: Original learning hypothesis (Hebb, 1949). Basis for all modern plasticity rules. Unstable without regulation (leads to runaway potentiation).
+
+**Impact**: **MEDIUM-HIGH - Foundation Learning Rule**
+Historical foundation of synaptic plasticity. Explains correlation-based learning. Led to BCM, Oja, STDP. Requires stabilization (Oja normalization, BCM threshold, synaptic scaling). Critical for understanding self-organization.
+
+**Code Example**:
+```python
+class HebbianLayer(nn.Module):
+    """Pure Hebbian learning (unstable without regulation)"""
+    
+    def __init__(self, n_in, n_out, learning_rate=0.01):
+        super().__init__()
+        self.W = nn.Parameter(torch.randn(n_out, n_in) * 0.01)
+        self.eta = learning_rate
+    
+    def forward(self, x):
+        return torch.sigmoid(F.linear(x, self.W))
+    
+    def hebbian_update(self, x, y):
+        """Pure Hebbian: Δw = η·r_i·r_j"""
+        # Outer product of post and pre activities
+        dW = self.eta * torch.outer(y.mean(0), x.mean(0))
+        
+        self.W += dW
+        
+        # WARNING: Weights will grow unbounded!
+        return dW.norm().item()
+    
+    def hebbian_with_decay(self, x, y, decay=0.01):
+        """Hebbian with weight decay (still unstable)"""
+        dW = self.eta * torch.outer(y.mean(0), x.mean(0)) - decay * self.W
+        self.W += dW
+        return dW.norm().item()
+    
+    def oja_normalization(self, x, y):
+        """Stable Hebbian via Oja's rule"""
+        # Hebbian term
+        hebbian = torch.outer(y.mean(0), x.mean(0))
+        
+        # Decay term (normalization)
+        decay = torch.outer(y.mean(0), y.mean(0)) @ self.W
+        
+        dW = self.eta * (hebbian - decay)
+        self.W += dW
+        return dW.norm().item()
+```
+
+**Source**: Hebb (1949) The Organization of Behavior; Stent (1973) PNAS; Neuroscience classics
+
+---
+
+### Maximum Likelihood Estimation (MLE) for Spiking
+
+**Purpose**: Statistically optimal parameter inference from spike trains.
+
+**Formula**: Poisson Log-Likelihood
+```
+L(θ) = Σ log λ(t_k; θ) - ∫ λ(t; θ) dt
+       k
+
+where:
+- λ(t; θ) = firing rate with parameters θ
+- t_k = spike times
+- θ = model parameters (e.g., receptive field)
+- Maximize L to find best θ
+```
+
+**Nature's Implementation**: Statistical framework for neural encoding models. Used to fit GLMs, cascade models, integrate-and-fire parameters from data.
+
+**Impact**: **MEDIUM - Statistical Inference**
+Principled parameter estimation. Maximum likelihood = optimal for large data. Enables model comparison via likelihood ratio. Foundation for GLM, point process models. Standard in computational neuroscience.
+
+**Code Example**:
+```python
+class PoissonMLE:
+    """Maximum likelihood estimation for Poisson spiking"""
+    
+    def __init__(self, model):
+        """
+        model: should have .firing_rate(stimulus, params) method
+        """
+        self.model = model
+    
+    def log_likelihood(self, stimulus, spikes, params, dt=0.001):
+        """Compute Poisson log-likelihood"""
+        # Predict firing rate
+        rate = self.model.firing_rate(stimulus, params)
+        
+        # Log-likelihood
+        # L = Σ log(λ(t_k)) - ∫ λ(t) dt
+        
+        # First term: log rate at spike times
+        spike_indices = np.where(spikes > 0)[0]
+        if len(spike_indices) > 0:
+            log_rates_at_spikes = np.log(rate[spike_indices] * dt + 1e-10)
+            term1 = np.sum(log_rates_at_spikes)
+        else:
+            term1 = 0
+        
+        # Second term: integral of rate
+        term2 = np.sum(rate) * dt
+        
+        ll = term1 - term2
+        return ll
+    
+    def fit(self, stimulus, spikes, initial_params, dt=0.001, max_iter=100):
+        """Find MLE parameters"""
+        from scipy.optimize import minimize
+        
+        def neg_log_likelihood(params):
+            return -self.log_likelihood(stimulus, spikes, params, dt)
+        
+        result = minimize(
+            neg_log_likelihood,
+            initial_params,
+            method='L-BFGS-B',
+            options={'maxiter': max_iter}
+        )
+        
+        return result.x, -result.fun
+    
+    def model_comparison(self, stimulus, spikes, model1, model2, dt=0.001):
+        """Compare two models via likelihood ratio test"""
+        # Fit both models
+        params1, ll1 = self.fit_model(model1, stimulus, spikes, dt)
+        params2, ll2 = self.fit_model(model2, stimulus, spikes, dt)
+        
+        # Likelihood ratio
+        lr = 2 * (ll2 - ll1)  # Assumes model2 has more parameters
+        
+        # Degrees of freedom
+        df = len(params2) - len(params1)
+        
+        # Chi-square test
+        from scipy import stats
+        p_value = 1 - stats.chi2.cdf(lr, df)
+        
+        return {
+            'likelihood_ratio': lr,
+            'p_value': p_value,
+            'better_model': model2 if p_value < 0.05 else model1
+        }
+```
+
+**Source**: Paninski et al. (2004) J Neurosci; Brown et al. (2004) Neural Comp; Statistical neuroscience
+
+---
+
+### Log-Likelihood Ratio (Optimal Decision)
+
+**Purpose**: Statistically optimal decision rule—accumulate evidence to threshold.
+
+**Formula**: Sequential Probability Ratio
+```
+L(t) = log[p(s(t)|H₁) / p(s(t)|H₀)]
+
+Decision: Choose H₁ if L(t) ≥ θ₁
+         Choose H₀ if L(t) ≤ θ₀
+         Continue if θ₀ < L(t) < θ₁
+```
+
+**Nature's Implementation**: Evidence accumulation in LIP, FEF for perceptual decisions. Matches drift-diffusion model behavior. Optimal strategy under accuracy-speed tradeoff.
+
+**Impact**: **MEDIUM - Decision Making**
+Statistically optimal decision rule. Explains neural dynamics in decision tasks. Connects to drift-diffusion model. Foundation for sequential analysis. Used in neuroscience, AI, signal detection.
+
+**Code Example**:
+```python
+class LogLikelihoodRatioDecider:
+    """Optimal sequential decision making"""
+    
+    def __init__(self, theta_upper=3.0, theta_lower=-3.0):
+        self.theta_1 = theta_upper  # Threshold for H1
+        self.theta_0 = theta_lower  # Threshold for H0
+        self.LLR = 0  # Accumulated log-likelihood ratio
+    
+    def update(self, observation, p_H1, p_H0):
+        """Update LLR with new observation"""
+        # Log-likelihood ratio for this observation
+        llr_obs = np.log((p_H1(observation) / (p_H0(observation) + 1e-10)))
+        
+        # Accumulate
+        self.LLR += llr_obs
+        
+        return self.LLR
+    
+    def decide(self):
+        """Check if decision threshold reached"""
+        if self.LLR >= self.theta_1:
+            return 'H1', self.LLR
+        elif self.LLR <= self.theta_0:
+            return 'H0', self.LLR
+        else:
+            return 'continue', self.LLR
+    
+    def reset(self):
+        """Reset for new trial"""
+        self.LLR = 0
+    
+    def simulate_decision(self, observations, p_H1, p_H0):
+        """Simulate full decision process"""
+        self.reset()
+        
+        for t, obs in enumerate(observations):
+            self.update(obs, p_H1, p_H0)
+            decision, llr = self.decide()
+            
+            if decision != 'continue':
+                return decision, t, llr
+        
+        # Forced choice if timeout
+        return ('H1' if self.LLR > 0 else 'H0'), len(observations), self.LLR
+    
+    def optimal_thresholds(self, p_error_target=0.05):
+        """Compute optimal thresholds for target error rate"""
+        # Wald's approximation
+        # θ ≈ log((1-β)/α) for upper threshold
+        # where α = P(decide H1 | H0), β = P(decide H0 | H1)
+        
+        alpha = p_error_target / 2
+        beta = p_error_target / 2
+        
+        theta_upper = np.log((1 - beta) / alpha)
+        theta_lower = np.log(beta / (1 - alpha))
+        
+        self.theta_1 = theta_upper
+        self.theta_0 = theta_lower
+        
+        return theta_upper, theta_lower
+```
+
+**Source**: Wald (1947) Sequential Analysis; Gold & Shadlen (2007) Annu Rev Neurosci; Decision neuroscience
+
+---
+
 ## Summary Statistics
 
-**Total Architectures Documented**: 120
+**Total Architectures Documented**: 135
 **Critical Impact**: 5 (paradigm-shifting)
 **High Impact**: 10 (10-100x improvements)
 **Medium-High Impact**: 12 (2-10x improvements)
