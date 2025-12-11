@@ -1,12 +1,13 @@
 # COMPREHENSIVE DROSOPHILA BIOLOGICAL FORMULAS FOR AI ARCHITECTURE DESIGN
 ## The Definitive Master Reference for Fruit Fly Neural Computation in Machine Learning
 
-**Version:** 3.2 Complete Master Edition
+**Version:** 3.3 Gene Regulation Complete Edition
 **Date:** 2025-12-11
-**Total Formulas:** 272 unique mathematical formulas (239 original + 14 detailed + 19 from 12 systems)
-**Coverage:** Complete biophysics, signaling, circuits, learning, metabolism, sensory processing, noise, gene regulation, chromatin, development, behavior, evolution
-**Status:** Production-ready, indexed, cross-referenced, all 12 biological systems
-**Consolidation:** Integrated from 12 source documents + expanded neurobiology
+**Total Formulas:** 302 unique mathematical formulas (239 + 14 detailed + 19 from 12 systems + 30 gene regulation)
+**Total Architectures:** 45 AI architectures (ARCH-1 through ARCH-45)
+**Coverage:** Complete across all 12 biological systems + comprehensive gene regulation
+**Status:** Production-ready, indexed, cross-referenced, complete Drosophila biology
+**Consolidation:** Integrated from 12 source documents + expanded neurobiology + 30 gene regulation
 
 ---
 
@@ -1175,4 +1176,554 @@ These 19 formulas span all major biological scales:
 
 Total database: 253 + 19 = **272 formulas**
 New architectures: ARCH-25 through ARCH-35 (11 new)
+
+## SYSTEM 1: GENE REGULATION (30 Full-Complexity Formulas) - VERSION 3.3
+
+**Architectures Created:** ARCH-36 through ARCH-45 (10 new)
+
+---
+
+### GR.1: Transcription with Time-Dependent mRNA Degradation
+
+```
+dm/dt = k_tx(t) - γ_m * m
+
+Where k_tx(t) = k_max * f(TF_1, TF_2, ..., TF_n)
+```
+
+**Context:** Dynamic transcription rates driven by time-varying TF concentrations. Drosophila segmentation genes have measured time-dependent expression profiles.
+
+**Architecture:** ARCH-36 (Enhancer Logic Networks) - temporal gene expression
+
+**PyTorch:**
+```python
+class DynamicTranscription(nn.Module):
+    def __init__(self, k_max=1.0, gamma_m=0.1):
+        super().__init__()
+        self.k_max = k_max
+        self.gamma_m = nn.Parameter(torch.tensor(gamma_m))
+    
+    def forward(self, m, k_tx_t, dt):
+        dm_dt = k_tx_t - self.gamma_m * m
+        return m + dm_dt * dt
+```
+
+---
+
+### GR.2: Hill Activation (Generalized)
+
+```
+f_act(X) = X^n / (K^n + X^n)
+```
+
+**Context:** Cooperative binding of transcription factors. Exponent n determines sharpness (n=1: simple saturation, n≥2: sharp threshold).
+
+**Architecture:** ARCH-36 - nonlinear activation thresholds
+
+---
+
+### GR.3: Hill Repression (Generalized)
+
+```
+f_rep(X) = K^n / (K^n + X^n)
+```
+
+**Context:** Inverse of activation. Sharp repression at threshold. Used in gap genes (Kruppel represses Hunchback).
+
+**Architecture:** ARCH-36 - sharp repression boundaries
+
+---
+
+### GR.4: Combinatorial AND Gate (Enhancer Logic)
+
+```
+k_tx = k_max * [A^n_A/(K_A^n_A + A^n_A)] * [B^n_B/(K_B^n_B + B^n_B)]
+```
+
+**Context:** Requires BOTH activators A AND B simultaneously. Multiplicative gate. Used in Drosophila segmentation: gap genes AND pair-rule genes.
+
+**Architecture:** ARCH-36 (Enhancer Logic Networks) - multiplicative integration
+
+**PyTorch:**
+```python
+class EnhancerANDGate(nn.Module):
+    def __init__(self, k_max=1.0, K_A=1.0, K_B=1.0, n_A=2, n_B=2):
+        super().__init__()
+        self.k_max = k_max
+        self.K_A, self.K_B = K_A, K_B
+        self.n_A, self.n_B = n_A, n_B
+    
+    def forward(self, A, B):
+        f_A = A**self.n_A / (self.K_A**self.n_A + A**self.n_A)
+        f_B = B**self.n_B / (self.K_B**self.n_B + B**self.n_B)
+        return self.k_max * f_A * f_B
+```
+
+---
+
+### GR.5: OR-Type Enhancer Logic
+
+```
+k_tx = k_max * [f_A + f_B - f_A*f_B]
+
+Where f_A = A^n_A/(K_A^n_A + A^n_A), f_B = B^n_B/(K_B^n_B + B^n_B)
+```
+
+**Context:** Either A OR B (or both) activates. Additive gate with exclusion term. Used when multiple regulatory pathways converge.
+
+**Architecture:** ARCH-36 - additive integration
+
+---
+
+### GR.6: Thermodynamic Model of Promoter Occupancy
+
+```
+P_on = Σ(e^(-β*E_i)) / Σ(e^(-β*E_j))
+
+Where β = 1/(k*T), E_i = binding energies of different states
+```
+
+**Context:** Statistical mechanics approach. Accounts for all possible TF binding configurations. More accurate than Hill equation at equilibrium.
+
+**Architecture:** ARCH-37 (Thermodynamic Gene Control) - equilibrium binding
+
+---
+
+### GR.7: Transcription Rate Under Thermodynamic Control
+
+```
+k_tx = k_max * P_on
+
+Where P_on from formula GR.6
+```
+
+**Context:** Combines thermodynamic promoter occupancy with transcription rate. Foundation for modern gene expression models.
+
+**Architecture:** ARCH-37 - mechanistic gene control
+
+---
+
+### GR.8: Chromatin Accessibility Weighted Transcription
+
+```
+k_tx = k_max * A_chrom(t) * P_on
+
+Where A_chrom(t) = time-varying chromatin accessibility
+```
+
+**Context:** Chromatin can be "open" (accessible) or "closed" (inaccessible). Epigenetic regulation gates transcription independent of TFs.
+
+**Architecture:** ARCH-37 + ARCH-41 (Chromatin-Aware Gene Expression)
+
+---
+
+### GR.9: Two-State Promoter Bursting Model
+
+```
+dP_on/dt = k_on*P_off - k_off*P_on
+dm/dt = r*P_on - γ_m*m
+
+Where P_off = 1 - P_on
+```
+
+**Context:** Promoter switches between ON (producing mRNA) and OFF (silent) states. Creates mRNA bursts. Measured in Drosophila (e.g., eve, hunchback loci).
+
+**Architecture:** ARCH-38 (Stochastic Bursting & Noise) - burst kinetics
+
+**PyTorch:**
+```python
+class PromoterBursting(nn.Module):
+    def __init__(self, k_on=0.1, k_off=0.5, r=1.0, gamma_m=0.1):
+        super().__init__()
+        self.k_on = nn.Parameter(torch.tensor(k_on))
+        self.k_off = nn.Parameter(torch.tensor(k_off))
+        self.r = r
+        self.gamma_m = gamma_m
+    
+    def forward(self, P_on, m, dt):
+        P_off = 1 - P_on
+        dP_on = self.k_on*P_off - self.k_off*P_on
+        dm = self.r*P_on - self.gamma_m*m
+        
+        P_on_new = P_on + dP_on * dt
+        m_new = m + dm * dt
+        return P_on_new, m_new
+```
+
+---
+
+### GR.10: Multi-State Bursting Model (ON₁, ON₂, OFF)
+
+```
+d𝐏/dt = Q*𝐏
+
+Where Q = transition rate matrix between states
+```
+
+**Context:** Promoter can visit multiple ON states with different transcription rates, plus OFF state. More realistic than 2-state model.
+
+**Architecture:** ARCH-38 - complex bursting dynamics
+
+---
+
+### GR.11: Noise Decomposition (Intrinsic + Extrinsic)
+
+```
+CV² = 1/<m> + η_ext
+
+Where CV = coefficient of variation, <m> = mean mRNA, η_ext = extrinsic noise
+```
+
+**Context:** Poisson noise (1/<m>) from mRNA synthesis/degradation + extrinsic noise from TF fluctuations. Drosophila single-cell data shows both sources.
+
+**Architecture:** ARCH-38 - noise sources in gene expression
+
+---
+
+### GR.12: Master Equation for mRNA Copy Number
+
+```
+dP(m,t)/dt = k_tx*P(m-1,t) + γ_m*(m+1)*P(m+1,t) 
+           - [k_tx + γ_m*m]*P(m,t)
+```
+
+**Context:** Exact stochastic treatment of mRNA numbers. P(m,t) = probability of having m mRNA molecules. Generates exact distributions, not just moments.
+
+**Architecture:** ARCH-38 - stochastic processes
+
+---
+
+### GR.13: Translation + Protein Degradation
+
+```
+dp/dt = k_tl * m - γ_p * p
+
+Where p = protein concentration, m = mRNA
+```
+
+**Context:** Couples mRNA to protein. Translation rate k_tl measured in ribosomes/mRNA/time. Protein degradation includes active (proteasome) and passive decay.
+
+**Architecture:** ARCH-41 (Chromatin-Aware) - multi-step gene expression
+
+**PyTorch:**
+```python
+class Translation(nn.Module):
+    def __init__(self, k_tl=0.5, gamma_p=0.02):
+        super().__init__()
+        self.k_tl = k_tl
+        self.gamma_p = nn.Parameter(torch.tensor(gamma_p))
+    
+    def forward(self, p, m, dt):
+        dp_dt = self.k_tl * m - self.gamma_p * p
+        return p + dp_dt * dt
+```
+
+---
+
+### GR.14: Nonlinear Translational Regulation
+
+```
+dp/dt = k_tl * [m^h / (K_tl^h + m^h)] - γ_p * p
+```
+
+**Context:** Translation rate depends nonlinearly on mRNA abundance. Can saturate at high mRNA (limited ribosomes) or cooperatively require high mRNA.
+
+**Architecture:** ARCH-41 - translational control
+
+---
+
+### GR.15: mRNA Diffusion + Decay (Spatial)
+
+```
+∂m/∂t = D_m * ∇²m - γ_m * m + S(x)
+
+Where D_m = diffusion coefficient, S(x) = source term
+```
+
+**Context:** mRNA spreads in cytoplasm/nucleus with diffusion coefficient ~10-100 μm²/s. Creates spatial gradients. Used in embryo patterning (e.g., oskar, bicoid maternal mRNA).
+
+**Architecture:** ARCH-42 (Spatial Gene Regulation)
+
+---
+
+### GR.16: Cooperative Binding of N Transcription Factors
+
+```
+P_bound = [∏_{i=1}^N (X_i/K_i)^n_i] / {1 + ∏_{i=1}^N (X_i/K_i)^n_i}
+```
+
+**Context:** Multiple TFs bind cooperatively to an enhancer. Each TF can have different cooperativity n_i. Accounts for synergy between TFs.
+
+**Architecture:** ARCH-36 - multi-factor binding logic
+
+---
+
+### GR.17: Activator-Repressor Competition
+
+```
+P_on = [(A/K_A)^n] / {[(A/K_A)^n] + [(R/K_R)^m] + 1}
+```
+
+**Context:** Activator A and repressor R compete for same enhancer. Repressor can outcompete activator. Used in segmentation (Hunchback vs. Krüppel).
+
+**Architecture:** ARCH-36 - competitive inhibition
+
+---
+
+### GR.18: Statistical Mechanical Model of Multi-TF Binding
+
+```
+Z = Σ_{s ∈ states} e^(-β*(E_s - μ_s))
+
+P(s) = e^(-β*(E_s - μ_s)) / Z
+
+Where E_s = binding energy, μ_s = chemical potentials
+```
+
+**Context:** Rigorous statistical mechanics. Accounts for all microscopic states and their Boltzmann weights. Foundation for modern quantitative biology.
+
+**Architecture:** ARCH-37 (Thermodynamic Gene Control) - statistical mechanics
+
+---
+
+### GR.19: Polymerase Loading as Poisson Process
+
+```
+P(n RNAP) = (λ*t)^n / n! * e^(-λ*t)
+
+Where λ = loading rate
+```
+
+**Context:** RNAP molecules arrive at promoter randomly (Poisson). Accounts for fluctuations in number of polymerases initiating per time interval.
+
+**Architecture:** ARCH-39 (Polymerase Dynamics & Queuing) - stochastic initiation
+
+---
+
+### GR.20: RNAP Traffic (Totally Asymmetric Exclusion Process, TASEP)
+
+```
+dn_i/dt = α*(1-n_1)*δ_{i1} + n_{i-1}*(1-n_i) - n_i*(1-n_{i+1})
+
+Where n_i = occupancy of position i on gene, α = initiation rate
+```
+
+**Context:** NOVEL physics model! RNAP polymerases move along DNA, can collide and queue. Creates "traffic jams" on highly transcribed genes. Drosophila genes show TASEP dynamics.
+
+**Architecture:** ARCH-39 (Polymerase Dynamics & Queuing) - exclusion processes
+
+**PyTorch:**
+```python
+class TASEPPolymeraseTraffic(nn.Module):
+    def __init__(self, n_sites=100, alpha=0.5):
+        super().__init__()
+        self.n = n_sites
+        self.alpha = alpha
+    
+    def forward(self, occupancy, dt):
+        # TASEP update: particles move right, can't pass
+        n_new = occupancy.clone()
+        
+        # Initiation at site 1
+        if occupancy[0] < 1:
+            n_new[0] += self.alpha * (1 - occupancy[0]) * dt
+        
+        # Hopping along gene
+        for i in range(self.n-1):
+            hop_rate = occupancy[i] * (1 - occupancy[i+1])
+            n_new[i] -= hop_rate * dt
+            n_new[i+1] += hop_rate * dt
+        
+        return n_new
+```
+
+---
+
+### GR.21: Cooperativity from DNA Looping
+
+```
+k_tx = k_max / {1 + (R/K_R)^n + ω*(R/K_R)^n*(A/K_A)^m}
+
+Where ω = looping cooperativity factor
+```
+
+**Context:** Enhancer and promoter can loop together in 3D. Looping multiplies cooperativity. Explains strong synergy between distant enhancers.
+
+**Architecture:** ARCH-40 (DNA Looping & 3D Genome) - 3D chromatin organization
+
+---
+
+### GR.22: Enhancer-Promoter Contact Probability
+
+```
+P_contact(s) = C * s^(-3/2)
+
+Where s = genomic distance
+```
+
+**Context:** Derived from polymer physics (chromatin as random coil). Probability falls as distance^(-3/2). Explains why enhancers work better when closer to promoter.
+
+**Architecture:** ARCH-40 - chromatin polymer physics
+
+---
+
+### GR.23: Transcription with Enhancer-Promoter Stochastic Switching
+
+```
+k_tx(t) = k_max * P_contact(t) * P_open(t)
+
+Where P_contact(t), P_open(t) are time-varying (stochastic)
+```
+
+**Context:** Both enhancer-promoter contact AND chromatin accessibility fluctuate. Creates bursty transcription. Matches Drosophila live-cell imaging data.
+
+**Architecture:** ARCH-40 - dynamic 3D genome
+
+---
+
+### GR.24: Gap Gene Regulation (Drosophila Classic)
+
+```
+dg_i/dt = [Σ_j a_ij * f_act(g_j) - Σ_j r_ij * f_rep(g_j)] - γ_i * g_i
+```
+
+**Context:** THE classic Drosophila model. Describes Hunchback, Krüppel, Knirps, Giant (4 gap genes). Each gap gene regulated by other gap genes + Bicoid. Creates body segmentation.
+
+**Architecture:** ARCH-36 - networked gene regulation
+
+**PyTorch:**
+```python
+class GapGeneNetwork(nn.Module):
+    def __init__(self, n_genes=4):
+        super().__init__()
+        self.n = n_genes
+        self.a_ij = nn.Parameter(torch.randn(n_genes, n_genes) * 0.5)  # activation
+        self.r_ij = nn.Parameter(torch.randn(n_genes, n_genes) * 0.5)  # repression
+        self.gamma = nn.Parameter(torch.ones(n_genes) * 0.1)
+    
+    def forward(self, g, dt):
+        f_act = g**2 / (1 + g**2)  # Hill activation
+        f_rep = 1 / (1 + g**2)      # Hill repression
+        
+        dg_dt = (self.a_ij @ f_act - self.r_ij @ f_rep) - self.gamma * g
+        return g + dg_dt * dt
+```
+
+---
+
+### GR.25: Spatial Patterning with Diffusion + TF Cooperativity
+
+```
+∂g_i/∂t = D_i*∇²g_i + [g_i^n / (K^n + g_i^n)] - γ_i*g_i
+```
+
+**Context:** Combines diffusion with local nonlinear feedback. Creates Turing patterns and stripes. Used for pair-rule gene stripes (even-skipped, etc.).
+
+**Architecture:** ARCH-42 (Spatial Gene Regulation) - reaction-diffusion
+
+---
+
+### GR.26: Chromatin State Dynamics (2-State Model)
+
+```
+dA/dt = k_open*(1-A) - k_close*A
+
+Where A = accessibility (0=closed, 1=open)
+```
+
+**Context:** Chromatin switches between open (histone acetylation) and closed (heterochromatin) states. Timescale: ~seconds to minutes. Epigenetic memory in fly development.
+
+**Architecture:** ARCH-41 (Chromatin-Aware Gene Expression) - epigenetic dynamics
+
+---
+
+### GR.27: mRNA Export from Nucleus (Two-Compartment Model)
+
+```
+dm_n/dt = k_tx - k_exp*m_n - γ_n*m_n
+dm_c/dt = k_exp*m_n - γ_c*m_c
+
+Where n=nucleus, c=cytoplasm
+```
+
+**Context:** mRNA made in nucleus, exported through nuclear pores, degraded in cytoplasm. Export rate k_exp ~0.1-1 min^-1. Cytoplasmic degradation faster than nuclear.
+
+**Architecture:** ARCH-43 (Nuclear Transport & Compartmentalization)
+
+---
+
+### GR.28: TF Concentration with Synthesis + Nonlinear Degradation
+
+```
+dX/dt = k_s - γ_1*X - γ_2*X²
+
+Where γ_2*X² represents dimerization-driven decay
+```
+
+**Context:** TF synthesis at constant rate, linear degradation + nonlinear (quadratic) degradation from dimerization. TF dimers are often the active form (e.g., Dorsal, Dif).
+
+**Architecture:** ARCH-36 - multi-order degradation kinetics
+
+---
+
+### GR.29: Alternative Splicing Regulation (Two Isoforms)
+
+```
+dm_1/dt = k_tx*P_splice - γ_1*m_1
+dm_2/dt = k_tx*(1-P_splice) - γ_2*m_2
+
+Where P_splice = 1 / (1 + (R/K_R)^n)
+```
+
+**Context:** One gene produces two protein isoforms via alternative splicing. Repressor R shifts splicing toward isoform 2. Used in Drosophila sex determination (Sex-lethal), development.
+
+**Architecture:** ARCH-44 (Alternative Splicing Networks) - post-transcriptional control
+
+---
+
+### GR.30: Gene Autoregulation (Positive Feedback)
+
+```
+dX/dt = k_basal + k_fb * [X^n / (K^n + X^n)] - γ*X
+
+Where k_fb term is positive feedback on itself
+```
+
+**Context:** Gene product X activates its own transcription. Creates bistable switch (two stable states: ON or OFF). Used in cell fate decisions, developmental commitments.
+
+**Architecture:** ARCH-45 (Feedback Autoregulation) - bistability, memory
+
+**PyTorch:**
+```python
+class PositiveFeedbackAutoregulation(nn.Module):
+    def __init__(self, k_basal=0.1, k_fb=1.0, K=1.0, n=2, gamma=0.1):
+        super().__init__()
+        self.k_basal = k_basal
+        self.k_fb = nn.Parameter(torch.tensor(k_fb))
+        self.K = K
+        self.n = n
+        self.gamma = nn.Parameter(torch.tensor(gamma))
+    
+    def forward(self, X, dt):
+        activation = X**self.n / (self.K**self.n + X**self.n)
+        dX_dt = self.k_basal + self.k_fb*activation - self.gamma*X
+        return X + dX_dt * dt
+```
+
+---
+
+**END OF 30 GENE REGULATION FORMULAS**
+
+These span:
+- Thermodynamics (formulas 6-8, 18)
+- Stochastic processes (9-12, 19)
+- Polymer physics (21-23)
+- Network dynamics (24, 29, 30)
+- Spatial patterns (15, 25)
+- Epigenetics (26)
+- Nuclear biology (27)
+- Drosophila classics (24, 29, 30)
+
+**Total database:** 272 + 30 = **302 formulas**
+**New architectures:** ARCH-36 through ARCH-45 (10 new)
 
