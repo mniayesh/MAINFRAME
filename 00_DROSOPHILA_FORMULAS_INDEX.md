@@ -75,7 +75,69 @@ Each folder will contain:
 
 ## FORMULA INDEX
 
-(To be filled as formulas are added)
+### ✅ QUANTUM_ANGSTROM: Quantum Mechanical Foundations (30 formulas)
+
+**Status:** Complete - All 30 quantum formulas integrated with PyTorch modules
+
+**Formulas by Category:**
+
+**I. Foundational Wave Mechanics (6)**
+1. QUANTUM.SCHRODINGER_TIMEDEPENDENT - Time-dependent wave equation → `quantum_schrodinger_timedependent.py`
+2. QUANTUM.SCHRODINGER_TIMEINDEPENDENT - Eigenstate solver → `quantum_schrodinger_timeindependent.py`
+3. QUANTUM.HAMILTONIAN_MANYBODY - Many-body Hamiltonian → `quantum_hamiltonian_manybody.py`
+4. QUANTUM.BORN_OPPENHEIMER - Electronic-nuclear decoupling → `quantum_born_oppenheimer.py`
+5. QUANTUM.PATHINTEGRAL - Feynman path integrals → `quantum_pathintegral.py`
+6. QUANTUM.EHRENFEST - Quantum-classical bridge → `quantum_ehrenfest.py`
+
+**II. Approximation Methods (6)**
+7. QUANTUM.PERTURBATION_FIRST_ORDER - First-order energy correction → `quantum_perturbation_first_order.py`
+8. QUANTUM.PERTURBATION_SECOND_ORDER - Second-order perturbation → `quantum_perturbation_second_order.py`
+9. QUANTUM.VARIATIONAL_METHOD - Energy upper bound → `quantum_variational_method.py`
+10. QUANTUM.WKB_APPROXIMATION - Quantum tunneling → `quantum_wkb_approximation.py`
+11. QUANTUM.HELLMANN_FEYNMAN - Forces from quantum potential → `quantum_hellmann_feynman.py`
+12. QUANTUM.FERMIGOLDENRULE - Transition rates → `quantum_fermigoldenrule.py`
+
+**III. Molecular Quantum Chemistry (6)**
+13. QUANTUM.HARTREE_FOCK - Self-consistent field → `quantum_hartree_fock.py`
+14. QUANTUM.SLATER_DETERMINANT - Pauli exclusion enforcement → `quantum_slater_determinant.py`
+15. QUANTUM.KOHN_SHAM_DFT - Density functional theory → `quantum_kohn_sham_dft.py`
+16. QUANTUM.ELECTRON_DENSITY - Electron density distribution → `quantum_electron_density.py`
+17. QUANTUM.EXCHANGE_CORRELATION - XC functional → `quantum_exchange_correlation.py`
+18. QUANTUM.POTENTIALENERGYSURFACE - Born-Oppenheimer PES → `quantum_potentialenergysurface.py`
+
+**IV. Electron & Quantum Transport (6)**
+19. QUANTUM.TUNNELING_PROBABILITY - Quantum tunneling rate → `quantum_tunneling_probability.py`
+20. QUANTUM.MARCUS_ELECTRONTRANSFER - Marcus electron transfer → `quantum_marcus_electrontransfer.py`
+21. QUANTUM.LANDAUER_CONDUCTANCE - Quantum-classical conductance → `quantum_landauer_conductance.py`
+22. QUANTUM.FERMI_DIRAC - Fermi-Dirac occupation → `quantum_fermi_dirac.py`
+23. QUANTUM.DENSITYOFSTATES - Density of electronic states → `quantum_densityofstates.py`
+24. QUANTUM.BORN_SCATTERING - Scattering amplitudes → `quantum_born_scattering.py`
+
+**V. Quantum Thermodynamics & Spectroscopy (6)**
+25. QUANTUM.PARTITIONFUNCTION - Partition function → `quantum_partitionfunction.py`
+26. QUANTUM.VIBRATIONAL_HARMONIC - Harmonic oscillator levels → `quantum_vibrational_harmonic.py`
+27. QUANTUM.ROTATIONAL_LEVELS - Rigid rotor levels → `quantum_rotational_levels.py`
+28. QUANTUM.DIPOLETRANSITION - Dipole transition matrix → `quantum_dipoletransition.py`
+29. QUANTUM.ABSORPTION_SPECTRUM - Absorption spectrum → `quantum_absorption_spectrum.py`
+30. QUANTUM.BOLTZMANN_POPULATION - Boltzmann population → `quantum_boltzmann_population.py`
+
+**Files:**
+- Formula details: `Quantum_Angstrom/formulas.md`
+- PyTorch modules: `Quantum_Angstrom/pytorch/quantum_*.py` (30 files)
+
+---
+
+### PENDING DOMAINS
+- Molecular_nm
+- Thermodynamics
+- Structural_Biology
+- Molecular_Machines
+- Genetics
+- Proteomics_Metabolism
+- Development
+- Connectome
+- Neural_Dynamics
+- Behavior
 
 ---
 
