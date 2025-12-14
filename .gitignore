@@ -4,7 +4,10 @@ biology_data/**/*.sdf.gz
 biology_data/**/*.xml.gz
 biology_data/**/*.obo
 biology_data/**/*.owl
+biology_data/**/*.tsv
 biology_data/**/*.tsv.gz
+biology_data/**/*.csv
+biology_data/**/*.txt
 biology_data/**/*.nii.gz
 biology_data/**/*.Z
 biology_data/**/*.zip
